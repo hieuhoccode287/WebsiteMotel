@@ -1,0 +1,202 @@
+﻿@model IEnumerable<WEBSITE_MOTEL.Models.PHONGTRO>
+
+@{
+    ViewBag.Title = "Manage";
+    Layout = "~/Views/_LayoutUser.cshtml";
+}
+
+<div class="nav-text">
+    <ol>
+        <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
+        <li id="arrow1"><i class="fa fa-angle-right"></i></li>
+        <li class="active" id="search-target">Quản lý</li>
+    </ol>
+</div>
+<section class="wrap-content">
+    <div class="content" style="border: none;">
+        <div class="wrapper">
+            <!-- Nav tabs -->
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="quan_ly_tin">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="white-space: nowrap;" class="td_center">Mã số</th>
+                                    <th style="white-space: nowrap;">Trạng thái</th>
+                                    <th style="white-space: nowrap;">Tiêu đề</th>
+                                    <th style="white-space: nowrap;">Ngày đăng tin</th>
+                                    <th style="white-space: nowrap;">Ngày hết hạn</th>
+                                    <th style="white-space: nowrap; text-align: center;">Thao tác</th>
+                                    <th style="white-space: nowrap;">Duyệt cho thuê</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="td_col2 td_matin">@item.Id</td>
+                                        <td class="td_col2s td_matin" style="color: #4CAF50">
+                                            @if (item.Ngay?.AddMonths(3) >= DateTime.Today && item.TrangThai == 1)
+                                            {
+                                                <span> Tin đang được đăng</span>
+                                            }
+                                            else if (item.TrangThai == 0)
+                                            {
+                                                <span style="color: #ED2327">Tin đã hết hạn</span>
+                                            }
+                                            else if (item.TrangThai == 2)
+                                            {
+                                                <span style="color: #ddec71">Tin chờ được duyệt</span>
+                                            }
+                                            else if (item.TrangThai == 3)
+                                            {
+                                                <span style="color: #1fefed">Phòng đã cho thuê</span>
+                                            }
+                                        </td>
+                                        <td class="td_col3">
+                                            <a href="home.html#content1" class="" target="_blank">@item.TenPhong</a>
+                                        </td>
+                                        <td id="dt1" data-id="@item.Id" class="ngay" style="color: #4CAF50">@Html.FormatValue(item.Ngay, "{0:dd/MM/yyyy}")</td>
+                                        <td id="dt2" data-id="@item.Id" class="ngay" style="color: #ED2327">@Html.FormatValue(item.Ngay?.AddMonths(3), "{0:dd/MM/yyyy}")</td>
+                                        <td>
+                                            <a class="btn btn_action" id="st2" data-id="@item.Id"><i class="fa fa-refresh"></i> Đăng lại</a>
+                                            <a class="btn btn_action" id="st1" data-id="@item.Id"><i class="fa fa-expeditedssl"></i> Ngừng đăng tin</a>
+                                            @*<a class="btn btn_action" href="#" id="idsua" data-id="@item.Id"><i class="fa fa-pencil"></i> Sửa</a>*@
+                                            <a class="btn btn_action" href="#" id="idxoa" data-id="@item.Id"><i class="fa fa-eraser"></i> Xóa</a>
+
+                                        </td>
+                                        <td>
+                                            @if (@item.TrangThai == 2)
+                                            {
+                                                <a class="btn btn_action btn-success" id="st3" data-id="@item.Id">Duyệt</a>
+                                                <a class="btn btn_action btn-danger" id="st4" data-id="@item.Id">Bỏ Duyệt</a>}
+                                            </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="page_navigation">
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    $(document).ready(function () {
+        // Sự kiện click vào nút "Đăng lại"
+        $(".table").on("click", "#st2", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/Manage/DangLai",
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    // Hiển thị thông báo
+                    alert("Cập nhật thành công");
+                    // Reload trang để cập nhật lại danh sách phòng trọ
+                    window.location.reload();
+                },
+                error: function () {
+                    // Hiển thị thông báo lỗi
+                    alert("Đăng lại tin không thành công!");
+                }
+            });
+        });
+
+        // Sự kiện click vào nút "Ngừng đăng tin"
+        $(".table").on("click", "#st1", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/Manage/NgungDang",
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    // Hiển thị thông báo
+                    alert("Cập nhật thành công");
+                    // Reload trang để cập nhật lại danh sách phòng trọ
+                    window.location.reload();
+                },
+                error: function () {
+                    // Hiển thị thông báo lỗi
+                    alert("Ngừng đăng tin không thành công!");
+                }
+            });
+        });
+        // Sự kiện click vào nút "Sửa"
+        $(".table").on("click", "#idsua", function () {
+            var id = $(this).data("id");
+            // Chuyển hướng đến trang Sửa phòng trọ
+            window.location.href = "/Manage/Sua/" + id;
+        });
+
+        // Sự kiện click vào nút "Xóa"
+        $(".table").on("click", "#idxoa", function () {
+            var id = $(this).data("id");
+            if (confirm("Bạn có chắc chắn muốn xóa phòng trọ này không?")) {
+                $.ajax({
+                    url: "/Manage/Xoa",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (result) {
+                        // Hiển thị thông báo
+                        alert("Cập nhật thành công");
+                        // Reload trang để cập nhật lại danh sách phòng trọ
+                        window.location.reload();
+                    },
+                    error: function () {
+                        // Hiển thị thông báo lỗi
+                        alert("Xóa phòng trọ không thành công!");
+                    }
+                });
+            }
+        });
+
+        //Sự kiện click nút "Duyệt Phòng"
+        $(".table").on("click", "#st3", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/Manage/DuyetPhong",
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    // Hiển thị thông báo
+                    alert("Đã Duyệt thành công");
+                    // Reload trang để cập nhật lại danh sách phòng trọ
+                    window.location.reload();
+                },
+                error: function () {
+                    // Hiển thị thông báo lỗi
+                    alert("Duyệt Phòng không thành công!");
+                }
+            });
+        });
+
+        //Sự kiện click nút "Bỏ Duyệt"
+        $(".table").on("click", "#st4", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/Manage/BoDuyet",
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    // Hiển thị thông báo
+                    alert("Đã bỏ duyệt phòng thành công");
+                    // Reload trang để cập nhật lại danh sách phòng trọ
+                    window.location.reload();
+                },
+                error: function () {
+                    // Hiển thị thông báo lỗi
+                    alert("Bỏ duyệt phòng không thành công!");
+                }
+            });
+        });
+    });
+
+</script>

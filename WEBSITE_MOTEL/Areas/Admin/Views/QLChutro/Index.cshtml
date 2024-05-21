@@ -1,0 +1,148 @@
+﻿@using WEBSITE_MOTEL.Models
+@using PagedList.Mvc;
+@model PagedList.PagedList<WEBSITE_MOTEL.Models.ChuTro>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    @using (Html.BeginForm("Index", "QLChutro", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
+                    {
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
+                        </div>
+                        <button type="submit" class="btn btn-default">Tìm</button>
+                    }
+                    <table class="table">
+                        <tr>
+                            <th style="text-align:center">Họ tên</th>
+                            <th style="text-align:center">Tài khoản</th>
+                            <th style="text-align:center">Mật khẩu</th>
+                            <th style="text-align:center">Email</th>
+                            <th style="text-align:center">Facebook</th>
+                            <th style="text-align:center">CCCD</th>
+                            <th style="text-align:center">Địa chỉ</th>
+                            <th style="text-align:center">Điện thoại</th>
+                            <th style="text-align:center">Phân quyền</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.sHotenCT)</td>
+                                <td>@Html.DisplayFor(modelItem => item.sTaiKhoanCT)</td>
+                                <td>@Html.DisplayFor(modelItem => item.sMatKhauCT)</td>
+                                <td>@Html.DisplayFor(modelItem => item.sEmailCT)</td>
+                                <td>@Html.DisplayFor(modelItem => item.sFacebook)</td>
+                                <td>@Html.DisplayFor(modelItem => item.sCCCD)</td>
+                                <td>@Html.DisplayFor(modelItem => item.sDiaChi)</td>
+                                <td>@Html.DisplayFor(modelItem => item.sSDTCT)</td>
+                                <td>@Html.DisplayFor(modelItem => item.sPhanQuyen)</td>
+                                <td>
+                                    <a href="@Url.Action("Edit", new { id = item.sId })" class="btn btn-warning" role="button">Sửa</a>
+                                    <a href="@Url.Action("Details", new { id = item.sId })" class="btn btn-primary" role="button">Chi tiết</a>
+                                    <a href="@Url.Action("Delete", new { id = item.sId })" class="btn btn-danger" role="button">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    var pagedListRenderOptions = new PagedListRenderOptions
+    {
+        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination" },
+        ContainerDivClasses = new[] { "pagination justify-content-center" },
+        LiElementClasses = new[] { "page-item" }
+    };
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="pagination">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }), pagedListRenderOptions)
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .page-item {
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
+    }
+
+    .page-link {
+        padding: 6px 12px;
+        color: #007bff;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+    }
+
+        .page-link:hover {
+            color: #0056b3;
+            text-decoration: none;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+    .page-item.active .page-link {
+        z-index: 3;
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .page-item.disabled .page-link {
+        pointer-events: none;
+        opacity: 0.65;
+    }
+
+    .pagination .page-item {
+        display: inline-block;
+        padding: 5px;
+    }
+
+    .pagination .current-page {
+        background-color: #337ab7;
+        color: white;
+        padding: 5px;
+        border-radius: 3px;
+    }
+    .pagination .page-separator {
+        margin: 0 5px;
+    }
+    .pagination a {
+        display: inline-block;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        margin-right: 5px;
+        text-decoration: none;
+    }
+
+        .pagination a.active {
+            background-color: #ccc;
+            color: #fff;
+            border-color: #ccc;
+        }
+</style>

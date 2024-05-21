@@ -1,0 +1,122 @@
+﻿@using WEBSITE_MOTEL.Models
+@using PagedList.Mvc;
+@model PagedList.PagedList<WEBSITE_MOTEL.Models.RoomDetail>
+@helper Truncate(string s, int length)
+{
+    if (s.Length < length)
+    {
+        @s
+    }
+    else
+    {
+        @s.Substring(0, length)<text>...</text>
+    }
+}
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/_LayoutUser.cshtml";
+}
+<table class="table">
+    <tr>
+        <th style="text-align:center">
+            Tên phòng
+        </th>
+        <th style="text-align:center">
+            ID_Chủ trọ
+        </th>
+        <th style="text-align:center">
+            Ảnh bìa
+        </th>
+        <th style="text-align:center">
+            Mô tả
+        </th>
+        <th style="text-align:center">
+            Giá cả
+        </th>
+        <th style="text-align:center">
+            Trạng thái
+        </th>
+        <th style="text-align:center">
+            Diện tích
+        </th>
+        <th style="text-align:center">
+            Ngày đăng
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @*Sử dụng helper để cắt TenSach lấy 50 ký tự*@
+                @Html.DisplayFor(modelItem => item.sTenPhong)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Id_KhuVuc)
+                </td>*@
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.TenPhong)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.sIDCT)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sAnhBia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sMoTa)
+            </td>
+            <td>
+                @Html.FormatValue(item.dGiaCa, "{0:#,##0}")
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.HoaHong)
+                </td>*@
+            @* <td>
+
+                    @Html.DisplayFor(modelItem => item.sTrangThai)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.sDienTich)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.SoLuong)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Contents)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Doituong)
+                </td>*@
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Map)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Video_link)
+                </td>*@
+            <td>
+                @*Định dạng hiển thị*@
+                @Html.FormatValue(@item.dNgayCapNhat, "{0:dd/MM/yyyy}")
+            </td>
+            <td>
+                @*<a href="@Url.Action("Edit", new { id = item.Id })" class="btn btnwarning form-control" style="color: blue; display: inline; background-color: #FFFF00;" role="button">Sửa</a>*@
+                <a href="@Url.Action("Detail", new { id = item.sMa })" class="btn btnprimary" style="color: blue; display: inline; background-color: #FF0000;" role="button">Chi tiết</a>
+                <a href="@Url.Action("Delete", new { id = item.sMa })" class="btn btndanger" style="color: blue; display: inline; background-color: #33FF00;" role="button">Xóa</a>
+            </td>
+        </tr>
+    }
+
+</table>
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount
+<div class="MenuTrang">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+</div>
+
+<style>
+    .MenuTrang {
+        display: inline;
+        text-align: center;
+    }
+</style>

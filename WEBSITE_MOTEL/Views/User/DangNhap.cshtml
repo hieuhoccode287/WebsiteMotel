@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "DangNhap";
+    Layout = "~/Views/_LayoutUser.cshtml";
+}
+
+
+<div id="id_back_top">    <h2 style="text-align:center; line-height:5.2; margin-bottom:0.5rem;">ĐĂNG NHẬP</h2></div>
+<div id="header"></div>
+<div class="login_form" style="">
+    @*<div class="form-group">
+        <a href="#" class="btn btn-primary btn-block ">
+            <i class="fab fa-facebook-f"></i> Đăng nhập bằng tài khoản Facebook
+        </a>
+    </div>
+    <div class="form-group">
+        <a href="#" class="btn btn-danger btn-block">
+            <i class="fab fa-google text-white"></i> Đăng nhập bằng tài khoản Google
+        </a>
+    </div>
+    <div class="text-center"> Hoặc </div>*@
+    <form class="login" action="~/User/DangNhap" method="post">
+        <div class="form-group"> <input placeholder="TDN*" name="TaiKhoan" type="text" id="user_tendn" class="form-control"> </div>
+        <div class="form-group"> <input placeholder="Mật khẩu*" name="MatKhau" type="password" id="user_pas" class="form-control" /> </div>
+        <div class="item_message">
+            <p class="message text-danger"></p>
+        </div>
+        <table>
+            <tr>
+                <td></td>
+                <td>
+                    @Html.CheckBox("remember")<span style="font-style:italic">Nhớ thông tin đăng nhập</span>
+                </td>
+            </tr>
+        </table>
+        <div class="form-group">
+            <input type="hidden" name="action" value="login">
+            <button class="btnLog btn btn-warning btn-block btn-lg text-white" type="submit">Đăng nhập</button>
+        </div>
+        <div class="login_form border-0">
+            <div class="form-text">
+                <p> Chưa có tài khoản? </p>
+            </div>
+            <div class="form-group">
+                <a href="@Url.Action("DangKy","User")" class="btn btn-outline-dark btn-block font-weight-bold">ĐĂNG KÍ NGAY</a>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script src="~/js/jvdangnhap.js"></script>
+
+

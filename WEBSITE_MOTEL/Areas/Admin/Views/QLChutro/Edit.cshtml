@@ -1,0 +1,124 @@
+﻿@model WEBSITE_MOTEL.Models.ChuTro
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
+}
+
+<h2>Sửa thông tin</h2>
+
+@using (Html.BeginForm("Edit", "QLChutro", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.sId)
+    <div class="form-group">
+        <div class="col-md-10">
+            <input type="hidden" size="70" name="sId" value="@Model.sId" readonly />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Họ tên:</label>
+        <div class="col-md-10">
+            <input class="form-control text-box single-line" type="text" name="sHotenCT" required value="@Model.sHotenCT" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Tài khoản:</label>
+        <div class="col-md-10">
+            <input class="form-control text-box single-line" type="text" name="sTaiKhoanCT" required value="@Model.sTaiKhoanCT" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Mật khẩu:</label>
+        <div class="col-md-10">
+            <input class="form-control text-box single-line" type="text" name="sMatKhauCT" required value="@Model.sMatKhauCT" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Email:</label>
+        <div class="col-md-10">
+            <input class="form-control text-box single-line" type="email" name="sEmailCT" required value="@Model.sEmailCT" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Căn cước công dân:</label>
+        <div class="col-md-10">
+            <input class="form-control text-box single-line" type="text" name="sCCCD" required value="@Model.sCCCD" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2">Địa chỉ:</label>
+        <div class="col-md-10">
+            <input class="form-control text-box single-line" type="text" name="sDiaChi" required value="@Model.sDiaChi" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Số điện thoại:</label>
+        <div class="col-md-10">
+            <input class="form-control text-box single-line" type="text" name="sSDTCT" required value="@Model.sSDTCT" />
+        </div>
+    </div>
+
+    @* <div class="form-group">
+            <label class="control-label col-md-2">Ngày sinh:</label>
+            <div class="col-md-10">
+                <input class="form-control text-box single-line" type="datetime" name="sNgaySinh" required value="@Convert.ToDateTime(Model.sNgaySinh)" />
+            </div>
+        </div>*@
+    @*    <div class="form-group">
+            <label class="control-label col-md-2">Facebook:</label>
+            <div class="col-md-10">
+                <input class="form-control text-box single-line" type="text" name="sFacebook" required value="@Model.sFacebook" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Căn cước công dân:</label>
+            <div class="col-md-10">
+                <input class="form-control text-box single-line" type="text" name="sCCCD" required value="@Model.sCCCD" />
+            </div>
+        </div>
+    *@
+    @* <div class="form-group">
+            @Html.LabelFor(model => model.Avatar, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Avatar, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Avatar, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.TrangThai, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TrangThai, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TrangThai, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.Id_TaiKhoan, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Id_TaiKhoan, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Id_TaiKhoan, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Lưu thông tin" class="btn btn-default">
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("VỀ TRANG QUẢN LÝ CHỦ TRỌ", "Index")
+</div>

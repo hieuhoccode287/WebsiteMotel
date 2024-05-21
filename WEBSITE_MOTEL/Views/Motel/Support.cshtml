@@ -1,0 +1,82 @@
+﻿
+@{
+    ViewBag.Title = "Support";
+    Layout = "~/Views/_LayoutUser.cshtml";
+}
+
+<div class="nav-text">
+    <ol>
+        <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
+        <li id="arrow1">  <i class="fa fa-angle-right"></i>  </li>
+        <li class="active" id="search-target">Trợ giúp tìm kiếm</li>
+    </ol>
+</div>
+<section class="wrap-content">
+    <div class="content">
+        <div class="help-form">
+            <p style="font-size: 20px; color: #00914E;">Cảm ơn bạn đã đồng hành cùng chúng tôi. Sự hài lòng của bạn là thành công lớn nhất của <i style="font-size: 22px; color: red;">timphongcungban.com</i></p>
+            <p>
+                Khó khăn:</br>- Bạn đang loay hoay tìm phòng trọ. </br> - Bạn kinh doanh phòng trọ nhưng chưa hiệu quả...</br>
+                Giải pháp:</br>
+                - Đội ngũ công tác viên hùng hậu, nhiệt tình chúng tôi sẽ giúp bạn tìm được nơi ở phù hợp, nhanh chóng nhất.</br>
+                - Các chiến lược marketing khoa học của chúng tôi khu trọ của bạn sẽ không còn tình trạng trống phòng...</br> Thật đơn giản hãy gửi yêu cầu cho chúng tôi.
+            </p>
+            <form class="form-help">
+                <div class="form-group">
+                    <label for="usr">Tên của bạn:</label>
+                    <input type="text" class="form-control" id="usr">
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Số điện thoại:</label>
+                    <input type="text" class="form-control" id="mobile">
+                </div>
+                <div class="form-group">
+                    <label for="comment">Yêu cầu của bạn:</label>
+                    <textarea class="form-control" rows="6" id="comment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-default" id="btnSubmit">Gửi</button>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    $('#btnSubmit').click(function () {
+        var Name = $('#usr').val();
+        var SDT = $('#mobile').val();
+        var Cmt = $('#comment').val();
+        if (Name.length == 0) {
+            alert('Vui lòng nhập tên của bạn.');
+            return;
+        }
+        if (SDT.length == 0) {
+            alert('Vui lòng nhập số điện thoại.');
+            return;
+        }
+        if (Cmt.length == 0) {
+            alert('Vui lòng mô tả vấn đề cần hỗ trợ.');
+            return;
+        }
+        if (Name.length > 0 && SDT.length > 0 && Cmt.length > 0) {
+            $.ajax({
+                url: '/Motel/AddSupport',
+                type: 'post',
+                data: {
+                    name: Name,
+                    phone: SDT,
+                    mota: Cmt,
+
+            },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert(data.msg);
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                }
+
+            })
+        }
+    })
+</script>
+ 

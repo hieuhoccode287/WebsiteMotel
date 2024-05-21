@@ -1,0 +1,83 @@
+﻿@using WEBSITE_MOTEL.Models
+@{
+    TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
+}
+
+<header class="header" data-spy="affix" data-offset-top="480" id="view">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                 
+                    <li class="item"><a href="@Url.Action("Support","Motel")"><i class="fa fa-binoculars"></i><p>Trợ giúp</p></a></li>
+                    <li class="item"><a href="@Url.Action("News","Motel")"><i class="fa fa-newspaper-o"></i><p>Tin tức</p></a></li>
+                    <li class="item"><a href="@Url.Action("Guide","Motel")"><i class="fa fa-life-ring"></i><p>Hướng dẫn</p></a></li>
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 3 || tk.PhanQuyen == 1)
+                    {
+                        <li class="item"><a href="@Url.Action("Index", "RoomPost")" style="display:none"><i class="fa fa-upload"></i><p>Đăng tin</p></a></li>
+                        @*<li class="item"><a href="@Url.Action("Manage", "Manage")"><i class="fa fa-book"></i><p>Quản lý</p></a></li>*@
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("Index", "RoomPost")"><i class="fa fa-upload"></i><p>Đăng tin</p></a></li>
+                    }
+
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 2 || tk.PhanQuyen == 3)
+                    {
+                        <li class="item"><a href="@Url.Action("Manage", "Manage")" style="display:none"><i class="fa fa-book" hidden></i><p>Quản lí</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("Manage", "Manage")"><i class="fa fa-book"></i><p>Quản lí</p></a></li>
+                    }
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 2 || tk.PhanQuyen == 3)
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfo","Info")" style="display:none"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfo","Info")"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 3)
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfoCT","Info")" style="display:none"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfoCT","Info")"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 2)
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfoND","Info")" style="display:none"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfoND","Info")"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right" @*style="padding-left: 50px;*@>
+                    <!-- Sign-in, Sign-up-->
+                    @Html.Action("LoginLogout", "Motel")
+
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Show infomation acc -->
+        <section class="info-acc">
+            <div class="img-ava">
+                <img src="~/images/user.jpg">
+            </div>
+            <div class="info-user">
+                <p>Xin chào: <b style="color: red">Trịnh Công Trình</b></p>
+                <button class="manager-user">Quản lý</button>
+                <button class="sign-out">Đăng xuất</button>
+            </div>
+            <div class="clear"></div>
+        </section>
+    </nav>
+
+</header>
+

@@ -1,0 +1,163 @@
+﻿@using WEBSITE_MOTEL.Models
+@using PagedList.Mvc;
+@model PagedList.PagedList<WEBSITE_MOTEL.Models.RoomDetail>
+@helper Truncate(string s, int length)
+{
+    if (s.Length < length)
+    {
+        @s
+    }
+    else
+    {
+        @s.Substring(0, length)<text>...</text>
+    }
+}
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
+}
+
+<div style="overflow-x:auto;">
+    <table class="table">
+        <tr>
+            <th style="text-align:center">
+                Tên phòng
+            </th>
+            <th style="text-align:center">
+                Mô tả
+            </th>
+            <th style="text-align:center">
+                Giá cả
+            </th>
+            <th style="text-align:center">
+                Diện tích
+            </th>
+            <th style="text-align:center">
+                Địa chỉ
+            </th>
+            <th style="text-align:center">
+                Số lượng
+            </th>
+            <th style="text-align:center">
+                Ngày đăng
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @*Sử dụng helper để cắt TenSach lấy 50 ký tự*@
+                    @Html.DisplayFor(modelItem => item.sTenPhong)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Id_KhuVuc)
+                    </td>*@
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.sIDCT)
+                    </td>*@
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.sAnhBia)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.sMoTa)
+                </td>
+                <td>
+                    @Html.FormatValue(item.dGiaCa, "{0:#,##0}") đ
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.HoaHong)
+                    </td>*@
+                @* <td>
+
+                        @Html.DisplayFor(modelItem => item.sTrangThai)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.sDienTich) m<sup>2</sup>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sDiaChi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sSoluong)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Contents)
+                    </td>*@
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Doituong)
+                    </td>*@
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Map)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Video_link)
+                    </td>*@
+                <td>
+                    @*Định dạng hiển thị*@
+                    @Html.FormatValue(@item.dNgayCapNhat, "{0:dd/MM/yyyy}")
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div style="text-align: right;">
+    <a href="@Url.Action("ExportToExcel", "DSPhong")" class="btn btn-primary">Xuất Excel</a>
+</div>
+
+Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount
+<div class="MenuTrang">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+</div>
+
+<style>
+    .MenuTrang {
+        display: inline;
+        text-align: center;
+    }
+</style>
+
+<style>
+    /* Thanh trượt ngang */
+    div.table-container {
+        overflow-x: auto;
+    }
+
+    /* Thiết lập kiểu dáng của thanh trượt */
+    ::-webkit-scrollbar {
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: white;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #333333;
+    }
+
+    /* Thiết lập kiểu dáng của bảng */
+    table.table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+        table.table th,
+        table.table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+            font-size: 16px;
+            color: white;
+        }
+
+        table.table th {
+            background-color: #333333;
+            color: white;
+        }
+</style>
+
+

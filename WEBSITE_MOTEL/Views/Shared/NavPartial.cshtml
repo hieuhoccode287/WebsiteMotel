@@ -1,0 +1,128 @@
+﻿@using WEBSITE_MOTEL.Models
+
+
+@{
+    TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
+    CHUTRO ct = (CHUTRO)Session["ChuTro"];
+
+}
+
+
+<header class="header" data-spy="affix" data-offset-top="480" id="view">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <ul class="nav-mobile">
+                    <!--Nav for mobile-->
+                    <li><a href="@Url.Action("Search","Motel")"><i class="fa fa-search"></i><p>Tìm phòng</p></a></li>
+                    <li><a href="@Url.Action("Index","RoomPost")"><i class="fa fa-upload"></i><p>Đăng tin</p></a></li>
+                    <div class="clear"></div>
+                </ul>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li class="item"><a href="@Url.Action("Index","Motel")"><i class="fa fa-home"></i><p>Trang chủ<p></p></a></li>
+                    @*<li class="item dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user-secret"></i><p>Cho thuê <span class="caret"></span></p></a>
+                            <ul class="dropdown-menu">
+                                <li class="sub-item house"><a><i class="fa fa-bolt"></i><p>Nhà cho thuê</p></a></li>
+                                <li class="sub-item room"><a><i class="fa fa-bolt"></i><p>Phòng cho thuê</p></a></li>
+                                <li class="sub-item flat"><a><i class="fa fa-bolt"></i><p>Chung cư mini</p></a></li>
+                                <li class="sub-item store"><a><i class="fa fa-bolt"></i><p>Mặt bằng cho thuê</p></a></li>
+                            </ul>
+                        </li>*@
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 2)
+                    {
+                        <li class="item search_nearby"><a href="@Url.Action("Map", "Motel")" style="display:none"><i class="fa fa-map-marker"></i><p>Tìm quanh đây</p></a></li>
+                    }
+                    <li class="item"><a href="@Url.Action("Support","Motel")"><i class="fa fa-binoculars"></i><p>Trợ giúp</p></a></li>
+                    <li class="item"><a href="@Url.Action("News","Motel")"><i class="fa fa-newspaper-o"></i><p>Tin tức</p></a></li>
+                    <li class="item"><a href="@Url.Action("Guide","Motel")"><i class="fa fa-life-ring"></i><p>Hướng dẫn</p></a></li>
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 3 || tk.PhanQuyen == 1)
+                    {
+                        <li class="item"><a href="@Url.Action("Index", "RoomPost")" style="display:none"><i class="fa fa-upload"></i><p>Đăng tin</p></a></li>
+                        @*<li class="item"><a href="@Url.Action("Manage", "Manage")"><i class="fa fa-book"></i><p>Quản lý</p></a></li>*@
+                    }
+                    else if (ct.TrangThai == 0)
+                    {
+                <li class="item"><a href="#" onclick="showNotification()"><i class="fa fa-upload"></i><p>Đăng tin</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("Index", "RoomPost")"><i class="fa fa-upload"></i><p>Đăng tin</p></a></li>
+                    }
+
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 3)
+                    {
+                        <li class="item"><a href="@Url.Action("Manage", "Manage")" style="display:none"><i class="fa fa-book" hidden></i><p>Quản lí</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("Manage", "Manage")"><i class="fa fa-book"></i><p>Quản lí</p></a></li>
+                    }
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 2 || tk.PhanQuyen == 3)
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfo","Info")" style="display:none"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfo","Info")"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 3)
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfoCT","Info")" style="display:none"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfoCT","Info")"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 2)
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfoND","Info")" style="display:none"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("ManageInfoND","Info")"><i class="fa fa-user"></i><p>Thông tin cá nhân</p></a></li>
+                    }
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 2)
+                    {
+                        <li class="item"><a href="@Url.Action("CartP", "Cart")" style="display:none"><i class="fa fa-shopping-cart"></i><p>Đặt phòng</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("CartP", "Cart")"><i class="fa fa-shopping-cart"></i><p>Phòng đã đặt</p></a></li>
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Sign-in, Sign-up-->
+                    @Html.Action("LoginLogout", "Motel")
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Show infomation acc -->
+        <section class="info-acc">
+            <div class="img-ava">
+                <img src="~/images/user.jpg">
+            </div>
+            <div class="info-user">
+                <p>Xin chào: <b style="color: red">Trịnh Công Trình</b></p>
+                <button class="manager-user">Quản lý</button>
+                <button class="sign-out">Đăng xuất</button>
+            </div>
+            <div class="clear"></div>
+        </section>
+    </nav>
+
+</header>
+<script>
+function showNotification() {
+  alert("Tài khoản hiện chưa được duyệt để đăng tin.");
+}
+</script>

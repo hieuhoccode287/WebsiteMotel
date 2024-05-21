@@ -1,0 +1,46 @@
+﻿@using WEBSITE_MOTEL.Models
+@model IEnumerable<WEBSITE_MOTEL.Models.KHUVUC>
+@using (Html.BeginForm("SearchKQ", "Motel", FormMethod.Get))
+{ 
+        <div>
+            <div class="title-side">
+                TÌM PHÒNG
+            </div>
+            <div class="row">
+                <select class="select" name="IdKV">
+                    <option>Quận/Huyện</option>
+                    @foreach (var item in Model)
+                    {
+                        <option>@item.Ten</option>
+                    }
+                </select>
+            </div>
+
+            <div class="row">
+                <select class="select" name="IdSL">
+                    <option>Số người ở</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                </select>
+                <select class="select" name="IdDT">
+                    <option>Diện tích(m2)</option>
+                    <option>Dưới 15</option>
+                    <option>15 - 25</option>
+                    <option>25 - 35</option>
+                    <option>Trên 35</option>
+                </select>
+                <select class="select" name="IdGia">
+                    <option>Mức giá?</option>
+                    <option>500000 - 1000000</option>
+                    <option>1000000 - 1500000</option>
+                    <option>1500000 - 2000000</option>
+                    <option>Trên 2000000</option>
+                    <option>Trên 2000000</option>
+                </select>
+            </div>
+            <input type="submit" value="Tìm kiếm" class="btn btn-default" />
+        </div>
+}
+
+

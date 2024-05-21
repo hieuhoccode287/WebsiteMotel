@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Guide";
+    Layout = "~/Views/_LayoutUser.cshtml";
+}
+<div class="nav-text">
+    <ol>
+        <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
+        <li id="arrow1">  <i class="fa fa-angle-right"></i>  </li>
+        <li class="active" id="search-target">Hướng dẫn</li>
+    </ol>
+</div>
+<section class="wrap-content">
+    <div class="content" style="border: none;">
+        <!-- Nav tabs -->
+        <ul class="guide_tab nav nav-tabs tab" role="tablist">
+            <li role="presentation" class="active"><a href="#support1" role="tab" data-toggle="tab">HƯỚNG DẪN ĐĂNG KÝ</a></li>
+            <li role="presentation" class=""><a href="#support2" role="tab" data-toggle="tab">HƯỚNG DẪN ĐĂNG TIN</a></li>
+            <li role="presentation" class=""><a href="#support3" role="tab" data-toggle="tab">HƯỚNG DẪN TÌM PHÒNG</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="guide_content tab-content">
+            <div role="tabpanel" class="tab-pane active" id="support1">
+                <h4 style="color: red">Lợi ích khi là thành viên của <i>timphongcungban.com</i></h4>
+                <p>
+                    -  Đăng tin rao cho thuê phòng trọ, nhà cho thuê, cho thuê căn  hộ, tìm người ở ghép hiệu quả, chuyên nghiệp, lượt truy cập cao nhất, đứng top 1 từ khóa cho thuê phòng trọ, nhà trọ, thuê nhà nguyên căn, tìm người ở ghép...</br>
+                    -  Quản lý các tin đã đăng: dễ dàng làm mới, đăng tin, sửa tin, hạ tin nhưng vẫn còn lưu lại, xóa tin đăng ở trang cá nhân.
+                </p>
+                </br>
+                <strong>Bước 1:</strong> Click vào đề mục đăng ký ở góc phải trên cùng trang.</br>
+                <!--Chèn ảnh-->
+                <strong>Bước 2:</strong> Điền đầy đủ thông tin vào mẫu, tất cả đều bắt buộc và chính xác. Click đăng ký để hoàn tất quá trình.</br>
+                <!--Chèn ảnh-->
+                <i>Quý khách vui lòng nhớ tên tài khoản và mật khẩu đã đăng ký để tiến hành quá trình đăng nhập vào hệ thống và đăng tin</i>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="support3">
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="support2">
+                <p style="color: blue">Sau khi đã đăng ký tài khoản, để đăng tin trên timphongcungban.com bạn vui lòng đăng nhập tài khoản, sau đó vào phần <i>ĐĂNG TIN</i> để đăng tin mới như ảnh bên dưới:</p>
+                <!--Chèn ảnh-->
+                <i>Lưu ý khi đăng tin:</i>
+                <p>+  Điền đầy đủ các thông tin bắt buộc vào các ô nhập liệu trong phần đăng tin.</p>
+                <p>+  Phần giá cho thuê, vui lòng nhập chính xác 1 giá duy nhất (Không nhập giá từ ....đến ....) và chọn đúng đơn vị giá là triệu/tháng hoặc nghìn/tháng.</p>
+                <p>+  Diện tích nhập đúng 1 diện tích duy nhất (Không nhập diện tích từ ....đến ....)</p>
+                <p>+ Sau khi nhập đầy đủ các thông tin, bấm ĐĂNG TIN NGAY và chờ vài giây để tin bạn hiển thị trên website, nếu đăng tin thành công hệ thống sẽ báo bạn đã đăng tin thành công, nếu hệ thống cảnh báo màu đỏ, các ô chọn màu bị sai, vui lòng nhập lại cho chính xác và bấm ĐĂNG TIN NGAY.</p>
+            </div>
+        </div>
+    </div>
+</section>

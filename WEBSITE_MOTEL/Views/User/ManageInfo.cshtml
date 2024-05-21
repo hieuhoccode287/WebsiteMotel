@@ -1,0 +1,120 @@
+﻿@model WEBSITE_MOTEL.Models.Admin
+@using WEBSITE_MOTEL.Models
+@{
+    ViewBag.Title = "Manage";
+    Layout = "~/Views/_LayoutUser.cshtml";
+
+}
+@{
+    TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
+}
+
+<div class="nav-text">
+    <ol>
+        <li><a href="home.html">Trang chủ</a></li>
+        <li id="arrow1"><i class="fa fa-angle-right"></i></li>
+        <li class="active" id="search-target">Quản lý</li>
+    </ol>
+</div>
+<section class="wrap-content">
+    <ul class="nav nav-tabs tab" role="tablist">
+        <li role="presentation" class="info-user">
+            <a href="#thong_tin_ca_nhan"
+               aria-controls="thong_tin_ca_nhan" role="tab" data-toggle="tab">Thông tin cá nhân</a>
+        </li>
+    </ul>
+    <div class="content" style="border: none;">
+        <div class="wrapper"
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane" id="thong_tin_ca_nhan">
+
+        <form id="form_thong_tin_ca_nhan" class="js-form-thong-tin-ca-nhan">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label for="username">Tài khoản</label>
+                        <input type="text" class="form-control" name="sTaiKhoan" id="" placeholder="" value="@Model.sTaiKhoan" disabled="">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label for="first_name">Họ và tên</label>
+                        <input type="text" class="form-control" name="sHoTen" id="first_name" placeholder="" value="@Model.sHoten">
+                    </div>
+                </div>
+            </div>
+            @if (tk.PhanQuyen == 1)
+            {
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <label for="phone">Điện thoại</label>
+                            <input type="text" class="form-control" name="sSDT" id="phone" placeholder="" value="@Model.sSDTAD">
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (tk.PhanQuyen == 2)
+            {
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <label for="phone">Điện thoại</label>
+                            <input type="text" class="form-control" name="sSDT" id="phone" placeholder="" value="@Model.sSDTCT">
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (tk.PhanQuyen == 3)
+            {
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <label for="phone">Điện thoại</label>
+                            <input type="text" class="form-control" name="sSDT" id="phone" placeholder="" value="@Model.sSDTND">
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" name="sEmail" id="email" placeholder="" value="@Model.sEmail">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label for="password_new">Mật khẩu mới</label>
+                        <input type="password" class="form-control" name="sMatKhau" id="password_new" placeholder="" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <label for="password_new2">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" name="sMatKhauNhapLai" id="password_new2" placeholder="" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="avatar">
+                <img src="./images/user.jpg" id="displayImg">
+                <div>
+                    Thay ảnh đại diện:
+                    <input type="file" onchange="previewFile()">
+                </div>
+            </div>
+            <input type="hidden" name="action" value="update_user_info">
+            <button type="submit" class="btn btn-primary" id="update">Cập nhật</button>
+        </form>
+
+    </div>
+    </div>
+    </div>
+    </div>
+</section>

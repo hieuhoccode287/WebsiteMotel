@@ -1,0 +1,99 @@
+﻿@using WEBSITE_MOTEL.Models
+@using PagedList.Mvc;
+@model PagedList.PagedList<WEBSITE_MOTEL.Models.HOTRO>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
+}
+
+<div class="row ">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    @using (Html.BeginForm("Index", "HoTro", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
+                    {
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
+                        </div>
+                    }
+                    <table class="table">
+                        <tr>
+                            <th style="text-align:center">
+                                Họ tên
+                            </th>
+                            <th style="text-align:center">
+                                Số điện thoại
+                            </th>
+                            <th style="text-align:center">
+                                Mô tả
+                            </th>
+                            <th style="text-align:right">
+                                Hành động
+                            </th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Ten)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Sdt)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MotaVande)
+                                </td>
+                                <td style="text-align:right">
+
+                                   @* <a href="@Url.Action("ChiTiet", new { id = item.Id })" class="btn btn-success" role="button">Duyệt</a> *@|
+                                    <a href="@Url.Action("XoaHoTro", new { id = item.Id })" class="btn btn-danger" role="button" onclick="return confirm('Bạn có chắc chắn muốn xóa hỗ trợ này không?')">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    <div style="text-align: right;">
+                        <a href="@Url.Action("ExportExcel", "HoTro")" class="btn btn-primary">Xuất Excel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="alertContainer">
+            @if (!string.IsNullOrEmpty(TempData["ThongBao"] as string))
+            {
+                <div class="alert alert-success">
+                    @TempData["ThongBao"]
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#alertContainer").fadeOut("slow");
+        }, 5000); // 5 giây
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="MenuTrang">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
+        </div>
+    </div>
+</div>
+
+<style>
+    .MenuTrang {
+        display: inline;
+        text-align: center;
+    }
+</style>

@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "News";
+    Layout = "~/Views/_LayoutUser.cshtml";
+}
+
+<div class="nav-text">
+    <ol>
+        <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
+        <li id="arrow1">  <i class="fa fa-angle-right"></i>  </li>
+        <li class="active" id="search-target">Tin tức</li>
+    </ol>
+</div>
+<section class="wrap-content">
+    <div class="content" style="border: none;">
+        <div class="news" id="data-new">
+            <div class="row-news">
+                <div class="news-item col-xs-12 col-sm-6 col-md-4">
+                    <div class="thumbnail item" id="news1">
+                        <a>
+                            <img class="img-responsive" src="~/images/img-news/img2.jpg">
+                            <p class="title">Những điều cần biết khi tìm phòng trọ</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="news-item col-xs-12 col-sm-6 col-md-4">
+                    <div class="thumbnail item" id="news2">
+                        <a>
+                            <img class="img-responsive" src="~/images/img-news/img3.jpg" alt="vi-sao-chon-nganh-hot-van-that-nghiep">
+                            <p class="title">Vì sao chọn ngành 'hot' vẫn thất nghiệp?</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="news-item col-xs-12 col-sm-6 col-md-4">
+                    <div class="thumbnail item" id="news3">
+                        <a>
+                            <img class="img-responsive" src="~/images/img-news/img4-1.jpg" alt="sinh-vien-my-chon-nganh-hoc-the-nao">
+                            <p class="title">Sinh viên Mỹ chọn ngành học thế nào?</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row-news">
+                <div class="news-item col-xs-12 col-sm-6 col-md-4">
+                    <div class="thumbnail item" id="news4">
+                        <a>
+                            <img class="img-responsive" src="~/images/img-news/img5-1.jpg" alt="sinh-vien-hao-hung-tham-gia-ngay-hoi-dinh-huong-nghe-nghiep">
+                            <p class="title">Sinh viên hào hứng tham gia ngày hội Định hướng nghề nghiệp</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="news-item col-xs-12 col-sm-6 col-md-4">
+                    <div class="thumbnail item" id="news5">
+                        <a>
+                            <img class="img-responsive" src="~/images/img-news/img1.jpg" alt="y-tuong-kinh-doanh-nha-tro-ngoi-khong-moi-thang-kiem-tram-trieu">
+                            <p class="title">Ý tưởng kinh doanh nhà trọ, ngồi không mỗi tháng kiếm trăm triệu?</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

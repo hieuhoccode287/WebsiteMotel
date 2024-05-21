@@ -1,0 +1,189 @@
+﻿@model IEnumerable<WEBSITE_MOTEL.Models.TAIKHOAN>
+@{
+    ViewBag.Title = "DangKy";
+    Layout = "~/Views/_LayoutUser.cshtml";
+}
+
+
+<div id="id_back_top">
+    <h2 style="text-align:center; line-height: 5.2; margin-bottom: 0.5rem;">ĐĂNG KÝ</h2>
+</div>
+<div id="header"></div>
+<div class="main">
+    <div class="login_form">
+        @using (Html.BeginForm("ADDTaiKhoan", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group">
+                <input placeholder="Họ và tên*" name="HoTen" type="text" id="user_name" class="form-control">
+            </div>
+            <div class="form-group">
+                <input placeholder="Email*" name="Email" type="text" id="user_email" class="form-control">
+            </div>
+            <div class="form-group">
+                <input placeholder="Số điện thoại*" name="SDT" type="text" id="user_sdt" class="form-control">
+            </div>
+            <div class="form-group">
+                <input placeholder="Căn cước công dân*" name="CCCD" type="text" id="user_cccd" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Hình ảnh CMND/CCCD (mặt trước):</label>
+                <input type="file" id="user_card_photo" accept="image/*" name="idCardPhotos1" required />
+                <br />
+                <div class="filearray_front"></div>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                <script>
+                    $(document).ready(function () {
+                        $("input[name='idCardPhotoFront']").change(function () {
+                            $(".filearray_front").empty();
+                            var files = $(this)[0].files;
+                            for (var i = 0; i < files.length; i++) {
+                                var file = files[i];
+                                var reader = new FileReader();
+                                reader.onload = function (e) {
+                                    var img = $('<img width="150" height="100">');
+                                    img.attr('src', e.target.result);
+                                    $(".filearray_front").append(img);
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Hình ảnh CMND/CCCD (mặt sau):</label>
+                <input type="file" id="user_card_photo_2" accept="image/*" name="idCardPhotos2" required />
+                <br />
+                <div class="filearray_back"></div>
+                <script>
+                    $(document).ready(function () {
+                        $("input[name='idCardPhotoBack']").change(function () {
+                            $(".filearray_back").empty();
+                            var files = $(this)[0].files;
+                            for (var i = 0; i < files.length; i++) {
+                                var file = files[i];
+                                var reader = new FileReader();
+                                reader.onload = function (e) {
+                                    var img = $('<img width="150" height="100">');
+                                    img.attr('src', e.target.result);
+                                    $(".filearray_back").append(img);
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            <div class="form-group">
+                <input placeholder="Địa chỉ*" name="DiaChi" type="text" id="user_dc" class="form-control">
+            </div>
+            <div class="form-group">
+                <input placeholder="Ngày sinh*" name="NgaySinh" type="date" id="user_ns" class="form-control">
+            </div>
+            <div class="form-group">
+                <input placeholder="Tên đăng nhập*" name="TenDN" type="text" id="user_tendn" class="form-control">
+            </div>
+            <div class="form-group">
+                <input placeholder="Mật khẩu*" name="MatKhau" type="password" id="user_pass" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="user_re_pass">Nhập lại mật khẩu: <span class="red">*</span></label>
+                <input placeholder="Nhập lại mật khẩu*" name="MatKhauNL" type="password" id="user_re_pass" class="form-control">
+            </div>
+            <div class="item">
+                <div class="item_input">
+                    <label style="width:max-content;">Hình thức: <span class="red">(*)</span></label>
+                    <div class="item_input">
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" id="chutro" value="2" name="phanquyen">Chủ trọ
+                            </label>
+                        </div>
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <input type="radio" class="form-check-input" id="nguoidung" value="3" name="phanquyen">Người dùng
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item_message">
+                <p class="message text-danger"></p>
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="action" value="register">
+                <button class="btnRe btn btn-warning btn-block btn-lg text-white" id="btnDangki" type="submit">Đăng ký</button>
+            </div>
+        }
+        <div class="login_form border-0">
+            <div class="form-text">
+                <p> Đã có tài khoản? </p>
+            </div>
+            <div class="form-group">
+                <a href="@Url.Action("DangNhap","User")" class="btn btn-outline-dark btn-block font-weight-bold">ĐĂNG NHẬP NGAY</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/jvdangky.js"></script>
+<script>
+    $(document).on('click', "#btnDangki", function () {
+    // Lấy các giá trị từ các trường nhập liệu
+    var name = $('#user_name').val();
+    var mail = $('#user_email').val();
+    var sdt = $('#user_sdt').val();
+    var dc = $('#user_dc').val();
+    var ns = $('#user_ns').val();
+    var cccd = $('#user_cccd').val();
+    var tdn = $('#user_tendn').val();
+    var mk = $('#user_pass').val();
+    var mknl = $('#user_re_pass').val();
+    var phanquyen = $('input[name="phanquyen"]:checked').val();
+
+    // Tạo FormData object để chứa dữ liệu form và hình ảnh
+    var formData = new FormData();
+    formData.append('HoTen', name);
+    formData.append('Email', mail);
+    formData.append('SDT', sdt);
+    formData.append('DiaChi', dc);
+    formData.append('NgaySinh', ns);
+    formData.append('CCCD', cccd);
+    formData.append('Taikhoan', tdn);
+    formData.append('Matkhau', mk);
+    formData.append('Phanquyen', phanquyen);
+
+    // Lấy danh sách hình ảnh đã chọn (mặt trước CCCD)
+    var idCardPhotos = document.getElementById('user_card_photo').files;
+    for (var i = 0; i < idCardPhotos.length; i++) {
+        formData.append('idCardPhotos', idCardPhotos[i]);
+    }
+
+    // Lấy danh sách hình ảnh mặt sau CCCD đã chọn
+    var idCardPhotos2 = document.getElementById('user_card_photo_2').files;
+    for (var i = 0; i < idCardPhotos2.length; i++) {
+        formData.append('idCardPhotos2', idCardPhotos2[i]);
+    }
+
+    // Gửi dữ liệu thông qua Ajax
+    $.ajax({
+        url: '/User/ADDTaiKhoan',
+        type: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.code === 200) {
+                alert(data.msg);
+                location.href = '@Url.Action("DangNhap", "User")';
+            } else {
+                alert(data.msg);
+            }
+        },
+        error: function () {
+            alert("Đăng kí thất bại. Vui lòng thử lại sau.");
+        }
+    });
+});
+</script>

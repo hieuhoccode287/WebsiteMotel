@@ -1,0 +1,242 @@
+﻿body {
+    font-family: 'Open Sans', Tahoma, Arial, sans-serif;
+}
+
+#id_back_top {
+    width: 100%;
+    height: 65px;
+    float: left;
+}
+
+#header {
+    height: 65px;
+}
+
+.main {
+    width: 100%;
+    display: -webkit-box;
+}
+
+section {
+    margin: 15px auto;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none black;
+}
+
+.pro_post_form_top {
+    width: 100%;
+    float: left;
+    margin-bottom: 20px;
+}
+
+    .pro_post_form_top .title {
+        width: 100%;
+        float: left;
+        color: #666666;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .pro_post_form_top a {
+        color: #0054a0;
+    }
+
+.pro_post_form_left {
+    width: 30%;
+    float: left;
+}
+
+.pro_post_form_help {
+    width: 100%;
+    float: left;
+    margin-bottom: 20px;
+    border: 1px solid #cecece;
+}
+
+    .pro_post_form_help .title {
+        width: 100%;
+        float: left;
+        background: #f9f9f9;
+        padding: 7px 10px 7px 10px;
+        font-weight: bold;
+        border-bottom: 1px solid #cecece;
+    }
+
+    .pro_post_form_help .content {
+        padding: 10px;
+        margin: 10px 0px 10px 0px;
+        min-height: 100px;
+    }
+
+.pro_post_form_mau {
+    width: 100%;
+    float: left;
+    border: 1px solid #cecece;
+}
+
+    .pro_post_form_mau .title {
+        width: 100%;
+        float: left;
+        background: #f9f9f9;
+        padding: 7px 10px 7px 10px;
+        font-weight: bold;
+        border-bottom: 1px solid #cecece;
+    }
+
+    .pro_post_form_mau .examples {
+        width: 100%;
+        float: left;
+        list-style: none;
+        padding: 10px 10px 0 10px;
+    }
+
+        .pro_post_form_mau .examples > li {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+
+.pro_post_form_right {
+    width: 60%;
+    padding-right: 15px;
+    float: left;
+    margin: 0px 40px;
+}
+
+@media screen and (max-width: 1000px) {
+    .pro_post_form_left {
+        display: none;
+        /* The width is 100%, when the viewport is 800px or smaller */
+    }
+
+    .item {
+        width: 100%;
+    }
+}
+
+.user_form_pro {
+    width: 100%;
+    font-family: tahoma;
+}
+
+    .user_form_pro .user_form_pro_content {
+        width: 100%;
+        padding: 0px 0px 30px 0px;
+        background: #fff;
+    }
+
+.form_item {
+    width: 100%;
+    float: left;
+    padding: 5px 0px;
+}
+
+.user_form_pro_content .item {
+    padding: 8px 0;
+    width: 100%;
+    float: left;
+    line-height: 36px;
+}
+
+.user_form_pro_content div label {
+    float: left;
+    width: 100px;
+    line-height: 36px;
+    min-height: 10px;
+}
+
+.item_input_image {
+    width: 100%;
+    float: left;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+}
+
+.user_form_pro .tit2 {
+    width: 100%;
+    float: left;
+    line-height: 20px;
+    margin-bottom: 10px;
+}
+
+.user_form_pro .user_form_pro_content {
+    width: 100%;
+    padding: 0px 0px 30px 0px;
+    background: #fff;
+}
+
+.user_form_pro_content .item {
+    padding: 8px 0;
+    width: 100%;
+    float: left;
+    line-height: 36px;
+}
+
+.user_form_pro_content div label {
+    float: left;
+    width: 100px;
+    line-height: 36px;
+    min-height: 10px;
+}
+
+.red {
+    color: red;
+}
+
+.user_form_pro_content .item_input {
+    padding-left: 100px;
+}
+
+.user_form_pro_content div input[type=text],
+.user_form_pro_content div input[type=number],
+.user_form_pro_content div input[type=password] {
+    border: 1px solid #dfdfdf;
+    padding: 5px;
+    width: 100%;
+    height: 33px;
+}
+
+.user_form_pro_content .input_des {
+    border: 1px solid #dfdfdf;
+    padding: 5px;
+    width: 100%;
+    height: 68px;
+    float: left;
+}
+
+.module_title {
+    width: 100%;
+    float: left;
+    color: #3d4d65;
+    overflow: hidden;
+    margin-bottom: 10px;
+    line-height: 26px;
+    text-transform: uppercase;
+}
+
+.user_form_pro_content .item .item_sub {
+    width: 50%;
+    float: left;
+}
+
+.form-check-label {
+    width: 150px;
+}
+
+@media screen and (max-width: 800px) {
+    .pro_post_form_left {
+        display: none;
+        /* The width is 100%, when the viewport is 800px or smaller */
+    }
+
+    .user_form_pro_content .item .item_sub {
+        width: 100%;
+    }
+}

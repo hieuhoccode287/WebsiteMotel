@@ -1,0 +1,95 @@
+﻿@using WEBSITE_MOTEL.Models
+@model WEBSITE_MOTEL.Models.NguoiDung
+@{
+    ViewBag.Title = "Manage";
+    Layout = "~/Views/_LayoutUser.cshtml";
+
+}
+@{
+    TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
+}
+<div class="nav-text">
+    <ol>
+        <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
+        <li id="arrow1"><i class="fa fa-angle-right"></i></li>
+        <li class="active" id="search-target">Quản lý thông tin</li>
+    </ol>
+</div>
+@using (Html.BeginForm("ManageInfoND", "Info", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+<section class="wrap-content">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.sId)
+    <div class="content" style="border: none;">
+        <div class="wrapper">
+            <div class="tab-content">
+                <div role="tabpanel" @*class="tab-pane"*@ id="thong_tin_ca_nhan">
+                    <div class="table-responsive">
+                        <form id="form_thong_tin_ca_nhan" class="js-form-thong-tin-ca-nhan">
+
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <label for="username">Tài khoản</label>
+                                        <input type="text" class="form-control" name="sTaiKhoanND" id="" placeholder="" value="@Model.sTaiKhoanND" disabled="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <label for="first_name">Họ và tên</label>
+                                        <input type="text" class="form-control" name="sHotenND" id="first_name" placeholder="" value="@Model.sHotenND">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <label for="phone">Điện thoại</label>
+                                        <input type="text" class="form-control" name="sSDTND" id="phone" placeholder="" value="@tk.SDT">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" name="sEmailND" id="email" placeholder="" value="@tk.Email">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <label for="password_new">Mật khẩu mới</label>
+                                        <input type="text" class="form-control" name="sMatKhauND" id="password_new" placeholder="" value="@Model.sMatKhauND">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12">
+                                        <label for="password_new2">Xác nhận mật khẩu mới</label>
+                                        <input type="text" class="form-control" name="sMatKhauNhapLai" id="password_new2" placeholder="" value="">
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <input type="hidden" name="action" value="update_user_info">
+                            <button type="submit" class="btn btn-primary" formmethod="post" id="update">Cập nhật</button>
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+}

@@ -1,0 +1,29 @@
+﻿@using WEBSITE_MOTEL.Models
+@{
+    TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
+}
+@if (Session["TaiKhoan"] == null)
+{
+
+    <li>
+        <a href="~/User/DangKy" style="color: blue; font-weight: bolder; background-color: bisque; border-radius: 14px; margin-top: 12px;">
+            <span class="glyphicon glyphicon-user"></span>Đăng ký
+
+        </a>
+    </li>
+
+    <li><a href="~/User/DangNhap?id=1" style="color: blue; font-weight: bolder; background-color: bisque; border-radius: 14px; margin-top: 12px;"><span class="glyphicon glyphicon-log-in"></span> Đăng nhập</a></li>
+}
+else
+{
+
+    <li>
+        <a href="#" style="color: blue; font-weight: bolder; background-color: bisque; margin-top: 0px;border-radius:14px;">
+            <span class="glyphicon glyphicon-user"></span> Xin chào: @tk.HoTen
+        </a>
+    </li>
+    <li> <a href="@Url.Action("DangXuat","User")" style="color: blue; font-weight: bolder; background-color: bisque; padding-right: 50px; border-radius: 14px;"><span class="glyphicon glyphicon-log-out"></span> Đăng xuất</a></li>
+
+
+}
+

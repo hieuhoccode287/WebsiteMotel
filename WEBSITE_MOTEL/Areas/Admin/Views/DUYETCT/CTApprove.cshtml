@@ -1,0 +1,176 @@
+﻿@model IEnumerable<WEBSITE_MOTEL.Models.TaiKhoan>
+@using WEBSITE_MOTEL.Models
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "CTApprove";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
+}
+
+<h2>Danh sách các chủ trọ chưa được duyệt</h2>
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    @using (Html.BeginForm("CTApprove", "DUYETCT", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
+                    {
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
+                        </div>
+                    }
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tài khoản</th>
+                                <th>Mật khẩu</th>
+                                <th>Họ tên</th>
+                                <th>Email</th>
+                                <th>SĐT</th>
+                                <th>Số CCCD</th>
+                                <th>Ảnh CCCD(Mặt trước)</th>
+                                <th>Ảnh CCCD(Mặt sau)</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.sTaiKhoanCT)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.sMatKhauCT)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.sHotenCT)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.sEmailCT)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.sSDTCT)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.sCCCD)
+                                    </td>
+                                    <td>
+                                        <div class="item active">
+                                            <div class="image-container">
+                                                <img src="~/images/@item.sidcardphoto" alt="anh1" class="zoomable-image" style="width: 145px; height: 110px; border-radius:5%;">
+                                                <div class="zoomed-image"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="item">
+                                            <div class="image-container">
+                                                <img src="~/images/@item.sidcardphoto2" alt="anh2" class="zoomable-image" style="width: 145px; height: 110px; border-radius:5%;">
+                                                <div class="zoomed-image"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("DuyetCT", new { id = item.sId })" class="btn btn-success" role="button">Duyệt</a> |
+                                        <a href="@Url.Action("BoDuyetCT", new { id = item.sId })" class="btn btn-danger" role="button">Từ Chối</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Sự kiện click nút "Duyệt Phòng"
+        $(".table").on("click", "#st3", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/DUYETCT/DuyetCT",
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    // Hiển thị thông báo
+                    alert("Đã Duyệt thành công");
+                    // Reload trang để cập nhật lại danh sách phòng trọ
+                    window.location.reload();
+                },
+                error: function () {
+                    // Hiển thị thông báo lỗi
+                    alert("Duyệt Phòng không thành công!");
+                }
+            });
+        });
+
+
+        $(".table").on("click", "#st4", function () {
+            var id = $(this).data("id");
+            if (confirm("Bạn có chắc chắn muốn xóa tài khoản này không?")) {
+                $.ajax({
+                    url: "/DUYETCT/BoDuyetCT",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (result) {
+                        // Hiển thị thông báo
+                        alert("Đã bỏ duyệt tài khoản thành công");
+                        // Reload trang để cập nhật lại danh sách phòng trọ
+                        window.location.reload();
+                    },
+                    error: function () {
+                        // Hiển thị thông báo lỗi
+                        alert("Bỏ duyệt tài khoản không thành công!");
+                    }
+                });
+            }
+        });
+    });
+</script>
+<style>
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .zoomable-image {
+        width: 300px;
+        height: 200px;
+        border-radius: 5%;
+    }
+
+    .zoomed-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none;
+    }
+
+    .zoomable-image:hover + .zoomed-image {
+        display: block;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $(".zoomable-image").mousemove(function (e) {
+            var $zoomedImage = $(this).siblings(".zoomed-image");
+            var imageWidth = $(this).width();
+            var imageHeight = $(this).height();
+            var mouseX = e.pageX - $(this).offset().left;
+            var mouseY = e.pageY - $(this).offset().top;
+            var zoomX = (mouseX / imageWidth) * 100;
+            var zoomY = (mouseY / imageHeight) * 100;
+            $zoomedImage.css({
+                "background-image": "url(" + $(this).attr("src") + ")",
+                "background-position": zoomX + "% " + zoomY + "%"
+            });
+        });
+    });
+</script>
