@@ -19,71 +19,51 @@ namespace WEBSITE_MOTEL.Controllers
         public ActionResult DangNhap()
         {
             return View();
-            
         }
+
         // GET: User
         [HttpPost]
         public ActionResult DangNhap(FormCollection collection)
         {
-            
-            ViewBag.TenDN = "Người dùng";
             var sTenDN = collection["TaiKhoan"];
             var sMatKhau = collection["MatKhau"];
-             
+
             if (String.IsNullOrEmpty(sTenDN))
             {
-                ViewData["Err1"] = "Bạn chưa nhập tên đăng nhập";
+                TempData["Message"] = "Bạn chưa nhập tên đăng nhập";
             }
             else if (String.IsNullOrEmpty(sMatKhau))
             {
-                ViewData["Err2"] = "Phải nhập mật khẩu";
+                TempData["Message"] = "Phải nhập mật khẩu";
             }
             else
             {
-                
                 TAIKHOAN tk = data.TAIKHOANs.SingleOrDefault(n => n.TaiKhoan == sTenDN && n.MatKhau == sMatKhau);
-               
+
                 if (tk != null)
                 {
                     CHUTRO ct = data.CHUTROs.FirstOrDefault(n => n.Id_TaiKhoan == tk.Id);
                     Session["ChuTro"] = ct;
                     Session["TaiKhoan"] = tk;
-                    tk.PhanQuyen.GetValueOrDefault();
-                    ViewBag.ThongBao = "Chúc mừng đăng nhập thành công";
-                    /*Session["PhanQuyen"] = tk.PhanQuyen;*/
 
-                    TAIKHOAN dk = Session["TaiKhoan"] as TAIKHOAN;
-                    if (tk.PhanQuyen == 1)
-                    {
-                        return RedirectToAction("Index", "Motel");
-                    }
-                    else if (tk.PhanQuyen == 2)
-                    {
-                        return RedirectToAction("Index", "Motel");
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Motel");
-                    }
                     if (collection["remember"].Contains("true"))
                     {
                         Response.Cookies["TaiKhoan"].Value = sTenDN;
                         Response.Cookies["MatKhau"].Value = sMatKhau;
                         Response.Cookies["TaiKhoan"].Expires = DateTime.Now.AddDays(1);
                         Response.Cookies["MatKhau"].Expires = DateTime.Now.AddDays(1);
-                        return RedirectToAction("Index", "Motel");
                     }
-                    return RedirectToAction("Index", "Motel");
 
+                    return RedirectToAction("Index", "Motel");
                 }
                 else
                 {
-                    ViewBag.ThongBao = "Sai mật khẩu hoặc tài khoản";
+                    TempData["Message111"] = "Sai mật khẩu hoặc tài khoản";
                 }
             }
             return View();
-
         }
+
         public ActionResult DangXuat()
         {
             FormsAuthentication.SignOut();

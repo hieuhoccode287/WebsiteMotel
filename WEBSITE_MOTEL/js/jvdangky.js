@@ -7,7 +7,7 @@ $(document).ready(function () {
     $(".btnRe").click(function (e) {
         var user_name = $("#user_name").val();
         var user_tendn = $("#user_tendn").val();
-        var use_phone = $("#use_phone").val();
+        var use_phone = $("#user_sdt").val();
         var user_email = $("#user_email").val();
         var user_pass = $("#user_pass").val();
         var user_re_pass = $("#user_re_pass").val();
@@ -15,7 +15,7 @@ $(document).ready(function () {
         var sttError = 1;
         if (user_name == null || user_name == '') {
             $("#user_name").focus();
-            $(".item_message .message").html('Vui lòng nhập họ và tên.');
+            $(".item_message .message").html('Vui lòng nhập họ tên.');
         } else if (user_tendn == null || user_tendn == '') {
             $("#user_tendn").focus();
             $(".item_message .message").html('Vui lòng nhập tên đăng nhập.');
@@ -23,9 +23,10 @@ $(document).ready(function () {
        /* else if (user_tendn != null) {
             $("#user_tendn").focus();
             $(".item_message .message").html('Tên đăng nhập đã tồn tại.');
-        }*/ else if (use_phone == null || use_phone == '') {
-            $("#use_phone").focus();
-            $(".item_message .message").html('Vui lòng nhập số điện thoại liên lạc.');
+        }*/
+        else if (use_phone == null || use_phone == '') {
+            $("#user_sdt").focus();
+            $(".item_message .message").html('Vui lòng nhập số điện thoại.');
         }
         else if (user_email == null || user_email == '') {
             $("#user_email").focus();

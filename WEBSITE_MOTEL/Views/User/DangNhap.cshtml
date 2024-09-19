@@ -1,27 +1,39 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "DangNhap";
     Layout = "~/Views/_LayoutUser.cshtml";
 }
 
-
-<div id="id_back_top">    <h2 style="text-align:center; line-height:5.2; margin-bottom:0.5rem;">ĐĂNG NHẬP</h2></div>
+<div id="id_back_top">
+    <h2 style="text-align:center; line-height:5.2; margin-bottom:0.5rem;">ĐĂNG NHẬP</h2>
+</div>
 <div id="header"></div>
-<div class="login_form" style="">
+<div class="login_form" style="width: 850px; margin: 0 auto;">
+    @* Phần hiển thị thông báo lỗi hoặc thành công *@
+    @if (TempData["Message111"] != null)
+    {
+        <div class="alert alert-info text-center">
+            @TempData["Message111"]
+        </div>
+    }
+
     @*<div class="form-group">
-        <a href="#" class="btn btn-primary btn-block ">
-            <i class="fab fa-facebook-f"></i> Đăng nhập bằng tài khoản Facebook
-        </a>
-    </div>
-    <div class="form-group">
-        <a href="#" class="btn btn-danger btn-block">
-            <i class="fab fa-google text-white"></i> Đăng nhập bằng tài khoản Google
-        </a>
-    </div>
-    <div class="text-center"> Hoặc </div>*@
+            <a href="#" class="btn btn-primary btn-block ">
+                <i class="fab fa-facebook-f"></i> Đăng nhập bằng tài khoản Facebook
+            </a>
+        </div>
+        <div class="form-group">
+            <a href="#" class="btn btn-danger btn-block">
+                <i class="fab fa-google text-white"></i> Đăng nhập bằng tài khoản Google
+            </a>
+        </div>
+        <div class="text-center"> Hoặc </div>*@
     <form class="login" action="~/User/DangNhap" method="post">
-        <div class="form-group"> <input placeholder="TDN*" name="TaiKhoan" type="text" id="user_tendn" class="form-control"> </div>
-        <div class="form-group"> <input placeholder="Mật khẩu*" name="MatKhau" type="password" id="user_pas" class="form-control" /> </div>
+        <div class="form-group">
+            <input placeholder="Tên đăng nhập*" name="TaiKhoan" type="text" id="user_tendn" class="form-control">
+        </div>
+        <div class="form-group">
+            <input placeholder="Mật khẩu*" name="MatKhau" type="password" id="user_pas" class="form-control" />
+        </div>
         <div class="item_message">
             <p class="message text-danger"></p>
         </div>
@@ -46,8 +58,5 @@
             </div>
         </div>
     </form>
-
 </div>
 <script src="~/js/jvdangnhap.js"></script>
-
-
