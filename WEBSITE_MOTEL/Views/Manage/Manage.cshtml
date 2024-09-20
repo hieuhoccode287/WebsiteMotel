@@ -1,5 +1,6 @@
-﻿@model IEnumerable<WEBSITE_MOTEL.Models.PHONGTRO>
+﻿@model PagedList.IPagedList<WEBSITE_MOTEL.Models.PHONGTRO>
 
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Manage";
     Layout = "~/Views/_LayoutUser.cshtml";
@@ -15,8 +16,6 @@
 <section class="wrap-content">
     <div class="content" style="border: none;">
         <div class="wrapper">
-            <!-- Nav tabs -->
-            <!-- Tab panes -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="quan_ly_tin">
                     <div class="table-responsive">
@@ -58,28 +57,27 @@
                                         <td class="td_col3">
                                             <a href="home.html#content1" class="" target="_blank">@item.TenPhong</a>
                                         </td>
-                                        <td id="dt1" data-id="@item.Id" class="ngay" style="color: #4CAF50">@Html.FormatValue(item.Ngay, "{0:dd/MM/yyyy}")</td>
-                                        <td id="dt2" data-id="@item.Id" class="ngay" style="color: #ED2327">@Html.FormatValue(item.Ngay?.AddMonths(3), "{0:dd/MM/yyyy}")</td>
+                                        <td id="dt1" class="ngay" style="color: #4CAF50">@Html.FormatValue(item.Ngay, "{0:dd/MM/yyyy}")</td>
+                                        <td id="dt2" class="ngay" style="color: #ED23227">@Html.FormatValue(item.Ngay?.AddMonths(3), "{0:dd/MM/yyyy}")</td>
                                         <td>
                                             <a class="btn btn_action" id="st2" data-id="@item.Id"><i class="fa fa-refresh"></i> Đăng lại</a>
                                             <a class="btn btn_action" id="st1" data-id="@item.Id"><i class="fa fa-expeditedssl"></i> Ngừng đăng tin</a>
-                                            @*<a class="btn btn_action" href="#" id="idsua" data-id="@item.Id"><i class="fa fa-pencil"></i> Sửa</a>*@
                                             <a class="btn btn_action" href="#" id="idxoa" data-id="@item.Id"><i class="fa fa-eraser"></i> Xóa</a>
-
                                         </td>
                                         <td>
-                                            @if (@item.TrangThai == 2)
+                                            @if (item.TrangThai == 2)
                                             {
                                                 <a class="btn btn_action btn-success" id="st3" data-id="@item.Id">Duyệt</a>
-                                                <a class="btn btn_action btn-danger" id="st4" data-id="@item.Id">Bỏ Duyệt</a>}
-                                            </td>
+                                                <a class="btn btn_action btn-danger" id="st4" data-id="@item.Id">Bỏ Duyệt</a>
+                                            }
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                     <div class="page_navigation">
-                        <p></p>
+                        @Html.PagedListPager(Model, page => Url.Action("Manage", new { page }), PagedListRenderOptions.Classic)
                     </div>
                 </div>
             </div>
@@ -182,7 +180,7 @@
         $(".table").on("click", "#st4", function () {
             var id = $(this).data("id");
             $.ajax({
-                url: "/Manage/BoDuyet",
+                url: "/Manage/BoDuyetPhong",
                 type: "POST",
                 data: { id: id },
                 success: function (result) {

@@ -93,7 +93,8 @@ namespace WEBSITE_MOTEL.Controllers
 
                     phong.Id_ChuTro = chutro.Id;
                     phong.TenPhong = f["sTieuDe"];
-                    phong.MoTa = f["sMoTa"].Replace("<p>", "").Replace("</p>", "\n");
+                    phong.MoTa = HttpUtility.HtmlDecode(f["sMoTa"].Replace("<p>", "").Replace("</p>", "\n"));
+
 
                     images.Id_PhongTro = phong.Id;
 

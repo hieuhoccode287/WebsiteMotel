@@ -11,6 +11,7 @@ namespace WEBSITE_MOTEL.Controllers
     public class InfoController : Controller
     {
         TimNhaTroDataContext data = new TimNhaTroDataContext();
+        public NguoiDung NguoiDung { get; set; }
         public TAIKHOAN GetAcc()
         {
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
@@ -151,32 +152,51 @@ namespace WEBSITE_MOTEL.Controllers
         {
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
 
-            var nguoidung = (from a in data.TAIKHOANs
-
-                             join b in data.NGUOIDUNGs on a.Id equals b.Id_TaiKhoan
-                             where (tk.Id == b.Id_TaiKhoan)
-                             select new NguoiDung()
-                             {
-                                 sTaiKhoanND = a.TaiKhoan,
-                                 sHotenND = a.HoTen,
-                                 sMatKhauND = a.MatKhau,
-                                 sId = b.Id,
-                                 sSDTND = a.SDT,
-                                 sEmailND = a.Email
-                             }).FirstOrDefault();
+            if (tk == null)
+            {
+                return RedirectToAction("Login", "Account"); // Chuyển hướng tới trang đăng nhập nếu chưa đăng nhập
+            }
 
             var taikhoan = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
-            if (ModelState.IsValid)
+
+            // Kiểm tra các trường dữ liệu
+            if (string.IsNullOrEmpty(f["sHotenND"]))
+            {
+                ModelState.AddModelError("sHotenND", "Vui lòng nhập họ và tên.");
+            }
+            if (string.IsNullOrEmpty(f["sMatKhauND"]))
+            {
+                ModelState.AddModelError("sMatKhauND", "Vui lòng nhập mật khẩu mới.");
+            }
+            if (string.IsNullOrEmpty(f["sSDTND"]))
+            {
+                ModelState.AddModelError("sSDTND", "Vui lòng nhập số điện thoại.");
+            }
+            if (string.IsNullOrEmpty(f["sEmailND"]))
+            {
+                ModelState.AddModelError("sEmailND", "Vui lòng nhập email.");
+            }
+
+            // Nếu có lỗi, trả về view với thông báo lỗi
+            if (!ModelState.IsValid)
+            {
+                return View(); // Trả về view với thông báo lỗi
+            }
+
+            // Cập nhật thông tin nếu không có lỗi
+            if (taikhoan != null)
             {
                 taikhoan.HoTen = f["sHotenND"];
                 taikhoan.MatKhau = f["sMatKhauND"];
                 taikhoan.SDT = f["sSDTND"];
                 taikhoan.Email = f["sEmailND"];
-                
+
                 data.SubmitChanges();
-                return RedirectToAction("ManageInfoND");
+                Session["TaiKhoan"] = taikhoan;
+                TempData["SuccessMessage"] = "Thông tin đã được cập nhật thành công!";
+                return RedirectToAction("ManageInfoND"); // Tải lại trang với thông báo thành công
             }
-            return View(nguoidung);
+            return View(); // Trả về view nếu không tìm thấy tài khoản
         }
 
     }

@@ -191,282 +191,116 @@ namespace WEBSITE_MOTEL.Controllers
             var listKV = from a in data.KHUVUCs select a;
             return PartialView(listKV);
         }
-        
+
         public ActionResult SearchKQ(int? page, string IdKV, string IdGia, string IdSL, string IdDT)
         {
             int iSize = 3;
             int iPageNum = (page ?? 1);
-            var listSearch = (from a in data.PHONGTROs
-                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
-                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
 
-                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                              where a.TrangThai == 1
-                              select new RoomDetail()
-                              {
-                                  sMa = a.Id,
-                                  sTenPhong = a.TenPhong,
-                                  sHoTen = e.HoTen,
+            var listSearch = from a in data.PHONGTROs
+                             join b in data.CHUTROs on a.Id_ChuTro equals b.Id
+                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro
+                             join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
+                             where a.TrangThai == 1
+                             select new RoomDetail()
+                             {
+                                 sMa = a.Id,
+                                 sTenPhong = a.TenPhong,
+                                 sHoTen = e.HoTen,
+                                 sDienTich = (int)a.DienTich,
+                                 sSoluong = (int)a.SoLuong,
+                                 sAnhBia = a.AnhBia,
+                                 sMoTa = a.MoTa,
+                                 dNgayCapNhat = (DateTime)a.Ngay,
+                                 dGiaCa = (double)a.GiaCa,
+                                 sSDT = e.SDT,
+                                 sEmail = e.Email,
+                                 sUrl_Path = c.Url_Path,
+                                 sUrl_Path2 = c.Url_Path2,
+                                 sUrl_Path3 = c.Url_Path3,
+                                 sUrl_Path4 = c.Url_Path4,
+                                 sDiaChi = a.Diachi,
+                                 sDien = (double)a.Dien,
+                                 sNuoc = (double)a.Nuoc,
+                                 sGuiXe = (double)a.GuiXe,
+                                 sInternet = (double)a.Internet,
+                                 sDoiTuong = (byte)a.Doituong,
+                                 sTrangThai = (byte)a.TrangThai,
+                                 sTenKV = a.KhuVuc,
+                             };
 
-                                  sDienTich = (int)a.DienTich,
-                                  sSoluong = (int)a.SoLuong,
-                                  sAnhBia = a.AnhBia,
-                                  sMoTa = a.MoTa,
-                                  dNgayCapNhat = (DateTime)a.Ngay,
-                                  dGiaCa = (double)a.GiaCa,
-                                  sSDT = e.SDT,
-                                  sEmail = e.Email,
-                                  sUrl_Path = c.Url_Path,
-                                  sUrl_Path2 = c.Url_Path2,
-                                  sUrl_Path3 = c.Url_Path3,
-                                  sUrl_Path4 = c.Url_Path4,
-                                  sDiaChi = a.Diachi,
-                                  sDien = (double)a.Dien,
-                                  sNuoc = (double)a.Nuoc,
-                                  sGuiXe = (double)a.GuiXe,
-                                  sInternet = (double)a.Internet,
-                                  sDoiTuong = (byte)a.Doituong,
-                                  sTrangThai = (byte)a.TrangThai,
-
-                                  sTenKV = a.KhuVuc,
-                              });
-
-            if (IdKV.Contains("Quận/Huyện") &&  IdSL.Contains("Số người ở") && IdDT.Contains("Diện tích(m2)") && !String.Equals(IdGia, "Mức giá?"))
+            // Filter by location
+            if (!String.IsNullOrEmpty(IdKV) && IdKV != "Quận/Huyện")
             {
-                string[] arrStr = IdGia.Split('-');
-                listSearch = (from a in data.PHONGTROs
-                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
-                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-
-                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                              where a.TrangThai == 1&& a.GiaCa > int.Parse(arrStr[0]) && a.GiaCa < int.Parse(arrStr[1])
-                              select new RoomDetail()
-                              {
-                                  sMa = a.Id,
-                                  sTenPhong = a.TenPhong,
-                                  sHoTen = e.HoTen,
-
-                                  sDienTich = (int)a.DienTich,
-                                  sSoluong = (int)a.SoLuong,
-                                  sAnhBia = a.AnhBia,
-                                  sMoTa = a.MoTa,
-                                  dNgayCapNhat = (DateTime)a.Ngay,
-                                  dGiaCa = (double)a.GiaCa,
-                                  sSDT = e.SDT,
-                                  sEmail = e.Email,
-                                  sUrl_Path = c.Url_Path,
-                                  sUrl_Path2 = c.Url_Path2,
-                                  sUrl_Path3 = c.Url_Path3,
-                                  sUrl_Path4 = c.Url_Path4,
-                                  sDiaChi = a.Diachi,
-                                  sDien = (double)a.Dien,
-                                  sNuoc = (double)a.Nuoc,
-                                  sGuiXe = (double)a.GuiXe,
-                                  sInternet = (double)a.Internet,
-                                  sDoiTuong = (byte)a.Doituong,
-                                  sTrangThai = (byte)a.TrangThai,
-
-                                  sTenKV = a.KhuVuc,
-                              });
-            }
-            //else if (String.Equals(IdGia, "Trên 2000000"))
-            //{
-            //    string[] arrStr = IdGia.Split('>');
-            //    int num = int.Parse(arrStr[1]);
-            //    listSearch = from s in data.PHONGTROs
-            //                 where int.Parse(arrStr[1]) > s.GiaCa && int.Parse(arrStr[0]) < s.GiaCa
-            //                 select s;
-            //}
-            else if (!String.Equals(IdKV, "Quận/Huyện") && IdGia.Contains("Mức giá?") && IdDT.Contains("Diện tích(m2)") && IdSL.Contains("Số người ở"))
-            {
-                listSearch = (from a in data.PHONGTROs
-                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
-                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-
-                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                              where a.TrangThai == 1 && a.KhuVuc == IdKV
-                              select new RoomDetail()
-                              {
-                                  sMa = a.Id,
-                                  sTenPhong = a.TenPhong,
-                                  sHoTen = e.HoTen,
-
-                                  sDienTich = (int)a.DienTich,
-                                  sSoluong = (int)a.SoLuong,
-                                  sAnhBia = a.AnhBia,
-                                  sMoTa = a.MoTa,
-                                  dNgayCapNhat = (DateTime)a.Ngay,
-                                  dGiaCa = (double)a.GiaCa,
-                                  sSDT = e.SDT,
-                                  sEmail = e.Email,
-                                  sUrl_Path = c.Url_Path,
-                                  sUrl_Path2 = c.Url_Path2,
-                                  sUrl_Path3 = c.Url_Path3,
-                                  sUrl_Path4 = c.Url_Path4,
-                                  sDiaChi = a.Diachi,
-                                  sDien = (double)a.Dien,
-                                  sNuoc = (double)a.Nuoc,
-                                  sGuiXe = (double)a.GuiXe,
-                                  sInternet = (double)a.Internet,
-                                  sDoiTuong = (byte)a.Doituong,
-                                  sTrangThai = (byte)a.TrangThai,
-
-                                  sTenKV = a.KhuVuc,
-                              });
-            }
-            else if (!String.Equals(IdSL,"Số người ở") && IdGia.Contains("Giá cả?") && IdKV.Contains("Quận/Huyện") && IdDT.Contains("Diện tích(m2)"))
-            {
-                listSearch = (from a in data.PHONGTROs
-                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
-                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-
-                              where a.TrangThai == 1 && a.SoLuong == int.Parse(IdSL)
-                              select new RoomDetail()
-                              {
-                                  sMa = a.Id,
-                                  sTenPhong = a.TenPhong,
-                                  sHoTen = e.HoTen,
-
-                                  sDienTich = (int)a.DienTich,
-                                  sSoluong = (int)a.SoLuong,
-                                  sAnhBia = a.AnhBia,
-                                  sMoTa = a.MoTa,
-                                  dNgayCapNhat = (DateTime)a.Ngay,
-                                  dGiaCa = (double)a.GiaCa,
-                                  sSDT = e.SDT,
-                                  sEmail = e.Email,
-                                  sUrl_Path = c.Url_Path,
-                                  sUrl_Path2 = c.Url_Path2,
-                                  sUrl_Path3 = c.Url_Path3,
-                                  sUrl_Path4 = c.Url_Path4,
-                                  sDiaChi = a.Diachi,
-                                  sDien = (double)a.Dien,
-                                  sNuoc = (double)a.Nuoc,
-                                  sGuiXe = (double)a.GuiXe,
-                                  sInternet = (double)a.Internet,
-                                  sDoiTuong = (byte)a.Doituong,
-                                  sTrangThai = (byte)a.TrangThai,
-
-                                  sTenKV = a.KhuVuc,
-                              });
-            }
-            else if (!String.Equals(IdKV, "Quận/Huyện") && !String.Equals(IdGia, "Mức giá?"))
-            {
-                string[] arrStr = IdGia.Split('-');
-                listSearch = (from a in data.PHONGTROs
-                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
-                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-
-                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                              where a.TrangThai == 1 && a.GiaCa > int.Parse(arrStr[0]) && a.GiaCa < int.Parse(arrStr[1]) && a.KhuVuc == IdKV
-                              select new RoomDetail()
-                              {
-                                  sMa = a.Id,
-                                  sTenPhong = a.TenPhong,
-                                  sHoTen = e.HoTen,
-
-                                  sDienTich = (int)a.DienTich,
-                                  sSoluong = (int)a.SoLuong,
-                                  sAnhBia = a.AnhBia,
-                                  sMoTa = a.MoTa,
-                                  dNgayCapNhat = (DateTime)a.Ngay,
-                                  dGiaCa = (double)a.GiaCa,
-                                  sSDT = e.SDT,
-                                  sEmail = e.Email,
-                                  sUrl_Path = c.Url_Path,
-                                  sUrl_Path2 = c.Url_Path2,
-                                  sUrl_Path3 = c.Url_Path3,
-                                  sUrl_Path4 = c.Url_Path4,
-                                  sDiaChi = a.Diachi,
-                                  sDien = (double)a.Dien,
-                                  sNuoc = (double)a.Nuoc,
-                                  sGuiXe = (double)a.GuiXe,
-                                  sInternet = (double)a.Internet,
-                                  sDoiTuong = (byte)a.Doituong,
-                                  sTrangThai = (byte)a.TrangThai,
-
-                                  sTenKV = a.KhuVuc,
-                              });
-            }
-            else if (!String.Equals(IdSL, "Số người ở") && !String.Equals(IdGia, "Mức giá?"))
-            {
-                string[] arrStr = IdGia.Split('-');
-                listSearch = (from a in data.PHONGTROs
-                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
-                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-
-                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                              where a.TrangThai == 1 && a.SoLuong == int.Parse(IdSL) && a.TenPhong == IdKV
-                              select new RoomDetail()
-                              {
-                                  sMa = a.Id,
-                                  sTenPhong = a.TenPhong,
-                                  sHoTen = e.HoTen,
-
-                                  sDienTich = (int)a.DienTich,
-                                  sSoluong = (int)a.SoLuong,
-                                  sAnhBia = a.AnhBia,
-                                  sMoTa = a.MoTa,
-                                  dNgayCapNhat = (DateTime)a.Ngay,
-                                  dGiaCa = (double)a.GiaCa,
-                                  sSDT = e.SDT,
-                                  sEmail = e.Email,
-                                  sUrl_Path = c.Url_Path,
-                                  sUrl_Path2 = c.Url_Path2,
-                                  sUrl_Path3 = c.Url_Path3,
-                                  sUrl_Path4 = c.Url_Path4,
-                                  sDiaChi = a.Diachi,
-                                  sDien = (double)a.Dien,
-                                  sNuoc = (double)a.Nuoc,
-                                  sGuiXe = (double)a.GuiXe,
-                                  sInternet = (double)a.Internet,
-                                  sDoiTuong = (byte)a.Doituong,
-                                  sTrangThai = (byte)a.TrangThai,
-
-                                  sTenKV = a.KhuVuc,
-                              });
-            }
-            else if (!String.Equals(IdKV, "Quận/Huyện") && !String.Equals(IdSL, "Số người ở"))
-            {
-                string[] arrStr = IdGia.Split('-');
-                listSearch = (from a in data.PHONGTROs
-                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
-                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-
-                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                              where a.TrangThai == 1 && a.GiaCa > int.Parse(arrStr[0]) && a.GiaCa < int.Parse(arrStr[1]) && a.SoLuong == int.Parse(IdSL)
-                              select new RoomDetail()
-                              {
-                                  sMa = a.Id,
-                                  sTenPhong = a.TenPhong,
-                                  sHoTen = e.HoTen,
-
-                                  sDienTich = (int)a.DienTich,
-                                  sSoluong = (int)a.SoLuong,
-                                  sAnhBia = a.AnhBia,
-                                  sMoTa = a.MoTa,
-                                  dNgayCapNhat = (DateTime)a.Ngay,
-                                  dGiaCa = (double)a.GiaCa,
-                                  sSDT = e.SDT,
-                                  sEmail = e.Email,
-                                  sUrl_Path = c.Url_Path,
-                                  sUrl_Path2 = c.Url_Path2,
-                                  sUrl_Path3 = c.Url_Path3,
-                                  sUrl_Path4 = c.Url_Path4,
-                                  sDiaChi = a.Diachi,
-                                  sDien = (double)a.Dien,
-                                  sNuoc = (double)a.Nuoc,
-                                  sGuiXe = (double)a.GuiXe,
-                                  sInternet = (double)a.Internet,
-                                  sDoiTuong = (byte)a.Doituong,
-                                  sTrangThai = (byte)a.TrangThai,
-
-                                  sTenKV = a.KhuVuc,
-                              });
+                listSearch = listSearch.Where(a => a.sTenKV == IdKV);
             }
 
-            // Kiểm tra xem kết quả tìm kiếm có rỗng không
+            // Filter by number of occupants
+            if (!String.IsNullOrEmpty(IdSL) && IdSL != "Số người ở")
+            {
+                int numberOfOccupants;
+                if (int.TryParse(IdSL, out numberOfOccupants))
+                {
+                    listSearch = listSearch.Where(a => a.sSoluong == numberOfOccupants);
+                }
+            }
+
+            // Filter by area
+            if (!String.IsNullOrEmpty(IdDT) && IdDT != "Diện tích(m2)")
+            {
+                string[] areaRange = IdDT.Split(' ');
+                if (areaRange.Length >= 2)
+                {
+                    int areaMin = 0;
+                    int areaMax = int.MaxValue;
+                    if (areaRange[0] == "Dưới")
+                    {
+                        int.TryParse(areaRange[1], out areaMax);
+                        listSearch = listSearch.Where(a => a.sDienTich < areaMax);
+                    }
+                    else if (areaRange[0] == "Trên")
+                    {
+                        int.TryParse(areaRange[1], out areaMin);
+                        listSearch = listSearch.Where(a => a.sDienTich > areaMin);
+                    }
+                    else if (areaRange.Length == 3 && areaRange[1] == "-")
+                    {
+                        int.TryParse(areaRange[0], out areaMin);
+                        int.TryParse(areaRange[2], out areaMax);
+                        listSearch = listSearch.Where(a => a.sDienTich >= areaMin && a.sDienTich <= areaMax);
+                    }
+                }
+            }
+
+            // Filter by price
+            if (!String.IsNullOrEmpty(IdGia) && IdGia != "Mức giá?")
+            {
+                string[] priceRange = IdGia.Split(' ');
+                if (priceRange.Length == 2)
+                {
+                    double priceMin;
+                    double priceMax;
+                    if (priceRange[0] == "Dưới")
+                    {
+                        double.TryParse(priceRange[1], out priceMax);
+                        listSearch = listSearch.Where(a => a.dGiaCa < priceMax);
+                    }
+                    else if (priceRange[0] == "Trên")
+                    {
+                        double.TryParse(priceRange[1], out priceMin);
+                        listSearch = listSearch.Where(a => a.dGiaCa > priceMin);
+                    }
+                    else if (priceRange.Length == 3 && priceRange[1] == "-")
+                    {
+                        double.TryParse(priceRange[0], out priceMin);
+                        double.TryParse(priceRange[2], out priceMax);
+                        listSearch = listSearch.Where(a => a.dGiaCa >= priceMin && a.dGiaCa <= priceMax);
+                    }
+                }
+            }
+
+
+            // Check if the result is empty
             if (!listSearch.Any())
             {
                 ViewBag.ErrorMessage = "Không tìm thấy kết quả phù hợp.";
@@ -475,6 +309,8 @@ namespace WEBSITE_MOTEL.Controllers
 
             return View("Index", listSearch.OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
         }
+
+
         public ActionResult Map()
         {
             return View();

@@ -49,10 +49,6 @@
                                     <option>Mặt bằng kinh doanh</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="mobile">Số điện thoại:</label></br>
-                                <input type="text" class="form-control" id="mobile" name="sSDT">
-                            </div>
                         </div>
 
                         <div class="form-inline">
@@ -65,24 +61,24 @@
                         <div class="form-inline">
                             <div class="form-group ">
                                 <label for="price">Giá cho thuê:</label></br>
-                                <input type="number" class="form-control" id="price" name="mGiaCa">
+                                <input type="number" class="form-control" id="price" name="mGiaCa" placeholder="ex: 1.500.000đ/tháng">
                             </div>
-
+                            <br />
                             <div class="form-group ">
                                 <label for="">Diện tích:</label></br>
 
-                                <input type="text" class="form-control" name="sDienTich">
+                                <input type="text" class="form-control" name="sDienTich" placeholder="ex: 20 m2">
                             </div>
                         </div>
 
                         <div class="form-inline">
                             <div class="form-group ">
-                                <label for="">Số lượng:</label></br>
+                                <label for="">Số người ở:</label></br>
                                 <input type="number" class="form-control" name="sSoLuong">
                             </div>
 
                         </div>
-                        <div class="item">
+                        <div class="item" style="margin-left: 10px">
                             <div class="item_input">
                                 <label style="width:max-content;">Hình thức: <span class="red">(*)</span></label>
                                 <div class="item_input">
@@ -115,7 +111,7 @@
 
                         </div>
                         <!--form-row 3-->
-                        <h4>Giá dịch vụ cơ bản:</h4>
+                        <h4 style="margin-left:10px">Giá dịch vụ cơ bản:</h4>
                         <div class="form-inline">
                             <div class="form-group">
                                 <label for="price-electric">Giá điện:</label></br>
@@ -123,7 +119,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="price-water">Giá nước:</label></br>
-                                <input type="text" class="form-control" id="price-water" name="sNuoc" placeholder="ex: 15.000đồng/m3, 50.000đồng/tháng">
+                                <input type="text" class="form-control" id="price-water" name="sNuoc" placeholder="ex: 15.000đồng/m3">
                             </div>
                             <div class="form-group">
                                 <label for="price-internet">Internet:</label></br>
@@ -131,7 +127,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="price-park">Gửi xe:</label></br>
-                                <input type="text" class="form-control" id="price-park" name="sGuiXe" placeholder="ex: Free, 50.000đồng/tháng">
+                                <input type="text" class="form-control" id="price-park" name="sGuiXe" placeholder="ex: 30.000đồng/tháng">
                             </div>
                         </div>
                     </div>
@@ -141,37 +137,32 @@
                     <div class="form-title"><h3>ĐỊA CHỈ</h3></div>
                     <div class="group-form-body">
                         <div class="form-inline">
-                            <div class="form-group">
-                                <label for="province">Khu vực</label></br>
-                                <input id="pac-input" class="controls" type="text" placeholder="Nhập khu vực..."  name="sKhuVuc">
-                            </div>
                             @*<div class="form-group">
-                                <label for="district">Quận/Huyện</label></br>
-                                <select class="form-control" id="district">
-                                </select>
-                            </div>
+                        <label for="province">Khu vực</label></br>
+                        <input id="pac-input" class="controls" type="text" placeholder="Nhập khu vực..."  name="sKhuVuc">
+                    </div>*@
                             <div class="form-group">
                                 <label for="ward">Phường/Xã</label></br>
-                                <select class="form-control" id="ward">
+                                <select class="form-control" id="ward" name="sKhuVuc">
                                     <option>Phường/Xã</option>
                                     <option>Định Hòa</option>
                                     <option>Phú Hòa</option>
                                     <option>Hoàng Đạo Thúy</option>
                                 </select>
-                            </div>*@
+                            </div>
                         </div>
-                        </br>
                         <div class="form-group">
                             <!--Thông tin vị trí cụ thể-->
                             <label for="pac-input">Số nhà, Tên đường cụ thể</label></br>
-                            <input id="pac-input" class="controls" type="text" placeholder="Nhập địa chỉ nhà chi tiết..." name="sDiaChi">
-                            <p style="position: absolute; top: 85px; color:rgba(89, 68, 206, 0.88) ">Vị trí trên bản đồ.</p>
-                            <i style="position: absolute; top: 110px;color: #E74C3C; font-size: 0.8em">
-                                Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn,
-                                hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon <img src="~/images/img-map/position-marker.png" style="width: 20px;height: 25px;"> tới đúng vị
-                                trí	của tin rao.
-                            </i>
-                            <div id="map"><input type="url" name="sMap" /></div>
+                            <input id="pac-input" class="controls" type="text" placeholder="  Nhập địa chỉ nhà chi tiết..." name="sDiaChi" style="width:300px">
+                            <br />
+                            @*<p style="position: absolute; top: 85px; color:rgba(89, 68, 206, 0.88) ">Vị trí trên bản đồ.</p>
+                    <i style="position: absolute; top: 110px;color: #E74C3C; font-size: 0.8em">
+                        Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn,
+                        hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon <img src="~/images/img-map/position-marker.png" style="width: 20px;height: 25px;"> tới đúng vị
+                        trí	của tin rao.
+                    </i>
+                    <div id="map"><input type="url" name="sMap" /></div>*@
                         </div>
                     </div>
                 </div>
@@ -195,7 +186,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!--Phần hình ảnh hoặc video-->
                 <div class="group-form">
                     <div class="form-title"><h3>HÌNH ẢNH HOẶC VIDEO VỀ PHÒNG TRỌ.</h3></div>
@@ -204,7 +195,9 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-12">
+                                    <p>LƯU Ý*: NHẤN CTRL TRONG LÚC CHỌN ẢNH ĐỂ CHỌN ĐƯỢC NHIỀU ẢNH CÙNG LÚC (NÊN CHỌN 4 - 5 HÌNH ẢNH).</p>
                                     <p>Định dạng ảnh hỗ trợ: .jpg .png .jpeg .gif - Dung lượng ảnh không quá 2MB</p>
+
                                     @*<input type=file id="files" name="fFileUpload" multiple accept="" required />*@
                                     @Html.TextBox("fFileUpload", "", new { type = "file", multiple = "multiple", accept = "image/*" })
 
@@ -236,80 +229,61 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-default" style="width:135px;">Đăng tin ngay</button>
+                <script>
+                    function validateForm() {
+                        var title = document.getElementById("tieude").value;
+                        var type = document.getElementById("type").value;
+                        var price = document.getElementById("price").value;
+                        var area = document.getElementsByName("sDienTich")[0].value;
+                        var numberOfPeople = document.getElementsByName("sSoLuong")[0].value;
+                        var tenantType = document.querySelector('input[name="sDoiTuong"]:checked');
+                        var date = document.getElementsByName("dNgayCapNhat")[0].value;
+                        var address = document.getElementsByName("sDiaChi")[0].value;
+                        var servicePriceElectric = document.getElementById("price-electric").value;
+                        var servicePriceWater = document.getElementById("price-water").value;
+                        var servicePriceInternet = document.getElementById("price-internet").value;
+                        var servicePricePark = document.getElementById("price-park").value;
+                        var fileUpload = document.getElementById("fFileUpload").files.length;
+
+                        var fields = {
+                            "Tiêu đề tin": title,
+                            "Loại hình cho thuê": type,
+                            "Giá cho thuê": price,
+                            "Diện tích": area,
+                            "Số người ở": numberOfPeople,
+                            "Hình thức": tenantType,
+                            "Ngày đăng": date,
+                            "Địa chỉ": address,
+                            "Giá điện": servicePriceElectric,
+                            "Giá nước": servicePriceWater,
+                            "Internet": servicePriceInternet,
+                            "Gửi xe": servicePricePark
+                        };
+
+                        for (var field in fields) {
+                            if (!fields[field]) {
+                                alert("Vui lòng điền đầy đủ các trường: " + field + "!");
+                                return false; // Ngăn không cho gửi biểu mẫu
+                            }
+                        }
+
+                        // Kiểm tra xem có file nào được chọn không
+                        if (fileUpload === 0) {
+                            alert("Vui lòng chọn ít nhất một file hình ảnh!");
+                            return false; // Ngăn không cho gửi biểu mẫu
+                        }
+
+                        return true; // Cho phép gửi biểu mẫu
+                    }
+                </script>
+
+                <button type="submit" class="btn btn-default" style="width:135px;" onclick="return validateForm();">Đăng tin ngay</button>
+
             </div>
         </form>
     </div>
 </section>
 
-
-<script>
-    function initAutocomplete() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: 21.028511, lng: 105.804817 },
-            zoom: 13,
-            mapTypeId: 'roadmap'
-        });
-
-        // Create the search box and link it to the UI element.
-        var input = document.getElementById('pac-input');
-        var searchBox = new google.maps.places.SearchBox(input);
-        // Bias the SearchBox results towards current map's viewport.
-        map.addListener('bounds_changed', function () {
-            searchBox.setBounds(map.getBounds());
-        });
-        var markers = [];
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
-        searchBox.addListener('places_changed', function () {
-            var places = searchBox.getPlaces();
-            if (places.length == 0) {
-                return;
-            }
-            // Clear out the old markers.
-            markers.forEach(function (marker) {
-                marker.setMap(null);
-            });
-            markers = [];
-            // For each place, get the icon, name and location.
-            var bounds = new google.maps.LatLngBounds();
-            places.forEach(function (place) {
-                if (!place.geometry) {
-                    console.log("Returned place contains no geometry");
-                    return;
-                }
-                var icon = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25)
-                };
-                // Create a marker for each place.
-                markers.push(new google.maps.Marker({
-                    map: map,
-                    icon: 'https://congtrinh0209.github.io/Du_anTN/IMG/position-marker.png',
-                    title: place.name,
-                    position: place.geometry.location,
-                    draggable: true,
-                }));
-                if (place.geometry.viewport) {
-                    // Only geocodes have viewport.
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
-            });
-            map.fitBounds(bounds);
-            function moveMarker(map, marker) {
-                marker.setPosition(new google.maps.LatLng(Lat, Lng));
-                map.panTo(new google.maps.LatLng(Lat, Lng));
-            };
-        });
-
-    }</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDUYFDaXnS0a217T0rP3xNrnqxuErZsD4&language=vi&region=vie&libraries=places&callback=initAutocomplete"
-        async defer></script>
 
 <script>
     var curDate = new Date();

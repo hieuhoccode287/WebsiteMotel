@@ -27,15 +27,15 @@
 
     </ol>
 </div>
-<form>
+@*<form>
     @using (Html.BeginForm("Index", "Motel", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
     {
         <div class="form-group">
             <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
         </div>
-        @* <button type="submit" class="btn btn-default">Tìm</button>*@
+         //<button type="submit" class="btn btn-default">Tìm</button>
     }
-</form>
+</form>*@
 <section class="wrap-content">
 
     <div class="content" id="content1">
@@ -180,7 +180,8 @@
                                         - Gần nơi sầm uất như VINCOM PLAZA, siêu thị CoopMart, cây xăng Tân phú, bệnh viện quận 9....
                                         <br>
                                         - Toàn bộ phòng được lát gạch men nên phòng ốc rất sạch sẽ và cao cấp<br> Vì số lượng có hạn nên gọi ngay cho mình để đặt phòng nhé.(MS. HẰNG)*@
-                                    @item.sMoTa
+                                    
+                                    @Html.Raw(item.sMoTa)
                                 </p>
                             </div>
                         </div>

@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using WEBSITE_MOTEL.Models;
 using System.IO;
 using System.Data.Linq.SqlClient;
+using PagedList;
+
 
 namespace WEBSITE_MOTEL.Controllers
 {
@@ -14,13 +16,23 @@ namespace WEBSITE_MOTEL.Controllers
         TimNhaTroDataContext data = new TimNhaTroDataContext();
         //*/ GET: Manage
 
-        public ActionResult Manage()
+        public ActionResult Manage(int? page)
         {
             // Cập nhật trạng thái của các phòng trọ đã hết hạn
             UpdateExpiredPhongTroStatus();
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
             var chutro = data.CHUTROs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
-            return View(data.PHONGTROs.Where(n => n.Id_ChuTro == chutro.Id && n.TrangThai != 4).ToList());
+            // Lấy danh sách phòng trọ
+            var phongTroList = data.PHONGTROs
+                .Where(n => n.Id_ChuTro == chutro.Id && n.TrangThai != 4)
+                .ToList();
+
+            // Sử dụng PagedList để phân trang
+            int pageSize = 5; // Số mục trên mỗi trang
+            int pageNumber = (page ?? 1); // Số trang hiện tại
+            var pagedList = phongTroList.ToPagedList(pageNumber, pageSize);
+
+            return View(pagedList);
         }
 
         private void UpdateExpiredPhongTroStatus()

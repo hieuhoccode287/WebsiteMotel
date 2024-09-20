@@ -10,14 +10,17 @@
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
+                <!-- Search Form -->
+                @using (Html.BeginForm("Index", "QLChutro", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
+                {
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
+                    </div>
+                    <button type="submit" class="btn btn-default">Tìm</button>
+                }
+
+                <!-- Table -->
                 <div class="table-responsive">
-                    @using (Html.BeginForm("Index", "QLChutro", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
-                    {
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
-                        </div>
-                        <button type="submit" class="btn btn-default">Tìm</button>
-                    }
                     <table class="table">
                         <tr>
                             <th style="text-align:center">Họ tên</th>
@@ -51,11 +54,18 @@
                             </tr>
                         }
                     </table>
+
                 </div>
             </div>
         </div>
+        <!-- Review Accounts Button -->
+        <div class="mb-3">
+            <a href="@Url.Action("CTApprove","DUYETCT")" class="btn btn-info" style="margin-top:10px">Duyệt tài khoản</a>
+        </div>
     </div>
 </div>
+
+
 @{
     var pagedListRenderOptions = new PagedListRenderOptions
     {
@@ -129,9 +139,11 @@
         padding: 5px;
         border-radius: 3px;
     }
+
     .pagination .page-separator {
         margin: 0 5px;
     }
+
     .pagination a {
         display: inline-block;
         padding: 5px 10px;
