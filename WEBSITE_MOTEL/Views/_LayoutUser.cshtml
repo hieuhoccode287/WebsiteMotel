@@ -38,9 +38,12 @@
             </article>
             <aside class="side-bar col-xs-12 col-md-3">
                 <section class="search-bar">
-                    <div class="search" id="menu-search">
-                        @Html.Action("SearchPartial", "Motel")
-                    </div>
+                    @if (Session["TaiKhoan"] == null || (Session["TaiKhoan"] as dynamic).PhanQuyen == 1 || (Session["TaiKhoan"] as dynamic).PhanQuyen == 3)
+                    {
+                        <div class="search" id="menu-search">
+                            @Html.Action("SearchPartial", "Motel")
+                        </div>
+                    }
                 </section>
                 <section class="news-bar">
                     <div class="news">

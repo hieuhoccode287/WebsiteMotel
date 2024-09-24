@@ -51,7 +51,6 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                             sNuoc = (double)a.Nuoc,
                             sGuiXe = (double)a.GuiXe,
                             sInternet = (double)a.Internet,
-                            sDoiTuong = (byte)a.Doituong,
                             sTrangThai = (byte)a.TrangThai,
                             sTenKV = a.KhuVuc
                         };

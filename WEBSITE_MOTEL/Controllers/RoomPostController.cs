@@ -27,17 +27,16 @@ namespace WEBSITE_MOTEL.Controllers
             }
 
         }
-    
+
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Index(PHONGTRO phong, FormCollection f, HttpPostedFileBase[] fFileUpLoad, IMAGE images, CHUTRO chutro, TAIKHOAN taikhoan)
         {
-
-            if (fFileUpLoad == null)
+            // Check if there are any files to upload
+            if (fFileUpLoad == null || !fFileUpLoad.Any())
             {
-
-                ViewBag.ThongBao = "Hay chon anh bia";
-
+                ViewBag.ThongBao = "Hãy chọn ảnh bìa";
+                // Preserve the input values for the view
                 ViewBag.TenPhong = f["sTieuDe"];
                 ViewBag.MoTa = f["sMoTa"];
                 ViewBag.DienTich = f["sDienTich"];
@@ -45,86 +44,112 @@ namespace WEBSITE_MOTEL.Controllers
                 ViewBag.GiaCa = decimal.Parse(f["mGiaCa"]);
 
                 return View();
-
             }
-            else
+
+            // Validate model state before proceeding
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                int dem = 0;
+                foreach (var file in fFileUpLoad)
                 {
-                    int dem = 0;
-                    foreach (HttpPostedFileBase file in fFileUpLoad)
+                    if (file != null && file.ContentLength > 0)
                     {
-                        if (file != null || file.ContentLength > 0)
+                        var sFileName = Path.GetFileName(file.FileName);
+                        dem++;
+                        // Assign file names to respective properties
+                        switch (dem)
                         {
-                            var sFileName = Path.GetFileName(file.FileName);
-                            dem++;
-                            if (dem == 1)
-                            {
-                                phong.AnhBia = sFileName;
-                            }
-                            else if (dem == 2)
-                            {
-                                images.Url_Path = sFileName;
-                            }
-                            else if (dem == 3)
-                            {
-                                images.Url_Path2 = sFileName;
-                            }
-                            else if (dem == 4)
-                            {
-                                images.Url_Path3 = sFileName;
-                            }
-                            else if (dem == 5)
-                            {
-                                images.Url_Path4 = sFileName;
-                            }
-                            var path = Path.Combine(Server.MapPath("~/Images"), sFileName);
-                            if (!System.IO.File.Exists(path))
-                            {
-                                System.IO.File.Delete(path);
-                                file.SaveAs(path);
-                            }
-                            else
-                            {
-                                file.SaveAs(path);
-                            }
+                            case 1: phong.AnhBia = sFileName; break;
+                            case 2: images.Url_Path = sFileName; break;
+                            case 3: images.Url_Path2 = sFileName; break;
+                            case 4: images.Url_Path3 = sFileName; break;
+                            case 5: images.Url_Path4 = sFileName; break;
+                        }
+
+                        var path = Path.Combine(Server.MapPath("~/Images"), sFileName);
+                        if (!System.IO.File.Exists(path))
+                        {
+                            file.SaveAs(path); // Save the file
                         }
                     }
+                }
 
-                    phong.Id_ChuTro = chutro.Id;
-                    phong.TenPhong = f["sTieuDe"];
-                    phong.MoTa = HttpUtility.HtmlDecode(f["sMoTa"].Replace("<p>", "").Replace("</p>", "\n"));
+                // Populate the PHONGTRO model with values from the form
+                phong.TenPhong = f["sTieuDe"];
+                phong.MoTa = HttpUtility.HtmlDecode(f["sMoTa"].Replace("<p>", "").Replace("</p>", "\n"));
+
+                if (int.TryParse(f["sDienTich"], out int dienTich)) phong.DienTich = dienTich;
+                else ModelState.AddModelError("DienTich", "Invalid value for DienTich");
+
+                if (DateTime.TryParse(f["dNgayCapNhat"], out DateTime ngayCapNhat)) phong.Ngay = ngayCapNhat;
+                else ModelState.AddModelError("NgayCapNhat", "Invalid value for NgayCapNhat");
+
+                string giaCaString = f["mGiaCa"].Replace(".", ""); // Bỏ dấu chấm
+                if (decimal.TryParse(giaCaString, out decimal giaCa))
+                    phong.GiaCa = giaCa;
+                else
+                    ModelState.AddModelError("GiaCa", "Invalid value for GiaCa");
 
 
-                    images.Id_PhongTro = phong.Id;
+                string dienString = f["sDien"].Replace(".", ""); // Bỏ dấu chấm
+                if (decimal.TryParse(dienString, out decimal dien))
+                    phong.Dien = dien;
+                else
+                    ModelState.AddModelError("Dien", "Invalid value for Dien");
 
-                    phong.DienTich = int.Parse(f["sDienTich"]);
-                    phong.Ngay = Convert.ToDateTime(f["dNgayCapNhat"]);
-                    /* phong.SoLuong = int.Parse(f["iSoLuong"]);*/
-                    phong.GiaCa = decimal.Parse(f["mGiaCa"]);
-                    phong.Dien = decimal.Parse(f["sDien"]);
-                    phong.Nuoc = decimal.Parse(f["sNuoc"]);
-                    phong.Internet = decimal.Parse(f["sInternet"]);
-                    phong.GuiXe = decimal.Parse(f["sGuiXe"]);
-                    phong.Diachi = f["sDiaChi"];
-                    phong.SoLuong = int.Parse(f["sSoLuong"]);
-                    phong.Doituong = byte.Parse(f["sDoiTuong"]);
-                    phong.TrangThai = byte.Parse(f["sTrangThai"]);
-                    phong.Map = f["sMap"];
-                    /*   chutro.HoTen = f["sHoTen"];*/
-                    taikhoan.SDT = f["sSDT"];
-                    phong.KhuVuc = f["sKhuVuc"];
-                    phong.Id_ChuTro = int.Parse(f["sid"]);
+
+                string nuocString = f["sNuoc"].Replace(".", ""); // Bỏ dấu chấm
+                if (decimal.TryParse(nuocString, out decimal nuoc))
+                    phong.Nuoc = nuoc;
+                else
+                    ModelState.AddModelError("Nuoc", "Invalid value for Nuoc");
+
+                string internetString = f["sInternet"].Replace(".", ""); // Bỏ dấu chấm
+                if (decimal.TryParse(internetString, out decimal internet))
+                    phong.Internet = internet;
+                else
+                    ModelState.AddModelError("Internet", "Invalid value for Internet");
+
+                string guixeString = f["sGuiXe"].Replace(".", ""); // Bỏ dấu chấm
+                if (decimal.TryParse(guixeString, out decimal guixe))
+                    phong.GuiXe = guixe;
+                else
+                    ModelState.AddModelError("GuiXe", "Invalid value for GuiXe");
+
+
+                if (int.TryParse(f["sSoPhong"], out int soPhong)) phong.SoLuong = soPhong;
+                else ModelState.AddModelError("SoPhong", "Invalid value for SoPhong");
+
+                if (int.TryParse(f["sSoLuong"], out int soNguoiO)) phong.SoNguoiO = soNguoiO;
+                else ModelState.AddModelError("SoLuong", "Invalid value for SoNguoiO");
+
+                if (byte.TryParse(f["sTrangThai"], out byte trangThai)) phong.TrangThai = trangThai;
+                else ModelState.AddModelError("TrangThai", "Invalid value for TrangThai");
+
+                phong.Map = f["sMap"];
+                phong.Diachi = f["sDiaChi"];
+                phong.KhuVuc = f["sKhuVuc"];
+                phong.Id_ChuTro = int.Parse(f["sid"]);
+
+                if (ModelState.IsValid) // Re-check if all fields are valid before saving to the database
+                {
+                    // Save data to database
                     data.PHONGTROs.InsertOnSubmit(phong);
                     data.SubmitChanges();
                     images.Id_PhongTro = phong.Id;
                     data.IMAGEs.InsertOnSubmit(images);
                     data.SubmitChanges();
-                    return RedirectToAction("Index", "Motel");
+
+                    TempData["SuccessMessage"] = "Đăng tin thành công! Tin của bạn đang chờ duyệt.";
+                    return RedirectToAction("Index", "RoomPost");
                 }
-                return View();
             }
+
+            // If model state is not valid, return the view with the model to show error messages
+            return View();
         }
+
+
 
     }
 }

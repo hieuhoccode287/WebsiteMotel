@@ -48,39 +48,34 @@ namespace WEBSITE_MOTEL.Models
     partial void InsertHOTRO(HOTRO instance);
     partial void UpdateHOTRO(HOTRO instance);
     partial void DeleteHOTRO(HOTRO instance);
-    partial void InsertIMAGE(IMAGE instance);
-    partial void UpdateIMAGE(IMAGE instance);
-    partial void DeleteIMAGE(IMAGE instance);
-    partial void InsertKHUVUC(KHUVUC instance);
-    partial void UpdateKHUVUC(KHUVUC instance);
-    partial void DeleteKHUVUC(KHUVUC instance);
     partial void InsertLUUTIN(LUUTIN instance);
     partial void UpdateLUUTIN(LUUTIN instance);
     partial void DeleteLUUTIN(LUUTIN instance);
-    partial void InsertMENU(MENU instance);
-    partial void UpdateMENU(MENU instance);
-    partial void DeleteMENU(MENU instance);
+    partial void InsertKHUVUC(KHUVUC instance);
+    partial void UpdateKHUVUC(KHUVUC instance);
+    partial void DeleteKHUVUC(KHUVUC instance);
+    partial void InsertIMAGE(IMAGE instance);
+    partial void UpdateIMAGE(IMAGE instance);
+    partial void DeleteIMAGE(IMAGE instance);
     partial void InsertNGUOIDUNG(NGUOIDUNG instance);
     partial void UpdateNGUOIDUNG(NGUOIDUNG instance);
     partial void DeleteNGUOIDUNG(NGUOIDUNG instance);
+    partial void InsertMENU(MENU instance);
+    partial void UpdateMENU(MENU instance);
+    partial void DeleteMENU(MENU instance);
     partial void InsertPHONGTRO(PHONGTRO instance);
     partial void UpdatePHONGTRO(PHONGTRO instance);
     partial void DeletePHONGTRO(PHONGTRO instance);
-    partial void InsertPHONGTRO_DUYET(PHONGTRO_DUYET instance);
-    partial void UpdatePHONGTRO_DUYET(PHONGTRO_DUYET instance);
-    partial void DeletePHONGTRO_DUYET(PHONGTRO_DUYET instance);
     partial void InsertTAIKHOAN(TAIKHOAN instance);
     partial void UpdateTAIKHOAN(TAIKHOAN instance);
     partial void DeleteTAIKHOAN(TAIKHOAN instance);
-    #endregion
-		
-		public TimNhaTroDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["TIM_TROOConnectionString4"].ConnectionString, mappingSource)
-		{
-			OnCreated();
-		}
-		
-		public TimNhaTroDataContext(string connection) : 
+        #endregion
+        public TimNhaTroDataContext() :
+                base(global::System.Configuration.ConfigurationManager.ConnectionStrings["TIM_TROOConnectionString"].ConnectionString, mappingSource)
+        {
+            OnCreated();
+        }
+        public TimNhaTroDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
@@ -152,11 +147,11 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		public System.Data.Linq.Table<IMAGE> IMAGEs
+		public System.Data.Linq.Table<LUUTIN> LUUTINs
 		{
 			get
 			{
-				return this.GetTable<IMAGE>();
+				return this.GetTable<LUUTIN>();
 			}
 		}
 		
@@ -168,19 +163,11 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		public System.Data.Linq.Table<LUUTIN> LUUTINs
+		public System.Data.Linq.Table<IMAGE> IMAGEs
 		{
 			get
 			{
-				return this.GetTable<LUUTIN>();
-			}
-		}
-		
-		public System.Data.Linq.Table<MENU> MENUs
-		{
-			get
-			{
-				return this.GetTable<MENU>();
+				return this.GetTable<IMAGE>();
 			}
 		}
 		
@@ -192,19 +179,19 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
+		public System.Data.Linq.Table<MENU> MENUs
+		{
+			get
+			{
+				return this.GetTable<MENU>();
+			}
+		}
+		
 		public System.Data.Linq.Table<PHONGTRO> PHONGTROs
 		{
 			get
 			{
 				return this.GetTable<PHONGTRO>();
-			}
-		}
-		
-		public System.Data.Linq.Table<PHONGTRO_DUYET> PHONGTRO_DUYETs
-		{
-			get
-			{
-				return this.GetTable<PHONGTRO_DUYET>();
 			}
 		}
 		
@@ -627,8 +614,6 @@ namespace WEBSITE_MOTEL.Models
 		
 		private System.Nullable<int> _Id_TaiKhoan;
 		
-		private EntitySet<PHONGTRO_DUYET> _PHONGTRO_DUYETs;
-		
 		private EntityRef<TAIKHOAN> _TAIKHOAN;
 		
     #region Extensibility Method Definitions
@@ -649,7 +634,6 @@ namespace WEBSITE_MOTEL.Models
 		
 		public CHUTRO()
 		{
-			this._PHONGTRO_DUYETs = new EntitySet<PHONGTRO_DUYET>(new Action<PHONGTRO_DUYET>(this.attach_PHONGTRO_DUYETs), new Action<PHONGTRO_DUYET>(this.detach_PHONGTRO_DUYETs));
 			this._TAIKHOAN = default(EntityRef<TAIKHOAN>);
 			OnCreated();
 		}
@@ -758,19 +742,6 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHUTRO_PHONGTRO_DUYET", Storage="_PHONGTRO_DUYETs", ThisKey="Id", OtherKey="Id_ChuTro")]
-		public EntitySet<PHONGTRO_DUYET> PHONGTRO_DUYETs
-		{
-			get
-			{
-				return this._PHONGTRO_DUYETs;
-			}
-			set
-			{
-				this._PHONGTRO_DUYETs.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_CHUTRO", Storage="_TAIKHOAN", ThisKey="Id_TaiKhoan", OtherKey="Id", IsForeignKey=true)]
 		public TAIKHOAN TAIKHOAN
 		{
@@ -823,18 +794,6 @@ namespace WEBSITE_MOTEL.Models
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_PHONGTRO_DUYETs(PHONGTRO_DUYET entity)
-		{
-			this.SendPropertyChanging();
-			entity.CHUTRO = this;
-		}
-		
-		private void detach_PHONGTRO_DUYETs(PHONGTRO_DUYET entity)
-		{
-			this.SendPropertyChanging();
-			entity.CHUTRO = null;
 		}
 	}
 	
@@ -1346,29 +1305,21 @@ namespace WEBSITE_MOTEL.Models
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.IMAGES")]
-	public partial class IMAGE : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.LUUTIN")]
+	public partial class LUUTIN : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private int _Id;
 		
+		private System.Nullable<int> _Id_NguoiDung;
+		
 		private System.Nullable<int> _Id_PhongTro;
 		
-		private string _Url_Path;
+		private EntityRef<NGUOIDUNG> _NGUOIDUNG;
 		
-		private string _ten;
-		
-		private string _Url_Path2;
-		
-		private string _Url_Path3;
-		
-		private string _Url_Path4;
-		
-		private string _Url_Path5;
-		
-		private System.Nullable<int> _Id_TaiKhoan;
+		private EntityRef<PHONGTRO> _PHONGTRO;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1376,26 +1327,16 @@ namespace WEBSITE_MOTEL.Models
     partial void OnCreated();
     partial void OnIdChanging(int value);
     partial void OnIdChanged();
+    partial void OnId_NguoiDungChanging(System.Nullable<int> value);
+    partial void OnId_NguoiDungChanged();
     partial void OnId_PhongTroChanging(System.Nullable<int> value);
     partial void OnId_PhongTroChanged();
-    partial void OnUrl_PathChanging(string value);
-    partial void OnUrl_PathChanged();
-    partial void OntenChanging(string value);
-    partial void OntenChanged();
-    partial void OnUrl_Path2Changing(string value);
-    partial void OnUrl_Path2Changed();
-    partial void OnUrl_Path3Changing(string value);
-    partial void OnUrl_Path3Changed();
-    partial void OnUrl_Path4Changing(string value);
-    partial void OnUrl_Path4Changed();
-    partial void OnUrl_Path5Changing(string value);
-    partial void OnUrl_Path5Changed();
-    partial void OnId_TaiKhoanChanging(System.Nullable<int> value);
-    partial void OnId_TaiKhoanChanged();
     #endregion
 		
-		public IMAGE()
+		public LUUTIN()
 		{
+			this._NGUOIDUNG = default(EntityRef<NGUOIDUNG>);
+			this._PHONGTRO = default(EntityRef<PHONGTRO>);
 			OnCreated();
 		}
 		
@@ -1419,6 +1360,30 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_NguoiDung", DbType="Int")]
+		public System.Nullable<int> Id_NguoiDung
+		{
+			get
+			{
+				return this._Id_NguoiDung;
+			}
+			set
+			{
+				if ((this._Id_NguoiDung != value))
+				{
+					if (this._NGUOIDUNG.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnId_NguoiDungChanging(value);
+					this.SendPropertyChanging();
+					this._Id_NguoiDung = value;
+					this.SendPropertyChanged("Id_NguoiDung");
+					this.OnId_NguoiDungChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_PhongTro", DbType="Int")]
 		public System.Nullable<int> Id_PhongTro
 		{
@@ -1430,6 +1395,10 @@ namespace WEBSITE_MOTEL.Models
 			{
 				if ((this._Id_PhongTro != value))
 				{
+					if (this._PHONGTRO.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnId_PhongTroChanging(value);
 					this.SendPropertyChanging();
 					this._Id_PhongTro = value;
@@ -1439,142 +1408,70 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path", DbType="NVarChar(255)")]
-		public string Url_Path
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NGUOIDUNG_LUUTIN", Storage="_NGUOIDUNG", ThisKey="Id_NguoiDung", OtherKey="Id", IsForeignKey=true)]
+		public NGUOIDUNG NGUOIDUNG
 		{
 			get
 			{
-				return this._Url_Path;
+				return this._NGUOIDUNG.Entity;
 			}
 			set
 			{
-				if ((this._Url_Path != value))
+				NGUOIDUNG previousValue = this._NGUOIDUNG.Entity;
+				if (((previousValue != value) 
+							|| (this._NGUOIDUNG.HasLoadedOrAssignedValue == false)))
 				{
-					this.OnUrl_PathChanging(value);
 					this.SendPropertyChanging();
-					this._Url_Path = value;
-					this.SendPropertyChanged("Url_Path");
-					this.OnUrl_PathChanged();
+					if ((previousValue != null))
+					{
+						this._NGUOIDUNG.Entity = null;
+						previousValue.LUUTINs.Remove(this);
+					}
+					this._NGUOIDUNG.Entity = value;
+					if ((value != null))
+					{
+						value.LUUTINs.Add(this);
+						this._Id_NguoiDung = value.Id;
+					}
+					else
+					{
+						this._Id_NguoiDung = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("NGUOIDUNG");
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ten", DbType="NVarChar(100)")]
-		public string ten
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PHONGTRO_LUUTIN", Storage="_PHONGTRO", ThisKey="Id_PhongTro", OtherKey="Id", IsForeignKey=true)]
+		public PHONGTRO PHONGTRO
 		{
 			get
 			{
-				return this._ten;
+				return this._PHONGTRO.Entity;
 			}
 			set
 			{
-				if ((this._ten != value))
+				PHONGTRO previousValue = this._PHONGTRO.Entity;
+				if (((previousValue != value) 
+							|| (this._PHONGTRO.HasLoadedOrAssignedValue == false)))
 				{
-					this.OntenChanging(value);
 					this.SendPropertyChanging();
-					this._ten = value;
-					this.SendPropertyChanged("ten");
-					this.OntenChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path2", DbType="NVarChar(255)")]
-		public string Url_Path2
-		{
-			get
-			{
-				return this._Url_Path2;
-			}
-			set
-			{
-				if ((this._Url_Path2 != value))
-				{
-					this.OnUrl_Path2Changing(value);
-					this.SendPropertyChanging();
-					this._Url_Path2 = value;
-					this.SendPropertyChanged("Url_Path2");
-					this.OnUrl_Path2Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path3", DbType="NVarChar(255)")]
-		public string Url_Path3
-		{
-			get
-			{
-				return this._Url_Path3;
-			}
-			set
-			{
-				if ((this._Url_Path3 != value))
-				{
-					this.OnUrl_Path3Changing(value);
-					this.SendPropertyChanging();
-					this._Url_Path3 = value;
-					this.SendPropertyChanged("Url_Path3");
-					this.OnUrl_Path3Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path4", DbType="NVarChar(255)")]
-		public string Url_Path4
-		{
-			get
-			{
-				return this._Url_Path4;
-			}
-			set
-			{
-				if ((this._Url_Path4 != value))
-				{
-					this.OnUrl_Path4Changing(value);
-					this.SendPropertyChanging();
-					this._Url_Path4 = value;
-					this.SendPropertyChanged("Url_Path4");
-					this.OnUrl_Path4Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path5", DbType="NVarChar(255)")]
-		public string Url_Path5
-		{
-			get
-			{
-				return this._Url_Path5;
-			}
-			set
-			{
-				if ((this._Url_Path5 != value))
-				{
-					this.OnUrl_Path5Changing(value);
-					this.SendPropertyChanging();
-					this._Url_Path5 = value;
-					this.SendPropertyChanged("Url_Path5");
-					this.OnUrl_Path5Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_TaiKhoan", DbType="Int")]
-		public System.Nullable<int> Id_TaiKhoan
-		{
-			get
-			{
-				return this._Id_TaiKhoan;
-			}
-			set
-			{
-				if ((this._Id_TaiKhoan != value))
-				{
-					this.OnId_TaiKhoanChanging(value);
-					this.SendPropertyChanging();
-					this._Id_TaiKhoan = value;
-					this.SendPropertyChanged("Id_TaiKhoan");
-					this.OnId_TaiKhoanChanged();
+					if ((previousValue != null))
+					{
+						this._PHONGTRO.Entity = null;
+						previousValue.LUUTINs.Remove(this);
+					}
+					this._PHONGTRO.Entity = value;
+					if ((value != null))
+					{
+						value.LUUTINs.Add(this);
+						this._Id_PhongTro = value.Id;
+					}
+					else
+					{
+						this._Id_PhongTro = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("PHONGTRO");
 				}
 			}
 		}
@@ -1806,21 +1703,29 @@ namespace WEBSITE_MOTEL.Models
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.LUUTIN")]
-	public partial class LUUTIN : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.IMAGES")]
+	public partial class IMAGE : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private int _Id;
 		
-		private System.Nullable<int> _Id_NguoiDung;
-		
 		private System.Nullable<int> _Id_PhongTro;
 		
-		private EntityRef<NGUOIDUNG> _NGUOIDUNG;
+		private string _Url_Path;
 		
-		private EntityRef<PHONGTRO> _PHONGTRO;
+		private string _ten;
+		
+		private string _Url_Path2;
+		
+		private string _Url_Path3;
+		
+		private string _Url_Path4;
+		
+		private string _Url_Path5;
+		
+		private System.Nullable<int> _Id_TaiKhoan;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1828,16 +1733,26 @@ namespace WEBSITE_MOTEL.Models
     partial void OnCreated();
     partial void OnIdChanging(int value);
     partial void OnIdChanged();
-    partial void OnId_NguoiDungChanging(System.Nullable<int> value);
-    partial void OnId_NguoiDungChanged();
     partial void OnId_PhongTroChanging(System.Nullable<int> value);
     partial void OnId_PhongTroChanged();
+    partial void OnUrl_PathChanging(string value);
+    partial void OnUrl_PathChanged();
+    partial void OntenChanging(string value);
+    partial void OntenChanged();
+    partial void OnUrl_Path2Changing(string value);
+    partial void OnUrl_Path2Changed();
+    partial void OnUrl_Path3Changing(string value);
+    partial void OnUrl_Path3Changed();
+    partial void OnUrl_Path4Changing(string value);
+    partial void OnUrl_Path4Changed();
+    partial void OnUrl_Path5Changing(string value);
+    partial void OnUrl_Path5Changed();
+    partial void OnId_TaiKhoanChanging(System.Nullable<int> value);
+    partial void OnId_TaiKhoanChanged();
     #endregion
 		
-		public LUUTIN()
+		public IMAGE()
 		{
-			this._NGUOIDUNG = default(EntityRef<NGUOIDUNG>);
-			this._PHONGTRO = default(EntityRef<PHONGTRO>);
 			OnCreated();
 		}
 		
@@ -1857,30 +1772,6 @@ namespace WEBSITE_MOTEL.Models
 					this._Id = value;
 					this.SendPropertyChanged("Id");
 					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_NguoiDung", DbType="Int")]
-		public System.Nullable<int> Id_NguoiDung
-		{
-			get
-			{
-				return this._Id_NguoiDung;
-			}
-			set
-			{
-				if ((this._Id_NguoiDung != value))
-				{
-					if (this._NGUOIDUNG.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnId_NguoiDungChanging(value);
-					this.SendPropertyChanging();
-					this._Id_NguoiDung = value;
-					this.SendPropertyChanged("Id_NguoiDung");
-					this.OnId_NguoiDungChanged();
 				}
 			}
 		}
@@ -1896,10 +1787,6 @@ namespace WEBSITE_MOTEL.Models
 			{
 				if ((this._Id_PhongTro != value))
 				{
-					if (this._PHONGTRO.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OnId_PhongTroChanging(value);
 					this.SendPropertyChanging();
 					this._Id_PhongTro = value;
@@ -1909,228 +1796,142 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NGUOIDUNG_LUUTIN", Storage="_NGUOIDUNG", ThisKey="Id_NguoiDung", OtherKey="Id", IsForeignKey=true)]
-		public NGUOIDUNG NGUOIDUNG
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path", DbType="NVarChar(255)")]
+		public string Url_Path
 		{
 			get
 			{
-				return this._NGUOIDUNG.Entity;
+				return this._Url_Path;
 			}
 			set
 			{
-				NGUOIDUNG previousValue = this._NGUOIDUNG.Entity;
-				if (((previousValue != value) 
-							|| (this._NGUOIDUNG.HasLoadedOrAssignedValue == false)))
+				if ((this._Url_Path != value))
 				{
+					this.OnUrl_PathChanging(value);
 					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._NGUOIDUNG.Entity = null;
-						previousValue.LUUTINs.Remove(this);
-					}
-					this._NGUOIDUNG.Entity = value;
-					if ((value != null))
-					{
-						value.LUUTINs.Add(this);
-						this._Id_NguoiDung = value.Id;
-					}
-					else
-					{
-						this._Id_NguoiDung = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("NGUOIDUNG");
+					this._Url_Path = value;
+					this.SendPropertyChanged("Url_Path");
+					this.OnUrl_PathChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PHONGTRO_LUUTIN", Storage="_PHONGTRO", ThisKey="Id_PhongTro", OtherKey="Id", IsForeignKey=true)]
-		public PHONGTRO PHONGTRO
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ten", DbType="NVarChar(100)")]
+		public string ten
 		{
 			get
 			{
-				return this._PHONGTRO.Entity;
+				return this._ten;
 			}
 			set
 			{
-				PHONGTRO previousValue = this._PHONGTRO.Entity;
-				if (((previousValue != value) 
-							|| (this._PHONGTRO.HasLoadedOrAssignedValue == false)))
+				if ((this._ten != value))
 				{
+					this.OntenChanging(value);
 					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._PHONGTRO.Entity = null;
-						previousValue.LUUTINs.Remove(this);
-					}
-					this._PHONGTRO.Entity = value;
-					if ((value != null))
-					{
-						value.LUUTINs.Add(this);
-						this._Id_PhongTro = value.Id;
-					}
-					else
-					{
-						this._Id_PhongTro = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("PHONGTRO");
+					this._ten = value;
+					this.SendPropertyChanged("ten");
+					this.OntenChanged();
 				}
 			}
 		}
 		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.MENU")]
-	public partial class MENU : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private string _Ten;
-		
-		private System.Nullable<int> _Parent_id;
-		
-		private System.Nullable<byte> _type;
-		
-		private string _Link;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnTenChanging(string value);
-    partial void OnTenChanged();
-    partial void OnParent_idChanging(System.Nullable<int> value);
-    partial void OnParent_idChanged();
-    partial void OntypeChanging(System.Nullable<byte> value);
-    partial void OntypeChanged();
-    partial void OnLinkChanging(string value);
-    partial void OnLinkChanged();
-    #endregion
-		
-		public MENU()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path2", DbType="NVarChar(255)")]
+		public string Url_Path2
 		{
 			get
 			{
-				return this._Id;
+				return this._Url_Path2;
 			}
 			set
 			{
-				if ((this._Id != value))
+				if ((this._Url_Path2 != value))
 				{
-					this.OnIdChanging(value);
+					this.OnUrl_Path2Changing(value);
 					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
+					this._Url_Path2 = value;
+					this.SendPropertyChanged("Url_Path2");
+					this.OnUrl_Path2Changed();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ten", DbType="NVarChar(100)")]
-		public string Ten
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path3", DbType="NVarChar(255)")]
+		public string Url_Path3
 		{
 			get
 			{
-				return this._Ten;
+				return this._Url_Path3;
 			}
 			set
 			{
-				if ((this._Ten != value))
+				if ((this._Url_Path3 != value))
 				{
-					this.OnTenChanging(value);
+					this.OnUrl_Path3Changing(value);
 					this.SendPropertyChanging();
-					this._Ten = value;
-					this.SendPropertyChanged("Ten");
-					this.OnTenChanged();
+					this._Url_Path3 = value;
+					this.SendPropertyChanged("Url_Path3");
+					this.OnUrl_Path3Changed();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Parent_id", DbType="Int")]
-		public System.Nullable<int> Parent_id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path4", DbType="NVarChar(255)")]
+		public string Url_Path4
 		{
 			get
 			{
-				return this._Parent_id;
+				return this._Url_Path4;
 			}
 			set
 			{
-				if ((this._Parent_id != value))
+				if ((this._Url_Path4 != value))
 				{
-					this.OnParent_idChanging(value);
+					this.OnUrl_Path4Changing(value);
 					this.SendPropertyChanging();
-					this._Parent_id = value;
-					this.SendPropertyChanged("Parent_id");
-					this.OnParent_idChanged();
+					this._Url_Path4 = value;
+					this.SendPropertyChanged("Url_Path4");
+					this.OnUrl_Path4Changed();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="TinyInt")]
-		public System.Nullable<byte> type
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path5", DbType="NVarChar(255)")]
+		public string Url_Path5
 		{
 			get
 			{
-				return this._type;
+				return this._Url_Path5;
 			}
 			set
 			{
-				if ((this._type != value))
+				if ((this._Url_Path5 != value))
 				{
-					this.OntypeChanging(value);
+					this.OnUrl_Path5Changing(value);
 					this.SendPropertyChanging();
-					this._type = value;
-					this.SendPropertyChanged("type");
-					this.OntypeChanged();
+					this._Url_Path5 = value;
+					this.SendPropertyChanged("Url_Path5");
+					this.OnUrl_Path5Changed();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Link", DbType="NVarChar(255)")]
-		public string Link
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_TaiKhoan", DbType="Int")]
+		public System.Nullable<int> Id_TaiKhoan
 		{
 			get
 			{
-				return this._Link;
+				return this._Id_TaiKhoan;
 			}
 			set
 			{
-				if ((this._Link != value))
+				if ((this._Id_TaiKhoan != value))
 				{
-					this.OnLinkChanging(value);
+					this.OnId_TaiKhoanChanging(value);
 					this.SendPropertyChanging();
-					this._Link = value;
-					this.SendPropertyChanged("Link");
-					this.OnLinkChanged();
+					this._Id_TaiKhoan = value;
+					this.SendPropertyChanged("Id_TaiKhoan");
+					this.OnId_TaiKhoanChanged();
 				}
 			}
 		}
@@ -2387,6 +2188,164 @@ namespace WEBSITE_MOTEL.Models
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.MENU")]
+	public partial class MENU : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Ten;
+		
+		private System.Nullable<int> _Parent_id;
+		
+		private System.Nullable<byte> _type;
+		
+		private string _Link;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnTenChanging(string value);
+    partial void OnTenChanged();
+    partial void OnParent_idChanging(System.Nullable<int> value);
+    partial void OnParent_idChanged();
+    partial void OntypeChanging(System.Nullable<byte> value);
+    partial void OntypeChanged();
+    partial void OnLinkChanging(string value);
+    partial void OnLinkChanged();
+    #endregion
+		
+		public MENU()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ten", DbType="NVarChar(100)")]
+		public string Ten
+		{
+			get
+			{
+				return this._Ten;
+			}
+			set
+			{
+				if ((this._Ten != value))
+				{
+					this.OnTenChanging(value);
+					this.SendPropertyChanging();
+					this._Ten = value;
+					this.SendPropertyChanged("Ten");
+					this.OnTenChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Parent_id", DbType="Int")]
+		public System.Nullable<int> Parent_id
+		{
+			get
+			{
+				return this._Parent_id;
+			}
+			set
+			{
+				if ((this._Parent_id != value))
+				{
+					this.OnParent_idChanging(value);
+					this.SendPropertyChanging();
+					this._Parent_id = value;
+					this.SendPropertyChanged("Parent_id");
+					this.OnParent_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="TinyInt")]
+		public System.Nullable<byte> type
+		{
+			get
+			{
+				return this._type;
+			}
+			set
+			{
+				if ((this._type != value))
+				{
+					this.OntypeChanging(value);
+					this.SendPropertyChanging();
+					this._type = value;
+					this.SendPropertyChanged("type");
+					this.OntypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Link", DbType="NVarChar(255)")]
+		public string Link
+		{
+			get
+			{
+				return this._Link;
+			}
+			set
+			{
+				if ((this._Link != value))
+				{
+					this.OnLinkChanging(value);
+					this.SendPropertyChanging();
+					this._Link = value;
+					this.SendPropertyChanged("Link");
+					this.OnLinkChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PHONGTRO")]
 	public partial class PHONGTRO : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -2417,8 +2376,6 @@ namespace WEBSITE_MOTEL.Models
 		
 		private string _Contents;
 		
-		private System.Nullable<byte> _Doituong;
-		
 		private string _Map;
 		
 		private string _Video_link;
@@ -2436,6 +2393,8 @@ namespace WEBSITE_MOTEL.Models
 		private System.Nullable<decimal> _GuiXe;
 		
 		private string _KhuVuc;
+		
+		private System.Nullable<int> _SoNguoiO;
 		
 		private EntitySet<CSVATCHAT> _CSVATCHATs;
 		
@@ -2469,8 +2428,6 @@ namespace WEBSITE_MOTEL.Models
     partial void OnSoLuongChanged();
     partial void OnContentsChanging(string value);
     partial void OnContentsChanged();
-    partial void OnDoituongChanging(System.Nullable<byte> value);
-    partial void OnDoituongChanged();
     partial void OnMapChanging(string value);
     partial void OnMapChanged();
     partial void OnVideo_linkChanging(string value);
@@ -2489,6 +2446,8 @@ namespace WEBSITE_MOTEL.Models
     partial void OnGuiXeChanged();
     partial void OnKhuVucChanging(string value);
     partial void OnKhuVucChanged();
+    partial void OnSoNguoiOChanging(System.Nullable<int> value);
+    partial void OnSoNguoiOChanged();
     #endregion
 		
 		public PHONGTRO()
@@ -2738,26 +2697,6 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Doituong", DbType="TinyInt")]
-		public System.Nullable<byte> Doituong
-		{
-			get
-			{
-				return this._Doituong;
-			}
-			set
-			{
-				if ((this._Doituong != value))
-				{
-					this.OnDoituongChanging(value);
-					this.SendPropertyChanging();
-					this._Doituong = value;
-					this.SendPropertyChanged("Doituong");
-					this.OnDoituongChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Map", DbType="Text", UpdateCheck=UpdateCheck.Never)]
 		public string Map
 		{
@@ -2938,6 +2877,26 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SoNguoiO", DbType="Int")]
+		public System.Nullable<int> SoNguoiO
+		{
+			get
+			{
+				return this._SoNguoiO;
+			}
+			set
+			{
+				if ((this._SoNguoiO != value))
+				{
+					this.OnSoNguoiOChanging(value);
+					this.SendPropertyChanging();
+					this._SoNguoiO = value;
+					this.SendPropertyChanged("SoNguoiO");
+					this.OnSoNguoiOChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PHONGTRO_CSVATCHAT", Storage="_CSVATCHATs", ThisKey="Id", OtherKey="Id_PhongTro")]
 		public EntitySet<CSVATCHAT> CSVATCHATs
 		{
@@ -3006,733 +2965,6 @@ namespace WEBSITE_MOTEL.Models
 		{
 			this.SendPropertyChanging();
 			entity.PHONGTRO = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PHONGTRO_DUYET")]
-	public partial class PHONGTRO_DUYET : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private System.Nullable<int> _Id_PhongTro;
-		
-		private System.Nullable<int> _Id_ChuTro;
-		
-		private string _TenPhong;
-		
-		private string _Slug;
-		
-		private string _AnhBia;
-		
-		private string _MoTa;
-		
-		private System.Nullable<decimal> _GiaCa;
-		
-		private System.Nullable<decimal> _HoaHong;
-		
-		private byte _TrangThai;
-		
-		private System.Nullable<int> _DienTich;
-		
-		private System.Nullable<int> _SoLuong;
-		
-		private string _Contents;
-		
-		private System.Nullable<byte> _Doituong;
-		
-		private string _Map;
-		
-		private string _Video_link;
-		
-		private System.Nullable<System.DateTime> _Ngay;
-		
-		private string _Diachi;
-		
-		private System.Nullable<decimal> _Nuoc;
-		
-		private System.Nullable<decimal> _Dien;
-		
-		private System.Nullable<decimal> _Internet;
-		
-		private System.Nullable<decimal> _GuiXe;
-		
-		private string _KhuVuc;
-		
-		private bool _IsApproved;
-		
-		private System.Nullable<System.DateTime> _ApprovedDate;
-		
-		private string _ApprovedBy;
-		
-		private string _RejectReason;
-		
-		private EntityRef<CHUTRO> _CHUTRO;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnId_PhongTroChanging(System.Nullable<int> value);
-    partial void OnId_PhongTroChanged();
-    partial void OnId_ChuTroChanging(System.Nullable<int> value);
-    partial void OnId_ChuTroChanged();
-    partial void OnTenPhongChanging(string value);
-    partial void OnTenPhongChanged();
-    partial void OnSlugChanging(string value);
-    partial void OnSlugChanged();
-    partial void OnAnhBiaChanging(string value);
-    partial void OnAnhBiaChanged();
-    partial void OnMoTaChanging(string value);
-    partial void OnMoTaChanged();
-    partial void OnGiaCaChanging(System.Nullable<decimal> value);
-    partial void OnGiaCaChanged();
-    partial void OnHoaHongChanging(System.Nullable<decimal> value);
-    partial void OnHoaHongChanged();
-    partial void OnTrangThaiChanging(byte value);
-    partial void OnTrangThaiChanged();
-    partial void OnDienTichChanging(System.Nullable<int> value);
-    partial void OnDienTichChanged();
-    partial void OnSoLuongChanging(System.Nullable<int> value);
-    partial void OnSoLuongChanged();
-    partial void OnContentsChanging(string value);
-    partial void OnContentsChanged();
-    partial void OnDoituongChanging(System.Nullable<byte> value);
-    partial void OnDoituongChanged();
-    partial void OnMapChanging(string value);
-    partial void OnMapChanged();
-    partial void OnVideo_linkChanging(string value);
-    partial void OnVideo_linkChanged();
-    partial void OnNgayChanging(System.Nullable<System.DateTime> value);
-    partial void OnNgayChanged();
-    partial void OnDiachiChanging(string value);
-    partial void OnDiachiChanged();
-    partial void OnNuocChanging(System.Nullable<decimal> value);
-    partial void OnNuocChanged();
-    partial void OnDienChanging(System.Nullable<decimal> value);
-    partial void OnDienChanged();
-    partial void OnInternetChanging(System.Nullable<decimal> value);
-    partial void OnInternetChanged();
-    partial void OnGuiXeChanging(System.Nullable<decimal> value);
-    partial void OnGuiXeChanged();
-    partial void OnKhuVucChanging(string value);
-    partial void OnKhuVucChanged();
-    partial void OnIsApprovedChanging(bool value);
-    partial void OnIsApprovedChanged();
-    partial void OnApprovedDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnApprovedDateChanged();
-    partial void OnApprovedByChanging(string value);
-    partial void OnApprovedByChanged();
-    partial void OnRejectReasonChanging(string value);
-    partial void OnRejectReasonChanged();
-    #endregion
-		
-		public PHONGTRO_DUYET()
-		{
-			this._CHUTRO = default(EntityRef<CHUTRO>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_PhongTro", DbType="Int")]
-		public System.Nullable<int> Id_PhongTro
-		{
-			get
-			{
-				return this._Id_PhongTro;
-			}
-			set
-			{
-				if ((this._Id_PhongTro != value))
-				{
-					this.OnId_PhongTroChanging(value);
-					this.SendPropertyChanging();
-					this._Id_PhongTro = value;
-					this.SendPropertyChanged("Id_PhongTro");
-					this.OnId_PhongTroChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_ChuTro", DbType="Int")]
-		public System.Nullable<int> Id_ChuTro
-		{
-			get
-			{
-				return this._Id_ChuTro;
-			}
-			set
-			{
-				if ((this._Id_ChuTro != value))
-				{
-					if (this._CHUTRO.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnId_ChuTroChanging(value);
-					this.SendPropertyChanging();
-					this._Id_ChuTro = value;
-					this.SendPropertyChanged("Id_ChuTro");
-					this.OnId_ChuTroChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TenPhong", DbType="NVarChar(1)")]
-		public string TenPhong
-		{
-			get
-			{
-				return this._TenPhong;
-			}
-			set
-			{
-				if ((this._TenPhong != value))
-				{
-					this.OnTenPhongChanging(value);
-					this.SendPropertyChanging();
-					this._TenPhong = value;
-					this.SendPropertyChanged("TenPhong");
-					this.OnTenPhongChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Slug", DbType="NVarChar(1)")]
-		public string Slug
-		{
-			get
-			{
-				return this._Slug;
-			}
-			set
-			{
-				if ((this._Slug != value))
-				{
-					this.OnSlugChanging(value);
-					this.SendPropertyChanging();
-					this._Slug = value;
-					this.SendPropertyChanged("Slug");
-					this.OnSlugChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AnhBia", DbType="VarChar(1)")]
-		public string AnhBia
-		{
-			get
-			{
-				return this._AnhBia;
-			}
-			set
-			{
-				if ((this._AnhBia != value))
-				{
-					this.OnAnhBiaChanging(value);
-					this.SendPropertyChanging();
-					this._AnhBia = value;
-					this.SendPropertyChanged("AnhBia");
-					this.OnAnhBiaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MoTa", DbType="NVarChar(1)")]
-		public string MoTa
-		{
-			get
-			{
-				return this._MoTa;
-			}
-			set
-			{
-				if ((this._MoTa != value))
-				{
-					this.OnMoTaChanging(value);
-					this.SendPropertyChanging();
-					this._MoTa = value;
-					this.SendPropertyChanged("MoTa");
-					this.OnMoTaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GiaCa", DbType="Money")]
-		public System.Nullable<decimal> GiaCa
-		{
-			get
-			{
-				return this._GiaCa;
-			}
-			set
-			{
-				if ((this._GiaCa != value))
-				{
-					this.OnGiaCaChanging(value);
-					this.SendPropertyChanging();
-					this._GiaCa = value;
-					this.SendPropertyChanged("GiaCa");
-					this.OnGiaCaChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HoaHong", DbType="Money")]
-		public System.Nullable<decimal> HoaHong
-		{
-			get
-			{
-				return this._HoaHong;
-			}
-			set
-			{
-				if ((this._HoaHong != value))
-				{
-					this.OnHoaHongChanging(value);
-					this.SendPropertyChanging();
-					this._HoaHong = value;
-					this.SendPropertyChanged("HoaHong");
-					this.OnHoaHongChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TrangThai", DbType="TinyInt NOT NULL")]
-		public byte TrangThai
-		{
-			get
-			{
-				return this._TrangThai;
-			}
-			set
-			{
-				if ((this._TrangThai != value))
-				{
-					this.OnTrangThaiChanging(value);
-					this.SendPropertyChanging();
-					this._TrangThai = value;
-					this.SendPropertyChanged("TrangThai");
-					this.OnTrangThaiChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DienTich", DbType="Int")]
-		public System.Nullable<int> DienTich
-		{
-			get
-			{
-				return this._DienTich;
-			}
-			set
-			{
-				if ((this._DienTich != value))
-				{
-					this.OnDienTichChanging(value);
-					this.SendPropertyChanging();
-					this._DienTich = value;
-					this.SendPropertyChanged("DienTich");
-					this.OnDienTichChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SoLuong", DbType="Int")]
-		public System.Nullable<int> SoLuong
-		{
-			get
-			{
-				return this._SoLuong;
-			}
-			set
-			{
-				if ((this._SoLuong != value))
-				{
-					this.OnSoLuongChanging(value);
-					this.SendPropertyChanging();
-					this._SoLuong = value;
-					this.SendPropertyChanged("SoLuong");
-					this.OnSoLuongChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Contents", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Contents
-		{
-			get
-			{
-				return this._Contents;
-			}
-			set
-			{
-				if ((this._Contents != value))
-				{
-					this.OnContentsChanging(value);
-					this.SendPropertyChanging();
-					this._Contents = value;
-					this.SendPropertyChanged("Contents");
-					this.OnContentsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Doituong", DbType="TinyInt")]
-		public System.Nullable<byte> Doituong
-		{
-			get
-			{
-				return this._Doituong;
-			}
-			set
-			{
-				if ((this._Doituong != value))
-				{
-					this.OnDoituongChanging(value);
-					this.SendPropertyChanging();
-					this._Doituong = value;
-					this.SendPropertyChanged("Doituong");
-					this.OnDoituongChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Map", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Map
-		{
-			get
-			{
-				return this._Map;
-			}
-			set
-			{
-				if ((this._Map != value))
-				{
-					this.OnMapChanging(value);
-					this.SendPropertyChanging();
-					this._Map = value;
-					this.SendPropertyChanged("Map");
-					this.OnMapChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Video_link", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Video_link
-		{
-			get
-			{
-				return this._Video_link;
-			}
-			set
-			{
-				if ((this._Video_link != value))
-				{
-					this.OnVideo_linkChanging(value);
-					this.SendPropertyChanging();
-					this._Video_link = value;
-					this.SendPropertyChanged("Video_link");
-					this.OnVideo_linkChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Ngay", DbType="SmallDateTime")]
-		public System.Nullable<System.DateTime> Ngay
-		{
-			get
-			{
-				return this._Ngay;
-			}
-			set
-			{
-				if ((this._Ngay != value))
-				{
-					this.OnNgayChanging(value);
-					this.SendPropertyChanging();
-					this._Ngay = value;
-					this.SendPropertyChanged("Ngay");
-					this.OnNgayChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Diachi", DbType="NVarChar(1)")]
-		public string Diachi
-		{
-			get
-			{
-				return this._Diachi;
-			}
-			set
-			{
-				if ((this._Diachi != value))
-				{
-					this.OnDiachiChanging(value);
-					this.SendPropertyChanging();
-					this._Diachi = value;
-					this.SendPropertyChanged("Diachi");
-					this.OnDiachiChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Nuoc", DbType="Money")]
-		public System.Nullable<decimal> Nuoc
-		{
-			get
-			{
-				return this._Nuoc;
-			}
-			set
-			{
-				if ((this._Nuoc != value))
-				{
-					this.OnNuocChanging(value);
-					this.SendPropertyChanging();
-					this._Nuoc = value;
-					this.SendPropertyChanged("Nuoc");
-					this.OnNuocChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Dien", DbType="Money")]
-		public System.Nullable<decimal> Dien
-		{
-			get
-			{
-				return this._Dien;
-			}
-			set
-			{
-				if ((this._Dien != value))
-				{
-					this.OnDienChanging(value);
-					this.SendPropertyChanging();
-					this._Dien = value;
-					this.SendPropertyChanged("Dien");
-					this.OnDienChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Internet", DbType="Money")]
-		public System.Nullable<decimal> Internet
-		{
-			get
-			{
-				return this._Internet;
-			}
-			set
-			{
-				if ((this._Internet != value))
-				{
-					this.OnInternetChanging(value);
-					this.SendPropertyChanging();
-					this._Internet = value;
-					this.SendPropertyChanged("Internet");
-					this.OnInternetChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GuiXe", DbType="Money")]
-		public System.Nullable<decimal> GuiXe
-		{
-			get
-			{
-				return this._GuiXe;
-			}
-			set
-			{
-				if ((this._GuiXe != value))
-				{
-					this.OnGuiXeChanging(value);
-					this.SendPropertyChanging();
-					this._GuiXe = value;
-					this.SendPropertyChanged("GuiXe");
-					this.OnGuiXeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_KhuVuc", DbType="NVarChar(1)")]
-		public string KhuVuc
-		{
-			get
-			{
-				return this._KhuVuc;
-			}
-			set
-			{
-				if ((this._KhuVuc != value))
-				{
-					this.OnKhuVucChanging(value);
-					this.SendPropertyChanging();
-					this._KhuVuc = value;
-					this.SendPropertyChanged("KhuVuc");
-					this.OnKhuVucChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsApproved", DbType="Bit NOT NULL")]
-		public bool IsApproved
-		{
-			get
-			{
-				return this._IsApproved;
-			}
-			set
-			{
-				if ((this._IsApproved != value))
-				{
-					this.OnIsApprovedChanging(value);
-					this.SendPropertyChanging();
-					this._IsApproved = value;
-					this.SendPropertyChanged("IsApproved");
-					this.OnIsApprovedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ApprovedDate", DbType="DateTime")]
-		public System.Nullable<System.DateTime> ApprovedDate
-		{
-			get
-			{
-				return this._ApprovedDate;
-			}
-			set
-			{
-				if ((this._ApprovedDate != value))
-				{
-					this.OnApprovedDateChanging(value);
-					this.SendPropertyChanging();
-					this._ApprovedDate = value;
-					this.SendPropertyChanged("ApprovedDate");
-					this.OnApprovedDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ApprovedBy", DbType="NVarChar(1)")]
-		public string ApprovedBy
-		{
-			get
-			{
-				return this._ApprovedBy;
-			}
-			set
-			{
-				if ((this._ApprovedBy != value))
-				{
-					this.OnApprovedByChanging(value);
-					this.SendPropertyChanging();
-					this._ApprovedBy = value;
-					this.SendPropertyChanged("ApprovedBy");
-					this.OnApprovedByChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RejectReason", DbType="NVarChar(1)")]
-		public string RejectReason
-		{
-			get
-			{
-				return this._RejectReason;
-			}
-			set
-			{
-				if ((this._RejectReason != value))
-				{
-					this.OnRejectReasonChanging(value);
-					this.SendPropertyChanging();
-					this._RejectReason = value;
-					this.SendPropertyChanged("RejectReason");
-					this.OnRejectReasonChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHUTRO_PHONGTRO_DUYET", Storage="_CHUTRO", ThisKey="Id_ChuTro", OtherKey="Id", IsForeignKey=true)]
-		public CHUTRO CHUTRO
-		{
-			get
-			{
-				return this._CHUTRO.Entity;
-			}
-			set
-			{
-				CHUTRO previousValue = this._CHUTRO.Entity;
-				if (((previousValue != value) 
-							|| (this._CHUTRO.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._CHUTRO.Entity = null;
-						previousValue.PHONGTRO_DUYETs.Remove(this);
-					}
-					this._CHUTRO.Entity = value;
-					if ((value != null))
-					{
-						value.PHONGTRO_DUYETs.Add(this);
-						this._Id_ChuTro = value.Id;
-					}
-					else
-					{
-						this._Id_ChuTro = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("CHUTRO");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 	

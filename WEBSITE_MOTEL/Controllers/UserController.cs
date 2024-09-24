@@ -54,6 +54,11 @@ namespace WEBSITE_MOTEL.Controllers
                         Response.Cookies["MatKhau"].Expires = DateTime.Now.AddDays(1);
                     }
 
+                    if (ct != null)
+                    {
+                        return RedirectToAction("Guide", "Motel");
+                    }    
+
                     return RedirectToAction("Index", "Motel");
                 }
                 else

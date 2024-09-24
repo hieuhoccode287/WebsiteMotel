@@ -35,7 +35,7 @@
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner" role="listbox">
                         <div class="item active">
-                            <img src="~/Images/@item.sAnhBia" alt="image" style="width:100%;">
+                            <img src="~/Images/@item.sAnhBia" alt="image" style="width:300px; height:200px ">
                         </div>
 
                     </div>
@@ -60,17 +60,17 @@
                     <div class="item-cr1 summarize-desc">
                         <p>@item.sMoTa</p>
                     </div>
-                    <div class="item-cr1 local">Khu vực: <span>@item.sDiaChi</span></div>
+                    <div class="item-cr1 local">Khu vực: <span>@item.sTenKV</span></div>
                     <div class="item-cr1 area">Diện tích: <span>@(item.sDienTich)m²</span></div>
                 </div>
                 <div class="content-right2 col-xs-12 col-md-4">
                     <p class="hide_op">GIÁ DỊCH VỤ:</p>
                     <ul>
-                        <li class="item-cr1 water-price hide_op"><i class="fa fa-shower"></i> Nước: <span>@string.Format("{0:#,##0,0}", item.sNuoc)đ/m3</span></li>
-                        <li class="item-cr1 electric-price hide_op"><i class="fa fa-bolt"></i> Điện: <span>@string.Format("{0:#,##0,0}", item.sDien)đ/số</span></li>
-                        <li class="item-cr1 internet-price hide_op"><i class="fa fa-wifi"></i> Mạng: <span>@string.Format("{0:#,##0,0}", item.sInternet)đ/tháng</span></li>
-                        <li class="item-cr1 park-price hide_op"><i class="fa fa-motorcycle"></i> Gửi xe: <span>@string.Format("{0:#,##0}", item.sGuiXe)đ/tháng</span></li>
-                        <li class="item-cr1 price"><i class="fa fa-money"></i> Phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa)đ/tháng</span></li>
+                        <li class="item-cr1 water-price hide_op"><i class="fa fa-shower"></i> Nước: <span>@string.Format("{0:#,##0}", item.sNuoc).Replace(',', '.')đ/m3</span></li>
+                        <li class="item-cr1 electric-price hide_op"><i class="fa fa-bolt"></i> Điện: <span>@string.Format("{0:#,##0}", item.sDien).Replace(',', '.')đ/số</span></li>
+                        <li class="item-cr1 internet-price hide_op"><i class="fa fa-wifi"></i> Mạng: <span>@string.Format("{0:#,##0}", item.sInternet).Replace(',', '.')đ/tháng</span></li>
+                        <li class="item-cr1 park-price hide_op"><i class="fa fa-motorcycle"></i> Gửi xe: <span>@string.Format("{0:#,##0}", item.sGuiXe).Replace(',', '.')đ/tháng</span></li>
+                        <li class="item-cr1 price"><i class="fa fa-money"></i> Phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 phone"><i class="fa fa-phone"></i> LH:@item.sSDT <span></span></li>
                     </ul>
                     <button class="button-detail" data-toggle="collapse" data-target="#content-detail1_@i"><i class="fa fa-arrow-right"></i> Xem chi tiết</button>
@@ -98,8 +98,8 @@
                         <li class="active"><a data-toggle="tab" href="#menu1_@i">THÔNG TIN CHUNG</a></li>
                         <li><a data-toggle="tab" href="#menu2_@i">MÔ TẢ CHI TIẾT</a></li>
                         <li><a data-toggle="tab" href="#menu3_@i">HÌNH ẢNH</a></li>
-                        <li><a data-toggle="tab" href="#menu5_@i">ẢNH 360<sup>o</sup></a></li>
-                        <li class="position item1"><a data-toggle="tab" href="#menu4_@i">VỊ TRÍ</a></li>
+                        @*<li><a data-toggle="tab" href="#menu5_@i">ẢNH 360<sup>o</sup></a></li>
+                        <li class="position item1"><a data-toggle="tab" href="#menu4_@i">VỊ TRÍ</a></li>*@
                     </ul>
                     <!-- Content navs tabs-->
                     <div class="tab-content">
@@ -125,29 +125,12 @@
                                     <tr>
                                         <th>Email</th>
                                         <td>@item.sEmail</td>
-                                        <th>FaceBook</th>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Diện tích</th>
-                                        <td>@(item.sDienTich)m2</td>
                                         <th>Giá cho thuê</th>
-                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa)/tháng</td>
+                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')    đ/tháng</td>
                                     </tr>
                                     <tr>
                                         <th>Số người ở:</th>
                                         <td>@item.sSoluong</td>
-                                        <th>Đối tượng</th>
-                                        @if (item.sDoiTuong == 1)
-                                        {
-                                            <td>Sinh viên</td>
-                                        }
-                                        @if (item.sDoiTuong == 2)
-                                        {
-                                            <td>Công nhân</td>
-                                        }
-                                    </tr>
-                                    <tr>
                                         <td style="font-weight: bold">Trạng thái</td>
                                         @if (item.sTrangThai == 3)
                                         {

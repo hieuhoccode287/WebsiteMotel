@@ -35,7 +35,7 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td class="td_col2 td_matin">@item.Id</td>
+                                        <td class="td_col2 td_matin" style="text-align:center">@item.Id</td>
                                         <td class="td_col2s td_matin" style="color: #4CAF50">
                                             @if (item.Ngay?.AddMonths(3) >= DateTime.Today && item.TrangThai == 1)
                                             {
@@ -64,11 +64,11 @@
                                             <a class="btn btn_action" id="st1" data-id="@item.Id"><i class="fa fa-expeditedssl"></i> Ngừng đăng tin</a>
                                             <a class="btn btn_action" href="#" id="idxoa" data-id="@item.Id"><i class="fa fa-eraser"></i> Xóa</a>
                                         </td>
-                                        <td>
+                                        <td style="text-align: center; vertical-align: middle; height: 100px;">
                                             @if (item.TrangThai == 2)
                                             {
-                                                <a class="btn btn_action btn-success" id="st3" data-id="@item.Id">Duyệt</a>
-                                                <a class="btn btn_action btn-danger" id="st4" data-id="@item.Id">Bỏ Duyệt</a>
+                                                <a class="btn btn_action btn-success" style="width:100px">Duyệt</a>
+                                                <a class="btn btn_action btn-danger" style="width:100px; margin-top:10px">Bỏ Duyệt</a>
                                             }
                                         </td>
                                     </tr>

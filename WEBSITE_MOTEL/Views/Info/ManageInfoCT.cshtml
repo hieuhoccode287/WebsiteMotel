@@ -1,10 +1,8 @@
-﻿
-@using WEBSITE_MOTEL.Models
+﻿@using WEBSITE_MOTEL.Models
 @model WEBSITE_MOTEL.Models.ChuTro
 @{
     ViewBag.Title = "Manage";
     Layout = "~/Views/_LayoutUser.cshtml";
-
 }
 @{
     TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
@@ -17,24 +15,28 @@
         <li class="active" id="search-target">Quản lý thông tin</li>
     </ol>
 </div>
-
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
 @using (Html.BeginForm("ManageInfoCT", "Info", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-        <section class="wrap-content">
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.sId)
-    <div class="content" style="border: none;">
-        <div class="wrapper">
-            <div class="tab-content">
-                <div role="tabpanel" @*class="tab-pane"*@ id="thong_tin_ca_nhan">
-                    <div class="table-responsive">
-                        <form id="form_thong_tin_ca_nhan" class="js-form-thong-tin-ca-nhan">
+{
+    @Html.AntiForgeryToken()
+    <section class="wrap-content">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.sId)
+        <div class="content" style="border: none;">
+            <div class="wrapper">
+                <div class="tab-content">
+                    <div role="tabpanel" id="thong_tin_ca_nhan">
+                        <div class="table-responsive">
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="username">Tài khoản</label>
-                                        <input type="text" class="form-control" name="sTaiKhoanCT" id="" placeholder="" value="@Model.sTaiKhoanCT" disabled="">
+                                        <input type="text" class="form-control" name="sTaiKhoanCT" value="@Model.sTaiKhoanCT" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -42,7 +44,8 @@
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="first_name">Họ và tên</label>
-                                        <input type="text" class="form-control" name="sHoTenCT" id="first_name" placeholder="" value="@Model.sHotenCT">
+                                        <input type="text" class="form-control" name="sHoTenCT" value="@Model.sHotenCT">
+                                        @Html.ValidationMessageFor(model => model.sHotenCT, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
@@ -50,7 +53,8 @@
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="phone">Điện thoại</label>
-                                        <input type="text" class="form-control" name="sSDTCT" id="phone" placeholder="" value="@Model.sSDTCT">
+                                        <input type="text" class="form-control" name="sSDTCT" value="@Model.sSDTCT">
+                                        @Html.ValidationMessageFor(model => model.sSDTCT, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +62,8 @@
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="email">Email</label>
-                                        <input type="email" class="form-control" name="sEmailCT" id="email" placeholder="" value="@Model.sEmailCT">
+                                        <input type="email" class="form-control" name="sEmailCT" value="@Model.sEmailCT">
+                                        @Html.ValidationMessageFor(model => model.sEmailCT, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +71,7 @@
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="">Căn cước công dân</label>
-                                        <input type="text" class="form-control" name="sCCCD" id="cccd" placeholder="" value="@Model.sCCCD">
+                                        <input type="text" class="form-control" name="sCCCD" value="@Model.sCCCD">
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +79,7 @@
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="">Địa chỉ</label>
-                                        <input type="text" class="form-control" name="sDiaChi" id="diachi" placeholder="" value="@Model.sDiaChi">
+                                        <input type="text" class="form-control" name="sDiaChi" value="@Model.sDiaChi">
                                     </div>
                                 </div>
                             </div>
@@ -82,37 +87,55 @@
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="">Ngày sinh</label>
-                                        <input type="date" class="form-control" name="sNgaySinh" id="ngaysinh" placeholder="" value="@Html.FormatValue(Model.sNgaySinh, "{0:yyyy-MM-dd}")">
-
+                                        <input type="date" class="form-control" name="sNgaySinh" value="@Html.FormatValue(Model.sNgaySinh, "{0:yyyy-MM-dd}")">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
-                                        <label for="password_new">Mật khẩu mới</label>
-                                        <input type="text" class="form-control" name="sMatKhauCT" id="password_new" placeholder="" value="@Model.sMatKhauCT">
+                                        <label for="password_new">Mật khẩu</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" name="sMatKhauCT" id="password_new" placeholder="" value="@Model.sMatKhauCT">
+                                            <span class="input-group-addon" id="toggle-password" style="cursor: pointer;">
+                                                <i class="fa fa-eye" id="eye-icon"></i>
+                                            </span>
+                                        </div>
+                                        @Html.ValidationMessage("sMatKhauND", "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-6 col-xs-12">
-                                        <label for="password_new2">Xác nhận mật khẩu mới</label>
-                                        <input type="text" class="form-control" name="sMatKhauNhapLai" id="password_new2" placeholder="" value="">
+                            @*<div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12">
+                                            <label for="password_new2">Xác nhận mật khẩu mới</label>
+                                            <input type="password" class="form-control" name="sMatKhauNhapLai">
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div>*@
 
                             <input type="hidden" name="action" value="update_user_info">
                             <button type="submit" class="btn btn-primary" id="update">Cập nhật</button>
-                        </form>
-
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
-</section>
+    </section>
 }
+<script>
+    document.getElementById('toggle-password').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password_new');
+        const eyeIcon = document.getElementById('eye-icon');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    });
+</script>

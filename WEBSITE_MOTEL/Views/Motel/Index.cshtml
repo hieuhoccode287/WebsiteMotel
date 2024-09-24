@@ -75,11 +75,11 @@
                 <div class="content-right2 col-xs-12 col-md-4">
                     <p class="hide_op">GIÁ DỊCH VỤ:</p>
                     <ul>
-                        <li class="item-cr1 water-price hide_op"><i class="fa fa-shower"></i> Nước: <span>@string.Format("{0:#,##0,0}", item.sNuoc)đ/m3</span></li>
-                        <li class="item-cr1 electric-price hide_op"><i class="fa fa-bolt"></i> Điện: <span>@string.Format("{0:#,##0,0}", item.sDien)đ/số</span></li>
-                        <li class="item-cr1 internet-price hide_op"><i class="fa fa-wifi"></i> Mạng: <span>@string.Format("{0:#,##0,0}", item.sInternet)đ/tháng</span></li>
-                        <li class="item-cr1 park-price hide_op"><i class="fa fa-motorcycle"></i> Gửi xe: <span>@string.Format("{0:#,##0}", item.sGuiXe)đ/tháng</span></li>
-                        <li class="item-cr1 price"><i class="fa fa-money"></i> Phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa)đ/tháng</span></li>
+                        <li class="item-cr1 water-price hide_op"><i class="fa fa-shower"></i> Nước: <span>@string.Format("{0:#,##0}", item.sNuoc).Replace(',', '.')đ/m3</span></li>
+                        <li class="item-cr1 electric-price hide_op"><i class="fa fa-bolt"></i> Điện: <span>@string.Format("{0:#,##0}", item.sDien).Replace(',', '.')đ/số</span></li>
+                        <li class="item-cr1 internet-price hide_op"><i class="fa fa-wifi"></i> Mạng: <span>@string.Format("{0:#,##0}", item.sInternet).Replace(',', '.')đ/tháng</span></li>
+                        <li class="item-cr1 park-price hide_op"><i class="fa fa-motorcycle"></i> Gửi xe: <span>@string.Format("{0:#,##0}", item.sGuiXe).Replace(',', '.')đ/tháng</span></li>
+                        <li class="item-cr1 price"><i class="fa fa-money"></i> Phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 phone"><i class="fa fa-phone"></i> LH:@item.sSDT <span></span></li>
                     </ul>
                     <button class="button-detail" data-toggle="collapse" data-target="#content-detail1_@i"><i class="fa fa-arrow-right"></i> Xem chi tiết</button>
@@ -134,35 +134,25 @@
                                     <tr>
                                         <th>Email</th>
                                         <td>@item.sEmail</td>
-                                        <th>FaceBook</th>
-                                        <td></td>
+                                        <th>Số lượng phòng</th>
+                                        <td>@item.sSoluong</td>
                                     </tr>
                                     <tr>
                                         <th>Diện tích</th>
                                         <td>@item.sDienTich m2</td>
                                         <th>Giá cho thuê</th>
-                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa)/tháng</td>
+                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</td>
                                     </tr>
                                     <tr>
                                         <th>Số người ở:</th>
-                                        <td>@item.sSoluong</td>
-                                        <th>Đối tượng</th>
-                                        @if (item.sDoiTuong == 1)
-                                        {
-                                            <td>Sinh viên</td>
-                                        }
-                                        @if (item.sDoiTuong == 2)
-                                        {
-                                            <td>Công nhân</td>
-                                        }
-                                    </tr>
-                                    <tr>
-                                        <td style="font-weight: bold">Trạng thái</td>
+                                        <td>@item.sSoNguoiO</td>
+                                        <th>Trạng thái</th>
                                         @if (item.sTrangThai == 1)
                                         {
                                             <td colspan="3" style="color:limegreen;">Còn phòng</td>
                                         }
                                     </tr>
+
 
 
                                 </tbody>
@@ -199,16 +189,16 @@
                                     <!-- Wrapper for slides -->
                                     <div class="carousel-inner" role="listbox">
                                         <div class="item active">
-                                            <img src="~/images/@item.sUrl_Path" alt="anh1" style="width:100%;">
+                                            <img src="~/images/@item.sUrl_Path" alt="anh1" style="width: 100%; height: 500px">
                                         </div>
                                         <div class="item">
-                                            <img src="~/images/@item.sUrl_Path2" alt="anh2" style="width:100%;">
+                                            <img src="~/images/@item.sUrl_Path2" alt="anh2" style="width:100%; height:500px">
                                         </div>
                                         <div class="item">
-                                            <img src="~/images/@item.sUrl_Path3" alt="anh3" style="width:100%;">
+                                            <img src="~/images/@item.sUrl_Path3" alt="anh3" style="width:100%; height:500px">
                                         </div>
                                         <div class="item">
-                                            <img src="~/images/@item.sUrl_Path4" alt="anh4" style="width:100%;">
+                                            <img src="~/images/@item.sUrl_Path4" alt="anh4" style="width:100%; height:500px">
                                         </div>
                                     </div>
                                     <!-- Left and right controls -->

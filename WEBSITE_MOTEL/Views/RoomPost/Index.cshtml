@@ -16,7 +16,7 @@
         <ol>
             <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
             <li id="arrow1">  <i class="fa fa-angle-right"></i>  </li>
-            <li><a href="#">Đăng tin</a></li>
+            <li><a href="#">Đăng phòng</a></li>
         </ol>
     </div>
 }
@@ -30,17 +30,25 @@
             <div class="wrapper form-step step1">
                 <!--Thông tin cơ bản-->
                 <div class="group-form">
+                    @{
+                        if (TempData["SuccessMessage"] != null)
+                        {
+                            <div class="alert alert-success">
+                                @TempData["SuccessMessage"]
+                            </div>
+                        }
+                    }
                     <div class="form-title"><h3>THÔNG TIN CƠ BẢN</h3></div>
                     <div class="group-form-body">
                         <div class="form-group">
                             <label for="tieude">Tiêu đề tin:</label>
-                            <input type="email" class="form-control" id="tieude" name="sTieuDe" placeholder="Hãy đặt tiêu đề đầy đủ, ý nghĩa khách hàng sẽ quan tâm hơn" required>
+                            <input type="text" class="form-control" id="tieude" name="sTieuDe" placeholder="Hãy đặt tiêu đề đầy đủ, ý nghĩa khách hàng sẽ quan tâm hơn" required>
                         </div>
-                        <!--form-row 1-->
-                        <div class="form-inline">
 
+                        <!--form-row 1-->
+                        <div class="form-row">
                             <div class="form-group">
-                                <label for="type">Loại hình cho thuê:</label></br>
+                                <label for="type">Loại hình cho thuê:</label>
                                 <select class="form-control" id="type">
                                     <option>Chọn loại hình cho thuê</option>
                                     <option>Thuê phòng trọ</option>
@@ -50,7 +58,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <div class="form-inline">
                             <div class="form-group ">
                                 <input type="hidden" size="70" name="sid" value="@ct.Id" readonly />
@@ -58,51 +65,43 @@
 
                         </div>
                         <!--form-row 2-->
-                        <div class="form-inline">
-                            <div class="form-group ">
-                                <label for="price">Giá cho thuê:</label></br>
-                                <input type="number" class="form-control" id="price" name="mGiaCa" placeholder="ex: 1.500.000đ/tháng">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="price">Giá cho thuê:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="price" name="mGiaCa" oninput="formatNumber(this)">
+                                    <span class="input-group-addon">đồng/tháng</span>
+                                </div>
                             </div>
-                            <br />
-                            <div class="form-group ">
-                                <label for="">Diện tích:</label></br>
-
-                                <input type="text" class="form-control" name="sDienTich" placeholder="ex: 20 m2">
-                            </div>
-                        </div>
-
-                        <div class="form-inline">
-                            <div class="form-group ">
-                                <label for="">Số người ở:</label></br>
-                                <input type="number" class="form-control" name="sSoLuong">
-                            </div>
-
-                        </div>
-                        <div class="item" style="margin-left: 10px">
-                            <div class="item_input">
-                                <label style="width:max-content;">Hình thức: <span class="red">(*)</span></label>
-                                <div class="item_input">
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" value="1" name="sDoiTuong">Sinh viên
-
-                                        </label>
-                                    </div>
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" value="2" name="sDoiTuong">Công nhân
-                                        </label>
-                                    </div>
+                            <div class="form-group">
+                                <label for="sDienTich">Diện tích:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="sDienTich" oninput="formatNumber(this)">
+                                    <span class="input-group-addon">m²</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-inline">
-                            <div class="form-group ">
-                                <label for="">Ngày đăng:</label></br>
 
-                                <input type="date" id="current-time" name="dNgayCapNhat">
+                        <!--form-row 3-->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="sSoLuong">Số người ở:</label>
+                                <input type="number" class="form-control" name="sSoLuong" min="1" required onkeydown="return event.key !== '-'">
                             </div>
+                            <div class="form-group">
+                                <label for="sSoPhong">Số lượng phòng:</label>
+                                <input type="number" class="form-control" name="sSoPhong" min="1" required onkeydown="return event.key !== '-'">
+                            </div>
+                        </div>
 
+
+
+                        <!--form-row 4-->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dNgayCapNhat">Ngày đăng:</label>
+                                <input type="date" class="form-control" id="dNgayCapNhat" name="dNgayCapNhat">
+                            </div>
                         </div>
                         <div class="form-inline">
                             <div class="form-group ">
@@ -110,28 +109,43 @@
                             </div>
 
                         </div>
-                        <!--form-row 3-->
+                        <!--form-row 5-->
                         <h4 style="margin-left:10px">Giá dịch vụ cơ bản:</h4>
-                        <div class="form-inline">
+                        <div class="form-row">
                             <div class="form-group">
-                                <label for="price-electric">Giá điện:</label></br>
-                                <input type="text" class="form-control" id="price-electric" name="sDien" placeholder="ex: 3.000đồng/số">
+                                <label for="price-electric">Giá điện:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="price-electric" name="sDien" oninput="formatNumber(this)">
+                                    <span class="input-group-addon">đồng/số</span>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="price-water">Giá nước:</label></br>
-                                <input type="text" class="form-control" id="price-water" name="sNuoc" placeholder="ex: 15.000đồng/m3">
+                                <label for="price-water">Giá nước:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="price-water" name="sNuoc" oninput="formatNumber(this)">
+                                    <span class="input-group-addon">đồng/m³</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="price-internet">Internet:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="price-internet" name="sInternet" oninput="formatNumber(this)">
+                                    <span class="input-group-addon">đồng/tháng</span>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="price-internet">Internet:</label></br>
-                                <input type="text" class="form-control" id="price-internet" name="sInternet" placeholder="ex: 50.000đồng/tháng">
-                            </div>
-                            <div class="form-group">
-                                <label for="price-park">Gửi xe:</label></br>
-                                <input type="text" class="form-control" id="price-park" name="sGuiXe" placeholder="ex: 30.000đồng/tháng">
+                                <label for="price-park">Gửi xe:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="price-park" name="sGuiXe" oninput="formatNumber(this)">
+                                    <span class="input-group-addon">đồng/tháng</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <!--Phần địa chỉ-->
                 <div class="group-form">
                     <div class="form-title"><h3>ĐỊA CHỈ</h3></div>
@@ -195,7 +209,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <p>LƯU Ý*: NHẤN CTRL TRONG LÚC CHỌN ẢNH ĐỂ CHỌN ĐƯỢC NHIỀU ẢNH CÙNG LÚC (NÊN CHỌN 4 - 5 HÌNH ẢNH).</p>
+                                    <p>LƯU Ý*: NHẤN CTRL TRONG LÚC CHỌN ẢNH ĐỂ CHỌN ĐƯỢC NHIỀU ẢNH CÙNG LÚC (NÊN CHỌN 4 HÌNH ẢNH).</p>
                                     <p>Định dạng ảnh hỗ trợ: .jpg .png .jpeg .gif - Dung lượng ảnh không quá 2MB</p>
 
                                     @*<input type=file id="files" name="fFileUpload" multiple accept="" required />*@
@@ -233,16 +247,16 @@
                     function validateForm() {
                         var title = document.getElementById("tieude").value;
                         var type = document.getElementById("type").value;
-                        var price = document.getElementById("price").value;
-                        var area = document.getElementsByName("sDienTich")[0].value;
-                        var numberOfPeople = document.getElementsByName("sSoLuong")[0].value;
-                        var tenantType = document.querySelector('input[name="sDoiTuong"]:checked');
+                        var price = parseNumber(document.getElementById("price").value);
+                        var area = parseNumber(document.getElementsByName("sDienTich")[0].value);
+                        var numberOfPeople = parseNumber(document.getElementsByName("sSoLuong")[0].value);
+                        var numberOfRoom = parseNumber(document.getElementsByName("sSoPhong")[0].value);
                         var date = document.getElementsByName("dNgayCapNhat")[0].value;
                         var address = document.getElementsByName("sDiaChi")[0].value;
-                        var servicePriceElectric = document.getElementById("price-electric").value;
-                        var servicePriceWater = document.getElementById("price-water").value;
-                        var servicePriceInternet = document.getElementById("price-internet").value;
-                        var servicePricePark = document.getElementById("price-park").value;
+                        var servicePriceElectric = parseNumber(document.getElementById("price-electric").value);
+                        var servicePriceWater = parseNumber(document.getElementById("price-water").value);
+                        var servicePriceInternet = parseNumber(document.getElementById("price-internet").value);
+                        var servicePricePark = parseNumber(document.getElementById("price-park").value);
                         var fileUpload = document.getElementById("fFileUpload").files.length;
 
                         var fields = {
@@ -251,7 +265,7 @@
                             "Giá cho thuê": price,
                             "Diện tích": area,
                             "Số người ở": numberOfPeople,
-                            "Hình thức": tenantType,
+                            "Số lượng phòng": numberOfRoom,
                             "Ngày đăng": date,
                             "Địa chỉ": address,
                             "Giá điện": servicePriceElectric,
@@ -261,11 +275,17 @@
                         };
 
                         for (var field in fields) {
-                            if (!fields[field]) {
-                                alert("Vui lòng điền đầy đủ các trường: " + field + "!");
+                            // Kiểm tra nếu giá trị không tồn tại (rỗng hoặc undefined) nhưng không phải là 0
+                            if (fields[field] === "" || fields[field] === undefined) {
+                                alert("Vui lòng không để trống: " + field + "!");
                                 return false; // Ngăn không cho gửi biểu mẫu
                             }
+                            if (["Giá cho thuê", "Diện tích", "Số người ở", "Số lượng phòng", "Giá điện", "Giá nước", "Internet", "Gửi xe"].includes(field) && isNaN(fields[field])) {
+                                alert("Vui lòng không để trống: " + field + "!");
+                                return false; // Prevent form submission
+                            }
                         }
+
 
                         // Kiểm tra xem có file nào được chọn không
                         if (fileUpload === 0) {
@@ -277,7 +297,10 @@
                     }
                 </script>
 
-                <button type="submit" class="btn btn-default" style="width:135px;" onclick="return validateForm();">Đăng tin ngay</button>
+                <div style="text-align: center">
+                    <button type="submit" class="btn btn-default" style="width:180px;" onclick="return validateForm();">Đăng phòng ngay</button>
+                </div>
+
 
             </div>
         </form>
@@ -299,4 +322,80 @@
 
     // Gán vào thẻ HTML
     document.getElementById('current-time').innerHTML = curDay + "/" + curMonth + "/" + curYear;
+
+    // Hàm thêm dấu chấm phân tách hàng nghìn cho số
+    function formatNumber(input) {
+        // Remove all non-numeric characters
+        let value = input.value.replace(/[^0-9]/g, '');
+        // Format the number as currency
+        input.value = new Intl.NumberFormat('vi-VN', { style: 'decimal', minimumFractionDigits: 0 }).format(value);
+    }
+
+    // Hàm loại bỏ dấu chấm để chuyển về số nguyên
+    function parseNumber(value) {
+        // Kiểm tra nếu giá trị là null, undefined hoặc không phải là chuỗi
+        if (value == null || typeof value !== 'string') {
+            return NaN; // Hoặc xử lý lỗi tùy ý
+        }
+
+        // Loại bỏ dấu chấm và dấu phẩy (nếu có)
+        const cleanedValue = value.replace(/\./g, '').replace(/,/g, '.'); // Thay dấu phẩy bằng dấu chấm
+
+        // Chuyển đổi thành số nguyên hoặc số thập phân
+        const number = parseFloat(cleanedValue);
+
+        // Kiểm tra nếu chuyển đổi thành công
+        return isNaN(number) ? NaN : number; // Hoặc có thể trả về 0 hoặc giá trị mặc định khác
+    }
+
+
+
 </script>
+
+<style>
+    .group-form {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    }
+
+    .form-title h3 {
+        margin-bottom: 15px;
+        text-align: center;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px; /* Khoảng cách giữa các nhóm input */
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .form-control {
+        margin-bottom: 10px;
+    }
+
+    h4 {
+        margin-top: 20px;
+        color: #007bff;
+    }
+
+</style>

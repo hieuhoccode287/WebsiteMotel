@@ -40,6 +40,7 @@ namespace WEBSITE_MOTEL.Controllers
 
                                  sDienTich = (int)a.DienTich,
                                  sSoluong = (int)a.SoLuong,
+                                 sSoNguoiO = (int)a.SoNguoiO,
                                  sAnhBia = a.AnhBia,
                                  sMoTa = a.MoTa,
                                  dNgayCapNhat = (DateTime)a.Ngay,
@@ -55,7 +56,6 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sDoiTuong = (byte)a.Doituong,
                                  sTrangThai = (byte)a.TrangThai,
 
                                  sTenKV = a.KhuVuc,
@@ -76,6 +76,7 @@ namespace WEBSITE_MOTEL.Controllers
                                  sHoTen = e.HoTen,
                                  sDienTich = (int)a.DienTich,
                                  sSoluong = (int)a.SoLuong,
+                                 sSoNguoiO = (int)a.SoNguoiO,
                                  sAnhBia = a.AnhBia,
                                  sMoTa = a.MoTa,
                                  dNgayCapNhat = (DateTime)a.Ngay,
@@ -91,7 +92,6 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sDoiTuong = (byte)a.Doituong,
                                  sTrangThai = (byte)a.TrangThai,
 
                                  sTenKV = a.KhuVuc
@@ -209,6 +209,7 @@ namespace WEBSITE_MOTEL.Controllers
                                  sHoTen = e.HoTen,
                                  sDienTich = (int)a.DienTich,
                                  sSoluong = (int)a.SoLuong,
+                                 sSoNguoiO = (int)a.SoNguoiO,
                                  sAnhBia = a.AnhBia,
                                  sMoTa = a.MoTa,
                                  dNgayCapNhat = (DateTime)a.Ngay,
@@ -224,7 +225,6 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sDoiTuong = (byte)a.Doituong,
                                  sTrangThai = (byte)a.TrangThai,
                                  sTenKV = a.KhuVuc,
                              };

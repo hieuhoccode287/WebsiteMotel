@@ -16,6 +16,7 @@ namespace WEBSITE_MOTEL.Models
         public string sTen { get; set; }
         public int sIDCT { get; set; }
         public int sSoluong { get; set; }
+        public int sSoNguoiO { get; set; }
         [DataType(DataType.Date)]
         public DateTime? dNgayCapNhat { get; set; }
         public string sMoTa { get; set; }
