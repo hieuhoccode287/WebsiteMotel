@@ -129,8 +129,12 @@
                                         <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')    đ/tháng</td>
                                     </tr>
                                     <tr>
-                                        <th>Số người ở:</th>
+                                        <th>Số người ở</th>
+                                        <td>@item.sSoNguoiO</td>
+                                        <th>Số phòng còn</th>
                                         <td>@item.sSoluong</td>
+                                    </tr>
+                                    <tr>
                                         <td style="font-weight: bold">Trạng thái</td>
                                         @if (item.sTrangThai == 3)
                                         {
@@ -223,8 +227,15 @@
                     </div>
                 </div>
                 <form style="text-align:center">
-                    <button type="button" data-toggle="modal" data-target="#ModalPay" name="pay" id="@item.sMa">THANH TOÁN</button>
-                    <button type="button" name="delete" id="@item.sMa">XÓA</button>
+                    @*<button type="button" data-toggle="modal" data-target="#ModalPay" name="pay" id="@item.sMa">THANH TOÁN</button>*@
+                    @if (item.sTrangThai == 3)
+                    {
+                        <button style="width:300px" type="button" name="checkout" id="@item.sMa">TRẢ PHÒNG</button>
+                    }
+                    else if (item.sTrangThai == 2)
+                    {
+                        <button style="width:300px" type="button" name="delete" id="@item.sMa">XÓA ĐƠN ĐẶT HÀNG</button>
+                    }
                 </form>
             </article>
 
@@ -263,6 +274,28 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
         if (confirm('Bạn thực sự muốn xóa Phòng này.')) {
             $.ajax({
                 url: '/Cart/Delete',
+                type: 'post',
+                data: {
+                    maDH: MaDH
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert(data.msg);
+                        location.reload();
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+
+                },
+            })
+        }
+    }));
+    $(document).on('click', "button[name='checkout']", (function () {
+        let MaDH = $(this).attr('id');
+        if (confirm('Xác nhận muốn trả phòng.')) {
+            $.ajax({
+                url: '/Cart/Checkout',
                 type: 'post',
                 data: {
                     maDH: MaDH

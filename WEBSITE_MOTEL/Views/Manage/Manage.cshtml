@@ -1,5 +1,4 @@
 ﻿@model PagedList.IPagedList<WEBSITE_MOTEL.Models.PHONGTRO>
-
 @using PagedList.Mvc;
 @{
     ViewBag.Title = "Manage";
@@ -10,7 +9,7 @@
     <ol>
         <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
         <li id="arrow1"><i class="fa fa-angle-right"></i></li>
-        <li class="active" id="search-target">Quản lý</li>
+        <li class="active" id="search-target">Quản lý phòng</li>
     </ol>
 </div>
 <section class="wrap-content">
@@ -23,53 +22,50 @@
                             <thead>
                                 <tr>
                                     <th style="white-space: nowrap;" class="td_center">Mã số</th>
-                                    <th style="white-space: nowrap;">Trạng thái</th>
-                                    <th style="white-space: nowrap;">Tiêu đề</th>
-                                    <th style="white-space: nowrap;">Ngày đăng tin</th>
-                                    <th style="white-space: nowrap;">Ngày hết hạn</th>
-                                    <th style="white-space: nowrap; text-align: center;">Thao tác</th>
-                                    <th style="white-space: nowrap;">Duyệt cho thuê</th>
+                                    <th style="white-space: nowrap; text-align: center">Tiêu đề</th>
+                                    <th style="white-space: nowrap; text-align: center">Hình ảnh</th>
+                                    <th style="white-space: nowrap; text-align: center">Trạng thái</th>
+                                    <th style="white-space: nowrap; text-align: center">Ngày đăng tin</th>
+                                    <th style="white-space: nowrap; text-align: center">Ngày hết hạn</th>
+                                    <th style="white-space: nowrap; text-align: center">Thao tác</th>
+                                    <th style="white-space: nowrap; text-align: center">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td class="td_col2 td_matin" style="text-align:center">@item.Id</td>
-                                        <td class="td_col2s td_matin" style="color: #4CAF50">
+                                        <td class="td_col2 td_matin" style="text-align: center; vertical-align: middle;">@item.Id</td>
+
+                                        <td class="td_col3" style="height: 100px; text-align: center; vertical-align: middle;">
+                                            <a class="" target="_blank">@item.TenPhong</a>
+                                        </td>
+                                        <td class="td_col2" style="text-align: center; vertical-align: middle;">
+                                            <img src="~/Images/@item.AnhBia" alt="image" style="width:100px; height:100px" loading="lazy">
+                                        </td>
+                                        <td class="td_col2s td_matin" style="color: #4CAF50; text-align: center; vertical-align: middle;">
                                             @if (item.Ngay?.AddMonths(3) >= DateTime.Today && item.TrangThai == 1)
                                             {
                                                 <span> Tin đang được đăng</span>
                                             }
-                                            else if (item.TrangThai == 0)
+                                            else if (item.TrangThai == 2)
                                             {
                                                 <span style="color: #ED2327">Tin đã hết hạn</span>
                                             }
-                                            else if (item.TrangThai == 2)
+                                            else if (item.TrangThai == 0)
                                             {
-                                                <span style="color: #ddec71">Tin chờ được duyệt</span>
-                                            }
-                                            else if (item.TrangThai == 3)
-                                            {
-                                                <span style="color: #1fefed">Phòng đã cho thuê</span>
+                                                <span style="color: #ddec71">Đang chờ admin duyệt phòng</span>
                                             }
                                         </td>
-                                        <td class="td_col3">
-                                            <a href="home.html#content1" class="" target="_blank">@item.TenPhong</a>
-                                        </td>
-                                        <td id="dt1" class="ngay" style="color: #4CAF50">@Html.FormatValue(item.Ngay, "{0:dd/MM/yyyy}")</td>
-                                        <td id="dt2" class="ngay" style="color: #ED23227">@Html.FormatValue(item.Ngay?.AddMonths(3), "{0:dd/MM/yyyy}")</td>
+                                        <td id="dt1" class="ngay" style="color: #4CAF50; text-align: center; vertical-align: middle;">@Html.FormatValue(item.Ngay, "{0:dd/MM/yyyy}")</td>
+                                        <td id="dt2" class="ngay" style="color: #ED23227; text-align: center; vertical-align: middle;">@Html.FormatValue(item.Ngay?.AddMonths(3), "{0:dd/MM/yyyy}")</td>
                                         <td>
                                             <a class="btn btn_action" id="st2" data-id="@item.Id"><i class="fa fa-refresh"></i> Đăng lại</a>
                                             <a class="btn btn_action" id="st1" data-id="@item.Id"><i class="fa fa-expeditedssl"></i> Ngừng đăng tin</a>
                                             <a class="btn btn_action" href="#" id="idxoa" data-id="@item.Id"><i class="fa fa-eraser"></i> Xóa</a>
                                         </td>
-                                        <td style="text-align: center; vertical-align: middle; height: 100px;">
-                                            @if (item.TrangThai == 2)
-                                            {
-                                                <a class="btn btn_action btn-success" style="width:100px">Duyệt</a>
-                                                <a class="btn btn_action btn-danger" style="width:100px; margin-top:10px">Bỏ Duyệt</a>
-                                            }
+                                        <td style="height: 100px; text-align: center; vertical-align: middle;">
+                                            <a class="btn btn_action btn-success" style="width: 100%">Chỉnh sửa</a>
                                         </td>
                                     </tr>
                                 }
@@ -84,7 +80,6 @@
         </div>
     </div>
 </section>
-
 
 <script>
     $(document).ready(function () {
@@ -155,46 +150,14 @@
                 });
             }
         });
-
-        //Sự kiện click nút "Duyệt Phòng"
-        $(".table").on("click", "#st3", function () {
-            var id = $(this).data("id");
-            $.ajax({
-                url: "/Manage/DuyetPhong",
-                type: "POST",
-                data: { id: id },
-                success: function (result) {
-                    // Hiển thị thông báo
-                    alert("Đã Duyệt thành công");
-                    // Reload trang để cập nhật lại danh sách phòng trọ
-                    window.location.reload();
-                },
-                error: function () {
-                    // Hiển thị thông báo lỗi
-                    alert("Duyệt Phòng không thành công!");
-                }
-            });
-        });
-
-        //Sự kiện click nút "Bỏ Duyệt"
-        $(".table").on("click", "#st4", function () {
-            var id = $(this).data("id");
-            $.ajax({
-                url: "/Manage/BoDuyetPhong",
-                type: "POST",
-                data: { id: id },
-                success: function (result) {
-                    // Hiển thị thông báo
-                    alert("Đã bỏ duyệt phòng thành công");
-                    // Reload trang để cập nhật lại danh sách phòng trọ
-                    window.location.reload();
-                },
-                error: function () {
-                    // Hiển thị thông báo lỗi
-                    alert("Bỏ duyệt phòng không thành công!");
-                }
-            });
-        });
     });
-
 </script>
+
+<style>
+    .td_col3 {
+        max-width:250px;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Thêm dấu chấm lửng nếu nội dung vượt quá */
+        white-space: nowrap;
+    }
+</style>

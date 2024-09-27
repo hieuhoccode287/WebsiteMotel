@@ -28,7 +28,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                         join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                         join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                         join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                        where a.TrangThai == 4
+                        where a.TrangThai == 0
                         select new RoomDetail()
                         {
                             sMa = a.Id,
@@ -73,7 +73,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
 
         public ActionResult DuyetPhong(int id)
         {
-            PHONGTRO phong = data.PHONGTROs.FirstOrDefault(p => p.Id == id && p.TrangThai == 4);
+            PHONGTRO phong = data.PHONGTROs.FirstOrDefault(p => p.Id == id && p.TrangThai == 0);
 
             if (phong != null)
             {

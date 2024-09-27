@@ -1,14 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="TIM_TROO" Class="TimNhaTroDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Table Name="dbo.ADMIN" Member="ADMINs">
-    <Type Name="ADMIN">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="SDT" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Avatar" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="TrangThai" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="Id_TaiKhoan" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.ANH_CCCD" Member="ANH_CCCDs">
     <Type Name="ANH_CCCD">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -16,7 +6,6 @@
       <Column Name="IdCardPhoto" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="IdCardPhoto2" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Association Name="TAIKHOAN_ANH_CCCD" Member="TAIKHOAN" ThisKey="IdTaiKhoan" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
-      <Association Name="TAIKHOAN_ANH_CCCD1" Member="TAIKHOAN1" ThisKey="IdTaiKhoan" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.CHUTRO" Member="CHUTROs">
@@ -26,16 +15,8 @@
       <Column Name="Avatar" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="TrangThai" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
       <Column Name="Id_TaiKhoan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="CHUTRO_PHONGTRO" Member="PHONGTROs" ThisKey="Id" OtherKey="Id_ChuTro" Type="PHONGTRO" />
       <Association Name="TAIKHOAN_CHUTRO" Member="TAIKHOAN" ThisKey="Id_TaiKhoan" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.CSVATCHAT" Member="CSVATCHATs">
-    <Type Name="CSVATCHAT">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Id_PhongTro" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Ten" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="MoTa" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Association Name="PHONGTRO_CSVATCHAT" Member="PHONGTRO" ThisKey="Id_PhongTro" OtherKey="Id" Type="PHONGTRO" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.DONHANG" Member="DONHANGs">
@@ -43,9 +24,11 @@
       <Column Name="IdDH" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="DaThanhToan" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="NgayDat" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="TrangThai" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
       <Column Name="Id_NguoiDung" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Id_Phong" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="NGUOIDUNG_DONHANG" Member="NGUOIDUNG" ThisKey="Id_NguoiDung" OtherKey="Id" Type="NGUOIDUNG" IsForeignKey="true" />
+      <Association Name="PHONGTRO_DONHANG" Member="PHONGTRO" ThisKey="Id_Phong" OtherKey="Id" Type="PHONGTRO" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.HOTRO" Member="HOTROs">
@@ -56,15 +39,6 @@
       <Column Name="MotaVande" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </Type>
   </Table>
-  <Table Name="dbo.LUUTIN" Member="LUUTINs">
-    <Type Name="LUUTIN">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Id_NguoiDung" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Id_PhongTro" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="NGUOIDUNG_LUUTIN" Member="NGUOIDUNG" ThisKey="Id_NguoiDung" OtherKey="Id" Type="NGUOIDUNG" IsForeignKey="true" />
-      <Association Name="PHONGTRO_LUUTIN" Member="PHONGTRO" ThisKey="Id_PhongTro" OtherKey="Id" Type="PHONGTRO" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.KHUVUC" Member="KHUVUCs">
     <Type Name="KHUVUC">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -72,8 +46,6 @@
       <Column Name="Slug" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Column Name="TieuDe" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Column Name="MoTa" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Column Name="Parent_Id" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
-      <Column Name="Type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.IMAGES" Member="IMAGEs">
@@ -81,12 +53,11 @@
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Id_PhongTro" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Url_Path" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Column Name="ten" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
       <Column Name="Url_Path2" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Column Name="Url_Path3" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Column Name="Url_Path4" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Column Name="Url_Path5" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Column Name="Id_TaiKhoan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="PHONGTRO_IMAGE" Member="PHONGTRO" ThisKey="Id_PhongTro" OtherKey="Id" Type="PHONGTRO" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.NGUOIDUNG" Member="NGUOIDUNGs">
@@ -96,17 +67,7 @@
       <Column Name="Avatar" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="Id_TaiKhoan" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="NGUOIDUNG_DONHANG" Member="DONHANGs" ThisKey="Id" OtherKey="Id_NguoiDung" Type="DONHANG" />
-      <Association Name="NGUOIDUNG_LUUTIN" Member="LUUTINs" ThisKey="Id" OtherKey="Id_NguoiDung" Type="LUUTIN" />
       <Association Name="TAIKHOAN_NGUOIDUNG" Member="TAIKHOAN" ThisKey="Id_TaiKhoan" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.MENU" Member="MENUs">
-    <Type Name="MENU">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Ten" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
-      <Column Name="Parent_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="type" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Column Name="Link" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.PHONGTRO" Member="PHONGTROs">
@@ -119,7 +80,6 @@
       <Column Name="MoTa" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
       <Column Name="GiaCa" Type="System.Decimal" DbType="Money" CanBeNull="true" />
       <Column Name="HoaHong" Type="System.Decimal" DbType="Money" CanBeNull="true" />
-      <Column Name="TrangThai" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
       <Column Name="DienTich" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="SoLuong" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Contents" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
@@ -133,8 +93,10 @@
       <Column Name="GuiXe" Type="System.Decimal" DbType="Money" CanBeNull="true" />
       <Column Name="KhuVuc" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="SoNguoiO" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="PHONGTRO_CSVATCHAT" Member="CSVATCHATs" ThisKey="Id" OtherKey="Id_PhongTro" Type="CSVATCHAT" />
-      <Association Name="PHONGTRO_LUUTIN" Member="LUUTINs" ThisKey="Id" OtherKey="Id_PhongTro" Type="LUUTIN" />
+      <Column Name="TrangThai" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Association Name="PHONGTRO_DONHANG" Member="DONHANGs" ThisKey="Id" OtherKey="Id_Phong" Type="DONHANG" />
+      <Association Name="PHONGTRO_IMAGE" Member="IMAGEs" ThisKey="Id" OtherKey="Id_PhongTro" Type="IMAGE" />
+      <Association Name="CHUTRO_PHONGTRO" Member="CHUTRO" ThisKey="Id_ChuTro" OtherKey="Id" Type="CHUTRO" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.TAIKHOAN" Member="TAIKHOANs">
@@ -150,7 +112,6 @@
       <Column Name="NgaySinh" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
       <Column Name="CCCD" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
       <Association Name="TAIKHOAN_ANH_CCCD" Member="ANH_CCCDs" ThisKey="Id" OtherKey="IdTaiKhoan" Type="ANH_CCCD" />
-      <Association Name="TAIKHOAN_ANH_CCCD1" Member="ANH_CCCDs1" ThisKey="Id" OtherKey="IdTaiKhoan" Type="ANH_CCCD" />
       <Association Name="TAIKHOAN_CHUTRO" Member="CHUTROs" ThisKey="Id" OtherKey="Id_TaiKhoan" Type="CHUTRO" />
       <Association Name="TAIKHOAN_NGUOIDUNG" Member="NGUOIDUNGs" ThisKey="Id" OtherKey="Id_TaiKhoan" Type="NGUOIDUNG" />
     </Type>

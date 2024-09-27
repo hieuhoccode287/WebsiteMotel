@@ -26,60 +26,75 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
         }
         public ActionResult ExportToExcel()
         {
-            var model = data.PHONGTROs; // Lấy dữ liệu từ model của bạn
+            var rooms = data.PHONGTROs.ToList();
+            var orders = data.DONHANGs.ToList();
 
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add("Danh sách thống kê");
 
-                // Tạo header
-                worksheet.Cells[1, 1].Value = "STT";
-                worksheet.Cells[1, 2].Value = "Thống kê";
-                worksheet.Cells[1, 3].Value = "Số lượng";
+                // Create headers
+                CreateHeader(worksheet);
 
-                worksheet.Cells["A1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                worksheet.Cells["A1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray);
-                worksheet.Cells["B1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                worksheet.Cells["B1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray);
-                worksheet.Cells["C1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                worksheet.Cells["C1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Gray);
-                // Đổ dữ liệu vào sheet
-                var row = 2;
-                var stt = 1;
+                // Fill data
+                FillData(worksheet, rooms, orders);
 
-                if (model != null)
-                {
-                    worksheet.Cells[row, 1].Value = stt++;
-                    worksheet.Cells[row, 2].Value = "Phòng đang đăng tin";
-                    worksheet.Cells[row++, 3].Value = model.Count(n => n.TrangThai == 1);
-
-                    worksheet.Cells[row, 1].Value = stt++;
-                    worksheet.Cells[row, 2].Value = "Phòng đã cho thuê";
-                    worksheet.Cells[row++, 3].Value = model.Count(n => n.TrangThai == 3);
-
-                    worksheet.Cells[row, 1].Value = stt++;
-                    worksheet.Cells[row, 2].Value = "Phòng đang chờ duyệt";
-                    worksheet.Cells[row++, 3].Value = model.Count(n => n.TrangThai == 2);
-                }
-                else
-                {
-                    worksheet.Cells[row, 1].Value = "Không có dữ liệu";
-                    worksheet.Cells[row, 2].Style.Font.Italic = true;
-                    worksheet.Cells[row++, 2, row, 3].Merge = true;
-                }
-
-                // Thiết lập định dạng cho sheet
+                // Formatting
                 worksheet.Cells.AutoFitColumns();
-                worksheet.Cells.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-                worksheet.Cells.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
-                // Gửi file Excel về client
-                var fileStream = new MemoryStream(package.GetAsByteArray());
-                var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                var fileName = "Danh sách thống kê.xlsx";
-
-                return File(fileStream, contentType, fileName);
+                // Return Excel file
+                return CreateExcelFile(package, "Danh sách thống kê.xlsx");
             }
         }
+
+        private void CreateHeader(ExcelWorksheet worksheet)
+        {
+            worksheet.Cells[1, 1].Value = "STT";
+            worksheet.Cells[1, 2].Value = "Thống kê";
+            worksheet.Cells[1, 3].Value = "Số lượng";
+
+            for (int col = 1; col <= 3; col++)
+            {
+                worksheet.Cells[1, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[1, col].Style.Fill.BackgroundColor.SetColor(Color.Gray);
+            }
+        }
+
+        private void FillData(ExcelWorksheet worksheet, List<PHONGTRO> rooms, List<DONHANG> orders)
+        {
+            var row = 2;
+            int stt = 1;
+
+            if (rooms != null && orders != null)
+            {
+                worksheet.Cells[row, 1].Value = stt++;
+                worksheet.Cells[row, 2].Value = "Phòng đang đăng tin";
+                worksheet.Cells[row++, 3].Value = rooms.Count(n => n.TrangThai == 1);
+
+                worksheet.Cells[row, 1].Value = stt++;
+                worksheet.Cells[row, 2].Value = "Phòng đã cho thuê";
+                worksheet.Cells[row++, 3].Value = orders.Count(n => n.TrangThai == 3);
+
+                worksheet.Cells[row, 1].Value = stt++;
+                worksheet.Cells[row, 2].Value = "Phòng đang chờ duyệt";
+                worksheet.Cells[row++, 3].Value = orders.Count(n => n.TrangThai == 2);
+            }
+            else
+            {
+                worksheet.Cells[row, 1].Value = "Không có dữ liệu";
+                worksheet.Cells[row, 2].Style.Font.Italic = true;
+                worksheet.Cells[row++, 2, row, 3].Merge = true;
+            }
+        }
+
+        private ActionResult CreateExcelFile(ExcelPackage package, string fileName)
+        {
+            var fileStream = new MemoryStream(package.GetAsByteArray());
+            var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            return File(fileStream, contentType, fileName);
+        }
+
     }
 }

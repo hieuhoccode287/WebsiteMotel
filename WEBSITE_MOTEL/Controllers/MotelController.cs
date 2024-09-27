@@ -10,6 +10,7 @@ using WEBSITE_MOTEL.Models;
 using Microsoft.Ajax.Utilities;
 using System.ComponentModel.DataAnnotations;
 using System.Net.NetworkInformation;
+using System.Diagnostics;
 
 namespace WEBSITE_MOTEL.Controllers
 {
@@ -21,14 +22,13 @@ namespace WEBSITE_MOTEL.Controllers
         {
             ViewData["strSearch"] = strSearch;
             /*ViewBag.IdPH = new SelectList(data.PHONGTROs.ToList().OrderBy(n => n.TenPhong), "Id", "TenPhong");*/
-            int iSize = 3;
+            int iSize = 5;
             int iPageNum = (page ?? 1);
             if (!string.IsNullOrEmpty(strSearch))
             {
                 var phong = (from a in data.PHONGTROs
                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-
                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
 
                              where a.TrangThai == 1 && a.TenPhong.Contains(strSearch) || a.MoTa.Contains(strSearch) /*|| a.DienTich.Equals(strSearch) */
@@ -37,7 +37,7 @@ namespace WEBSITE_MOTEL.Controllers
                                  sMa = a.Id,
                                  sTenPhong = a.TenPhong,
                                  sHoTen = e.HoTen,
-
+                                 sTrangThai = (byte)a.TrangThai,
                                  sDienTich = (int)a.DienTich,
                                  sSoluong = (int)a.SoLuong,
                                  sSoNguoiO = (int)a.SoNguoiO,
@@ -56,7 +56,6 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sTrangThai = (byte)a.TrangThai,
 
                                  sTenKV = a.KhuVuc,
                              });
@@ -68,12 +67,13 @@ namespace WEBSITE_MOTEL.Controllers
                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                             where a.TrangThai == 1
+                             where a.TrangThai == 1 
                              select new RoomDetail()
                              {
                                  sMa = a.Id,
                                  sTenPhong = a.TenPhong,
                                  sHoTen = e.HoTen,
+                                 sTrangThai = (byte)a.TrangThai,
                                  sDienTich = (int)a.DienTich,
                                  sSoluong = (int)a.SoLuong,
                                  sSoNguoiO = (int)a.SoNguoiO,
@@ -92,8 +92,6 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sTrangThai = (byte)a.TrangThai,
-
                                  sTenKV = a.KhuVuc
                              });
 
@@ -194,9 +192,8 @@ namespace WEBSITE_MOTEL.Controllers
 
         public ActionResult SearchKQ(int? page, string IdKV, string IdGia, string IdSL, string IdDT)
         {
-            int iSize = 3;
+            int iSize = 5;
             int iPageNum = (page ?? 1);
-
             var listSearch = from a in data.PHONGTROs
                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
@@ -207,6 +204,7 @@ namespace WEBSITE_MOTEL.Controllers
                                  sMa = a.Id,
                                  sTenPhong = a.TenPhong,
                                  sHoTen = e.HoTen,
+                                 sTrangThai = (byte)a.TrangThai,
                                  sDienTich = (int)a.DienTich,
                                  sSoluong = (int)a.SoLuong,
                                  sSoNguoiO = (int)a.SoNguoiO,
@@ -225,27 +223,26 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sTrangThai = (byte)a.TrangThai,
                                  sTenKV = a.KhuVuc,
                              };
 
-            // Filter by location
+            // Lọc theo vị trí
             if (!String.IsNullOrEmpty(IdKV) && IdKV != "Quận/Huyện")
             {
                 listSearch = listSearch.Where(a => a.sTenKV == IdKV);
             }
 
-            // Filter by number of occupants
+            // Lọc theo số lượng người
             if (!String.IsNullOrEmpty(IdSL) && IdSL != "Số người ở")
             {
                 int numberOfOccupants;
                 if (int.TryParse(IdSL, out numberOfOccupants))
                 {
-                    listSearch = listSearch.Where(a => a.sSoluong == numberOfOccupants);
+                    listSearch = listSearch.Where(a => a.sSoNguoiO == numberOfOccupants);
                 }
             }
 
-            // Filter by area
+            // Lọc theo diện tích
             if (!String.IsNullOrEmpty(IdDT) && IdDT != "Diện tích(m2)")
             {
                 string[] areaRange = IdDT.Split(' ');
@@ -272,11 +269,11 @@ namespace WEBSITE_MOTEL.Controllers
                 }
             }
 
-            // Filter by price
+            // Lọc theo giá cả
             if (!String.IsNullOrEmpty(IdGia) && IdGia != "Mức giá?")
             {
                 string[] priceRange = IdGia.Split(' ');
-                if (priceRange.Length == 2)
+                if (priceRange.Length >= 2)
                 {
                     double priceMin;
                     double priceMax;
@@ -299,16 +296,21 @@ namespace WEBSITE_MOTEL.Controllers
                 }
             }
 
-
-            // Check if the result is empty
+            // Kiểm tra nếu không có kết quả
             if (!listSearch.Any())
             {
                 ViewBag.ErrorMessage = "Không tìm thấy kết quả phù hợp.";
-                return View("Index", listSearch.ToPagedList(iPageNum, iSize));
             }
+
+            // Truyền lại các tham số lọc vào ViewBag để sử dụng trong View
+            ViewBag.IdKV = IdKV;
+            ViewBag.IdGia = IdGia;
+            ViewBag.IdSL = IdSL;
+            ViewBag.IdDT = IdDT;
 
             return View("Index", listSearch.OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
         }
+
 
 
         public ActionResult Map()
@@ -401,20 +403,41 @@ namespace WEBSITE_MOTEL.Controllers
         [HttpPost]
         public JsonResult SaveData(int idphong)
         {
-
             try
             {
-
+                // Get the current user account
                 TAIKHOAN tk = GetAcc();
-                var idnd = data.NGUOIDUNGs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
+                if (tk == null)
+                {
+                    return Json(new { code = 400, msg = "Tài khoản không hợp lệ." }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Fetch user information
+                var nd = data.NGUOIDUNGs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
+                if (nd == null)
+                {
+                    return Json(new { code = 400, msg = "Người dùng không tồn tại." }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Check if the room exists
                 var phong = data.PHONGTROs.SingleOrDefault(n => n.Id == idphong);
+                if (phong == null)
+                {
+                    return Json(new { code = 400, msg = "Phòng trọ không tồn tại." }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Proceed with saving the booking and approval information
+
                 var dh = new DONHANG();
                 dh.NgayDat = DateTime.Now;
-                dh.Id_NguoiDung = idnd.Id;
+                dh.Id_NguoiDung = nd.Id;
                 dh.Id_Phong = idphong;
-                phong.TrangThai = 2;
+                dh.TrangThai = 2;
+
+
                 data.DONHANGs.InsertOnSubmit(dh);
                 data.SubmitChanges();
+
                 return Json(new { code = 200, msg = "Đặt thành công." }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -422,5 +445,6 @@ namespace WEBSITE_MOTEL.Controllers
                 return Json(new { code = 500, msg = "Lỗi. " + ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
     }
 }

@@ -46,6 +46,18 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="6.2.3" />
+    <PackageReference Include="Microsoft.AspNet.Mvc">
+      <Version>5.2.9</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.Razor">
+      <Version>3.2.9</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebPages">
+      <Version>3.2.9</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Web.Infrastructure">
+      <Version>2.0.0</Version>
+    </PackageReference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
@@ -137,6 +149,7 @@
     <Compile Include="Areas\Admin\Controllers\QLDUYETPHONGController.cs" />
     <Compile Include="Areas\Admin\Controllers\QLPhongController.cs" />
     <Compile Include="Areas\Admin\Controllers\ThongKeController.cs" />
+    <Compile Include="Controllers\ApproveController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CHUTROController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
@@ -154,6 +167,7 @@
     <Compile Include="Models\ChuTro.cs" />
     <Compile Include="Models\image.cs" />
     <Compile Include="Models\NguoiDung.cs" />
+    <Compile Include="Models\PhongDuyet.cs" />
     <Compile Include="Models\RoomDetail.cs" />
     <Compile Include="Models\TaiKhoan.cs" />
     <Compile Include="Models\TimNhaTro.designer.cs">
@@ -1760,7 +1774,6 @@
     <Content Include="Views\_LayoutPageStart.cshtml" />
     <Content Include="Views\Shared\NewsPartial.cshtml" />
     <Content Include="Views\Motel\Search.cshtml" />
-    <Content Include="Views\Info\ManageInfo.cshtml" />
     <Content Include="Views\Info\ManageInfoCT.cshtml" />
     <Content Include="Views\Info\ManageInfoND.cshtml" />
     <Content Include="Views\Shared\QDinh.cshtml" />
@@ -1769,6 +1782,7 @@
     <Content Include="Views\Motel\TEST.cshtml" />
     <Content Include="Views\Motel\SearchKQ.cshtml" />
     <Content Include="Views\Default\Index.cshtml" />
+    <Content Include="Views\Approve\Approve.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

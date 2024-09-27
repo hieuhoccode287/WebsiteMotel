@@ -47,9 +47,9 @@ namespace WEBSITE_MOTEL.Controllers
                                  sMa = g.IdDH,
                                  sTenPhong = a.TenPhong,
                                  sHoTen = e.HoTen,
-                                 
                                  sDienTich = (int)a.DienTich,
                                  sSoluong = (int)a.SoLuong,
+                                 sSoNguoiO = (int)a.SoNguoiO,
                                  sAnhBia = a.AnhBia,
                                  sMoTa = a.MoTa,
                                  dNgayCapNhat = (DateTime)a.Ngay,
@@ -65,26 +65,59 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sTrangThai = (byte)a.TrangThai,
                                  sTenKV = a.KhuVuc,
+                                 sTrangThai = (byte)g.TrangThai,
                              });
                 return View(phong.ToList().OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
             }
         }
-       
+
         [HttpPost]
         public JsonResult Delete(int maDH)
         {
             try
             {
+                // Find the order by IdDH
                 var dh = data.DONHANGs.SingleOrDefault(d => d.IdDH == maDH);
+                if (dh == null)
+                {
+                    return Json(new { code = 404, msg = "Đơn hàng không tồn tại." }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Delete the order
                 data.DONHANGs.DeleteOnSubmit(dh);
                 data.SubmitChanges();
+
                 return Json(new { code = 200, msg = "Xóa phòng thành công." }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 return Json(new { code = 500, msg = "Xóa phòng thất bại. Lỗi " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult Checkout(int maDH)
+        {
+            try
+            {
+                // Find the order by IdDH
+                var dh = data.DONHANGs.SingleOrDefault(d => d.IdDH == maDH);
+                var p = data.PHONGTROs.SingleOrDefault(n => n.Id == dh.Id_Phong);
+                if (dh == null)
+                {
+                    return Json(new { code = 404, msg = "Đơn hàng không tồn tại." }, JsonRequestBehavior.AllowGet);
+                }
+                p.SoLuong += 1;
+                // Delete the order
+                data.DONHANGs.DeleteOnSubmit(dh);
+                data.SubmitChanges();
+
+                return Json(new { code = 200, msg = "Trả phòng thành công." }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 500, msg = "Trả phòng thất bại. Lỗi " + ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
     }

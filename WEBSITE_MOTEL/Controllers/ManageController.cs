@@ -24,7 +24,7 @@ namespace WEBSITE_MOTEL.Controllers
             var chutro = data.CHUTROs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
             // Lấy danh sách phòng trọ
             var phongTroList = data.PHONGTROs
-                .Where(n => n.Id_ChuTro == chutro.Id && n.TrangThai != 4)
+                .Where(n => n.Id_ChuTro == chutro.Id)
                 .ToList();
 
             // Sử dụng PagedList để phân trang
@@ -35,6 +35,7 @@ namespace WEBSITE_MOTEL.Controllers
             return View(pagedList);
         }
 
+
         private void UpdateExpiredPhongTroStatus()
         {
             // Lấy danh sách các phòng trọ đã hết hạn
@@ -43,19 +44,20 @@ namespace WEBSITE_MOTEL.Controllers
             // Cập nhật trạng thái của các phòng trọ đã hết hạn
             foreach (var phongTro in expiredPhongTroList)
             {
-                phongTro.TrangThai = 0;
+                phongTro.TrangThai = 2;
             }
 
             // Lưu thay đổi vào database
             data.SubmitChanges();
         }
 
+
         public ActionResult DangLai(int id)
         {
             // Thực hiện cập nhật trạng thái của phòng trọ có id tương ứng
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
             var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
-            
+
             if (phongTro != null)
             {
                 phongTro.TrangThai = 1;
@@ -67,14 +69,14 @@ namespace WEBSITE_MOTEL.Controllers
             // Chuyển hướng về trang quản lý
             return RedirectToAction("Manage");
         }
-        
+
         public ActionResult NgungDang(int id)
         {
             // Thực hiện cập nhật trạng thái của phòng trọ có id tương ứng
             var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
             if (phongTro != null)
             {
-                phongTro.TrangThai = 0;
+                phongTro.TrangThai = 2;
                 phongTro.Ngay = null;
                 data.SubmitChanges();
                 TempData["Message"] = "Ngừng đăng tin thành công!";
@@ -103,7 +105,7 @@ namespace WEBSITE_MOTEL.Controllers
             var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
             if (phongTro != null)
             {
-                phongTro.TrangThai = 0;
+                phongTro.TrangThai = 2;
                 data.SubmitChanges();
                 return Json(new { success = true, message = "Ngừng đăng tin thành công!" });
             }
@@ -160,61 +162,6 @@ namespace WEBSITE_MOTEL.Controllers
                 message = "Không tìm thấy phòng trọ có mã số tương ứng!"
             });
         }
-
-        public ActionResult DuyetPhong(int id)
-        {
-            // Thực hiện cập nhật trạng thái của phòng trọ có id tương ứng
-            var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
-            if (phongTro != null && phongTro.TrangThai == 2)
-            {
-                phongTro.TrangThai = 3;
-                phongTro.Ngay = DateTime.Now;
-                data.SubmitChanges();
-                TempData["Message"] = "Duyệt phòng thành công!";
-            }
-
-            // Chuyển hướng về trang quản lý
-            return RedirectToAction("Manage");
-        }
-
-        [HttpPost]
-        public ActionResult DuyetPhongAjax(int id)
-        {
-            var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
-            if (phongTro != null && phongTro.TrangThai == 2)
-            {
-                phongTro.TrangThai = 3;
-                data.SubmitChanges();
-                return Json(new { success = true, message = "Duyệt phòng thành công!" });
-            }
-            return Json(new { success = false, message = "Lỗi không duyệt được phòng!" });
-        }
-        public ActionResult BoDuyetPhong(int id)
-        {
-            // Thực hiện cập nhật trạng thái của phòng trọ có id tương ứng
-            var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
-            if (phongTro != null && phongTro.TrangThai == 2)
-            {
-                phongTro.TrangThai = 1;
-                phongTro.Ngay = DateTime.Now;
-                data.SubmitChanges();
-                TempData["Message"] = "Bỏ duyệt phòng thành công!";
-            }
-
-            // Chuyển hướng về trang quản lý
-            return RedirectToAction("Manage");
-        }
-        [HttpPost]
-        public ActionResult BoDuyetPhongAjax(int id)
-        {
-            var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
-            if (phongTro != null && phongTro.TrangThai == 2)
-            {
-                phongTro.TrangThai = 1;
-                data.SubmitChanges();
-                return Json(new { success = true, message = "Bỏ duyệt phòng thành công!" });
-            }
-            return Json(new { success = false, message = "Bỏ duyệt phòng không thành công!" });
-        }
     }
+        
 }

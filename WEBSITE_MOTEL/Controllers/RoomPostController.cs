@@ -30,7 +30,7 @@ namespace WEBSITE_MOTEL.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Index(PHONGTRO phong, FormCollection f, HttpPostedFileBase[] fFileUpLoad, IMAGE images, CHUTRO chutro, TAIKHOAN taikhoan)
+        public ActionResult Index(PHONGTRO phong,DONHANG pd,FormCollection f, HttpPostedFileBase[] fFileUpLoad, IMAGE images)
         {
             // Check if there are any files to upload
             if (fFileUpLoad == null || !fFileUpLoad.Any())

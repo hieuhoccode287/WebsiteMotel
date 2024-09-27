@@ -62,11 +62,19 @@
 
                     @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 3)
                     {
+                        <li class="item"><a href="@Url.Action("Approve", "Approve")" style="display:none"><i class="fa fa-book" hidden></i><p>Quản lí</p></a></li>
+                    }
+                    else
+                    {
+                        <li class="item"><a href="@Url.Action("Approve", "Approve")"><i class="fa fa-archive"></i><p>Duyệt phòng</p></a></li>
+                    }
+                    @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 1 || tk.PhanQuyen == 3)
+                    {
                         <li class="item"><a href="@Url.Action("Manage", "Manage")" style="display:none"><i class="fa fa-book" hidden></i><p>Quản lí</p></a></li>
                     }
                     else
                     {
-                        <li class="item"><a href="@Url.Action("Manage", "Manage")"><i class="fa fa-book"></i><p>Quản lí</p></a></li>
+                        <li class="item"><a href="@Url.Action("Manage", "Manage")"><i class="fa fa-book"></i><p>Quản lý phòng</p></a></li>
                     }
                     @if (Session["TaiKhoan"] == null || tk.PhanQuyen == 2 || tk.PhanQuyen == 3)
                     {

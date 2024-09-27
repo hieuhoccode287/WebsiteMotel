@@ -6,14 +6,16 @@ using System.Web;
 
 namespace WEBSITE_MOTEL.Models
 {
-    public class RoomDetail
+    public class PhongDuyet
     {
         public int sMa { get; set; }
+        public int sIdDonHang { get; set; }
         public string sTenPhong { get; set; }
         public string sHoTen { get; set; }
         public int sDienTich { get; set; }
         public string sAnhBia { get; set; }
-        public string sTen { get; set; }
+        public string sTenND { get; set; }
+        public string sSDTND { get; set; }
         public int sIDCT { get; set; }
         public int sSoluong { get; set; }
         public int sSoNguoiO { get; set; }
@@ -23,17 +25,13 @@ namespace WEBSITE_MOTEL.Models
         public double dGiaCa { get; set; }
         public string sSDT { get; set; }
         public string sEmail { get; set; }
-        public string sUrl_Path { get; set; }
-        public string sUrl_Path2 { get; set; }
-        public string sUrl_Path3 { get; set; }
-        public string sUrl_Path4 { get; set; }
         public double sNuoc { get; set; }
         public double sDien { get; set; }
         public double sInternet { get; set; }
         public double sGuiXe { get; set; }
         public string sDiaChi { get; set; }
         public byte sTrangThai { get; set; }
-        
+
         public string sTenKV { get; set; }
     }
 }

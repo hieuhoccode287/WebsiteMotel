@@ -35,7 +35,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join d in data.TAIKHOANs on b.Id_TaiKhoan equals d.Id
 
-                             where a.TenPhong.Contains(strSearch) || a.MoTa.Contains(strSearch) || a.DienTich.Equals(strSearch)
+                             where a.TrangThai == 1 && a.TenPhong.Contains(strSearch) || a.MoTa.Contains(strSearch) || a.DienTich.Equals(strSearch)
                              select new RoomDetail()
                              {
                                  sMa = (int)a.Id,
@@ -66,7 +66,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join d in data.TAIKHOANs on b.Id_TaiKhoan equals d.Id
-
+                             where a.TrangThai == 1
                              select new RoomDetail()
                              {
                                  sMa = (int)a.Id,

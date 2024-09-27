@@ -1,47 +1,44 @@
 ﻿@using WEBSITE_MOTEL.Models
 @model IEnumerable<WEBSITE_MOTEL.Models.KHUVUC>
 @using (Html.BeginForm("SearchKQ", "Motel", FormMethod.Get))
-{ 
-        <div>
-            <div class="title-side">
-                TÌM PHÒNG
-            </div>
-            <div class="row">
-                <select class="select" name="IdKV">
-                    <option>Phường/Xã</option>
-                    @foreach (var item in Model)
-                    {
-                        <option>@item.Ten</option>
-                    }
-                </select>
-            </div>
-
-            <div class="row">
-                <select class="select" name="IdSL">
-                    <option>Số người ở</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                </select>
-                <select class="select" name="IdDT">
-                    <option>Diện tích(m2)</option>
-                    <option>Dưới 15</option>
-                    <option>15 - 25</option>
-                    <option>25 - 35</option>
-                    <option>Trên 35</option>
-                </select>
-                <select class="select" name="IdGia">
-                    <option>Mức giá?</option>
-                    <option>Dưới 1000000</option>
-                    <option>1000000 - 1500000</option>
-                    <option>1500000 - 2000000</option>
-                    <option>Trên 2000000</option>
-
-                </select>
-            </div>
-            <input type="submit" value="Tìm kiếm" class="btn btn-default" style="margin-left: 10px;" />
-
+{
+    <div>
+        <div class="title-side">
+            TÌM PHÒNG
         </div>
+        <div class="row">
+            <select class="select" name="IdKV">
+                <option value="">Phường/Xã</option>
+                @foreach (var item in Model)
+                {
+                    <option value="@item.Ten">@item.Ten</option>
+ <!-- Đảm bảo Id được gửi đi -->
+                }
+            </select>
+        </div>
+
+        <div class="row">
+            <select class="select" name="IdSL">
+                <option value="">Số người ở</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+            <select class="select" name="IdDT">
+                <option value="">Diện tích(m2)</option>
+                <option value="Dưới 15">Dưới 15</option>
+                <option value="15 - 25">15 - 25</option>
+                <option value="25 - 35">25 - 35</option>
+                <option value="Trên 35">Trên 35</option>
+            </select>
+            <select class="select" name="IdGia">
+                <option value="">Mức giá?</option>
+                <option value="Dưới 1000000">Dưới 1 triệu</option>
+                <option value="1000000 - 2000000">1 - 2 triệu</option>
+                <option value="2000000 - 3000000">2 - 3 triệu</option>
+                <option value="Trên 3000000">Trên 3 triệu</option>
+            </select>
+        </div>
+        <input type="submit" value="Tìm kiếm" class="btn btn-default" style="margin-left: 10px;" />
+    </div>
 }
-
-

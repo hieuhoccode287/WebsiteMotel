@@ -20,51 +20,6 @@ namespace WEBSITE_MOTEL.Controllers
         }
         // GET: Info
         [HttpGet]
-        public ActionResult ManageInfo()
-        {
-            if (Session["TaiKhoan"] == null || Session["TaiKhoan"].ToString() == "")
-            {
-                return Redirect("~/User/DangNhap");
-            }
-
-            else
-            {
-                TAIKHOAN nd = (TAIKHOAN)Session["TaiKhoan"];
-
-
-                var adminn = (from a in data.ADMINs
-                              join b in data.TAIKHOANs on a.Id_TaiKhoan equals b.Id
-                              
-
-                              select new Admin()
-                              {
-                                  sTaiKhoanAD = b.TaiKhoan,
-                                  sHotenAD = b.HoTen,
-                                  sMatKhauAD = b.MatKhau,
-                                  sId = b.Id,
-                                  sSDTAD = a.SDT,
-                                  sEmailAD = a.Email
-                              }).FirstOrDefault();
-
-
-                return View(adminn);
-            }
-        }
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult ManageInfo(FormCollection f)
-        {
-            var thongtin = data.TAIKHOANs.SingleOrDefault(n => n.Id == int.Parse(f["sId"]));
-            if(ModelState.IsValid)
-            {
-                thongtin.HoTen = f["sHotenAD"];
-                thongtin.MatKhau = f["sMatKhauAD"];
-                data.SubmitChanges();
-                return RedirectToAction("ManageInfo");
-            }
-            return View(thongtin);
-        }
-        [HttpGet]
         public ActionResult ManageInfoCT()
         {
             if (Session["TaiKhoan"] == null || Session["TaiKhoan"].ToString() == "")

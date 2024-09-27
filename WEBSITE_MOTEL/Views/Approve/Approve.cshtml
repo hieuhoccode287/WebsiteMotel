@@ -1,0 +1,138 @@
+﻿@model PagedList.IPagedList<WEBSITE_MOTEL.Models.PhongDuyet>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Approve";
+    Layout = "~/Views/_LayoutUser.cshtml";
+}
+
+<div class="nav-text">
+    <ol>
+        <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
+        <li id="arrow1"><i class="fa fa-angle-right"></i></li>
+        <li class="active" id="search-target">Duyệt phòng</li>
+    </ol>
+</div>
+<section class="wrap-content">
+    <div class="content" style="border: none;">
+        <div class="wrapper">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="quan_ly_tin">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="white-space: nowrap;" class="td_center">Mã số</th>
+                                    <th style="white-space: nowrap; text-align: center">Tiêu đề</th>
+                                    <th style="white-space: nowrap; text-align: center">Hình ảnh</th>
+                                    <th style="white-space: nowrap; text-align: center">Trạng thái</th>
+                                    <th style="white-space: nowrap; text-align: center">Tên khách hàng</th>
+                                    <th style="white-space: nowrap; text-align: center">SĐT liên hệ</th>
+                                    <th style="white-space: nowrap; text-align: center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="td_col2 td_matin" style="text-align: center; vertical-align: middle;">@item.sIdDonHang</td>
+                                        <td class="td_col3" style="height: 100px; text-align: center; vertical-align: middle;">
+                                            <a target="_blank">@item.sTenPhong</a>
+                                        </td>
+                                        <td class="td_col2" style="text-align: center; vertical-align: middle;">
+                                            <img src="~/Images/@item.sAnhBia" alt="image" style="width:100px; height:100px" loading="lazy">
+                                        </td>
+                                        <td class="td_col2s td_matin" style="color: #4CAF50; text-align: center; vertical-align: middle;">
+                                            @if (item.sTrangThai == 0)
+                                            {
+                                                <span style="color: #ED2327">Tin đã hết hạn</span>
+                                            }
+                                            else if (item.sTrangThai == 2)
+                                            {
+                                                <span style="color: #ddec71">Tin chờ được duyệt</span>
+                                            }
+                                            else if (item.sTrangThai == 3)
+                                            {
+                                                <span style="color: #1fefed">Phòng đã cho thuê</span>
+                                            }
+                                        </td>
+                                        <td class="td_col" style="height: 100px; text-align: center; vertical-align: middle;">
+                                            <a>@item.sTenND</a>
+                                        </td>
+                                        <td style="height: 100px; text-align: center; vertical-align: middle;">
+                                            <a style="width: 100%;">@item.sSDT</a>
+                                        </td>
+                                        <td style="height: 100px; text-align: center; vertical-align: middle;">
+                                            @if (item.sTrangThai == 2)
+                                            {
+                                                <a class="btn btn_action btn-success" id="st3" data-id="@item.sIdDonHang" style="width: 100px">Duyệt</a>
+                                                <a class="btn btn_action btn-danger" id="st4" data-id="@item.sIdDonHang" style="width: 100px; margin-top: 1px">Bỏ Duyệt</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="page_navigation">
+                        @Html.PagedListPager(Model, page => Url.Action("Approve", new { page }), PagedListRenderOptions.Classic)
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+    $(document).ready(function () {
+        //Sự kiện click nút "Duyệt Phòng"
+        $(".table").on("click", "#st3", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/Approve/DuyetPhong",
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    // Hiển thị thông báo
+                    alert("Đã Duyệt thành công");
+                    // Reload trang để cập nhật lại danh sách phòng trọ
+                    window.location.reload();
+                },
+                error: function () {
+                    // Hiển thị thông báo lỗi
+                    alert("Duyệt phòng không thành công!");
+                }
+            });
+        });
+
+        //Sự kiện click nút "Bỏ Duyệt"
+        $(".table").on("click", "#st4", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/Approve/BoDuyetPhong",
+                type: "POST",
+                data: { id: id },
+                success: function (result) {
+                    // Hiển thị thông báo
+                    alert("Đã bỏ duyệt phòng thành công");
+                    // Reload trang để cập nhật lại danh sách phòng trọ
+                    window.location.reload();
+                },
+                error: function () {
+                    // Hiển thị thông báo lỗi
+                    alert("Bỏ duyệt phòng không thành công!");
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    .td_col3 {
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Thêm dấu chấm lửng nếu nội dung vượt quá */
+        white-space: nowrap;
+    }
+</style>

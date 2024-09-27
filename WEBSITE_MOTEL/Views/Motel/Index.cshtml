@@ -50,7 +50,7 @@
                 <div id="myCarousel_@i" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner" role="listbox">
                         <div class="item active">
-                            <img src="~/Images/@item.sAnhBia" alt="image" style="width:300px; height:200px ">
+                            <img src="~/Images/@item.sAnhBia" alt="image" style="width:300px; height:200px" loading="lazy">
                         </div>
 
                     </div>
@@ -70,7 +70,19 @@
 
 
                     <div class="item-cr1 area">Diện tích: <span>@item.sDienTich m²</span></div>
+                    <div class="item-cr1 area">
+                        Trạng thái:
+                        @if (item.sSoluong > 0)
+                        {
+                            <span style="color:limegreen;">Còn phòng</span>
+                        }
+                        else
+                        {
+                            <span style="color:red;">Hết phòng</span>
+                        }
+                    </div>
                     <div class="item-cr1 date">Ngày đăng: <span>@Html.FormatValue(item.dNgayCapNhat, "{0:dd/MM/yyyy}")</span></div>
+
                 </div>
                 <div class="content-right2 col-xs-12 col-md-4">
                     <p class="hide_op">GIÁ DỊCH VỤ:</p>
@@ -88,10 +100,6 @@
             </div>
 
             <div class="clear"></div>
-
-
-
-
 
 
 
@@ -134,23 +142,18 @@
                                     <tr>
                                         <th>Email</th>
                                         <td>@item.sEmail</td>
-                                        <th>Số lượng phòng</th>
+                                        <th>Số phòng còn</th>
                                         <td>@item.sSoluong</td>
                                     </tr>
                                     <tr>
                                         <th>Diện tích</th>
                                         <td>@item.sDienTich m2</td>
-                                        <th>Giá cho thuê</th>
-                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</td>
+                                        <th>Số người ở</th>
+                                        <td>@item.sSoNguoiO</td>
                                     </tr>
                                     <tr>
-                                        <th>Số người ở:</th>
-                                        <td>@item.sSoNguoiO</td>
-                                        <th>Trạng thái</th>
-                                        @if (item.sTrangThai == 1)
-                                        {
-                                            <td colspan="3" style="color:limegreen;">Còn phòng</td>
-                                        }
+                                        <th>Giá cho thuê</th>
+                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</td>
                                     </tr>
 
 
@@ -230,7 +233,7 @@
                         <button type="button"><a href="@Url.Action("DangNhap","User")">ĐẶT NGAY</a></button>
                     </form>
                 }
-                else if (tk.PhanQuyen == 2 || tk.PhanQuyen == 1)
+                else if (tk.PhanQuyen == 2 || tk.PhanQuyen == 1 || item.sSoluong == 0)
                 {
                     <form style="text-align:center">
                         <button type="button" style="display:none" data-toggle="modal" data-target="#exampleModal" name="dat" id="@item.sMa">ĐẶT NGAY</button>
@@ -260,7 +263,7 @@
 </section>
 Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
 <div class="MenuTrang">
-    @Html.PagedListPager(Model, page => Url.Action("Index", "Motel", new { page = page }))
+    @Html.PagedListPager(Model, page => Url.Action("SearchKQ", "Motel", new { page, IdKV = ViewBag.IdKV, IdGia = ViewBag.IdGia, IdSL = ViewBag.IdSL, IdDT = ViewBag.IdDT }))
 </div>
 <style>
     .MenuTrang {
@@ -284,14 +287,14 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
             </div>
             <div class="modal-body">
                 <input type="text" id="maND" value="" hidden />
-                <label> Tên khách hàng </label>
-                <input type="text" class="form-control" id="txtTenKH" />
-                <label> Số điện thoại </label>
+                <label> Tên khách hàng: </label>
+                <input type="text" class="form-control" id="txtTenKH"/>
+                <label style="margin-top:10px"> Số điện thoại: </label>
                 <input type="text" class="form-control" id="txtSDT" />
-                <label> Bạn muốn đặt phòng trọ </label>
+                <label style="margin-top:10px"> Tên phòng trọ: </label>
                 <input type="text" class="form-control" id="txtTenPhong" />
-                <label> Giá </label>
-                <input type="number" class="form-control" id="txtGia" />
+                <label style="margin-top:10px"> Giá cho thuê: </label>
+                <input type="text" class="form-control" id="txtGia" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary cls " data-dismiss="modal">Đóng</button>
@@ -300,7 +303,71 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
         </div>
     </div>
 </div>
+<style>
+/*    .form-control {
+        max-width: 200px;
+        text-overflow: ellipsis;
+    }*/
+    .modal-content {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+    }
 
+    .modal-header {
+        background: linear-gradient(135deg, #82e682, #53a653); /* Màu xanh lá gradient */
+        color: white;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        padding: 15px;
+    }
+
+    .modal-body {
+        padding: 20px;
+        font-size: 16px;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+
+        .modal-footer .btn {
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+    .btn-primary {
+        background-color: #53a653;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #469d46;
+        }
+
+    .btn-secondary {
+        background-color: #e0e0e0;
+        border: none;
+    }
+
+        .btn-secondary:hover {
+            background-color: #cacaca;
+        }
+
+    .close {
+        color: white;
+        opacity: 1;
+        font-size: 2.5rem;
+    }
+
+</style>
 <script>
     $(document).on('click', "close", (function () {
         location.reload();
@@ -363,23 +430,31 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
             type: 'get',
             data: {
                 idphong: id,
-
             },
             success: function (data) {
                 if (data.code == 200) {
                     $('#txtTenPhong').val(data.dh.sTenPhong);
                     $('#txtTenPhong').prop('readonly', true);
 
-                    $('#txtGia').val(data.dh.sGia);
+                    // Format giá
+                    let formattedPrice = formatPrice(data.dh.sGia);
+                    $('#txtGia').val(formattedPrice);
                     $('#txtGia').prop('readonly', true);
-
-                }
-                else {
+                } else {
                     alert(data.msg);
                 }
-
             }
-
-        })
+        });
     }
+
+    // Hàm để format giá
+    function formatPrice(price) {
+        // Chuyển giá thành chuỗi
+        price = price.toString();
+        // Thêm dấu chấm cho mỗi nhóm 3 chữ số
+        let formatted = price.replace(/\B(?=(\d{3})+(?!\d))/g, ".").replace(',', '.');
+        return formatted;
+    }
+
+
 </script>
