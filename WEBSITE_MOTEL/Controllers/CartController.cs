@@ -41,7 +41,8 @@ namespace WEBSITE_MOTEL.Controllers
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro  
                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
                              join g in data.DONHANGs on a.Id equals g.Id_Phong
-                             where (idnd.Id == g.Id_NguoiDung)
+                             join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
+                             where (idnd.Id == g.Id_NguoiDung && g.TrangThai ==2 || g.TrangThai == 3)
                              select new RoomDetail()
                              {
                                  sMa = g.IdDH,
@@ -65,7 +66,7 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sTenKV = a.KhuVuc,
+                                 sTenKV = kv.Ten,
                                  sTrangThai = (byte)g.TrangThai,
                              });
                 return View(phong.ToList().OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));

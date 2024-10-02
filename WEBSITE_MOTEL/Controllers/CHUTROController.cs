@@ -23,13 +23,13 @@ namespace WEBSITE_MOTEL.Controllers
                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join d in data.TAIKHOANs on b.Id_TaiKhoan equals d.Id
-
+                             join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
                              select new RoomDetail()
                              {
                                  sMa = (int)a.Id,
                                  sTenPhong = a.TenPhong,
                                  /*sHoTen = b.HoTen,*/
-                                 sTenKV = a.KhuVuc,
+                                 sTenKV = kv.Ten,
                                  sDienTich = (int)a.DienTich,
                                  sSoluong = (int)a.SoLuong,
                                  sAnhBia = a.AnhBia,

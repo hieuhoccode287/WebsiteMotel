@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using PagedList;
-using PagedList.Mvc;
-using System.Web.UI;
 using WEBSITE_MOTEL.Models;
-using Microsoft.Ajax.Utilities;
-using System.ComponentModel.DataAnnotations;
-using System.Net.NetworkInformation;
-using System.Diagnostics;
+
 
 namespace WEBSITE_MOTEL.Controllers
 {
@@ -30,7 +23,7 @@ namespace WEBSITE_MOTEL.Controllers
                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-
+                             join d in data.KHUVUCs on a.KhuVuc equals d.Id
                              where a.TrangThai == 1 && a.TenPhong.Contains(strSearch) || a.MoTa.Contains(strSearch) /*|| a.DienTich.Equals(strSearch) */
                              select new RoomDetail()
                              {
@@ -56,8 +49,7 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-
-                                 sTenKV = a.KhuVuc,
+                                 sTenKV = d.Ten,
                              });
                 return View(phong.OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
             }
@@ -67,6 +59,7 @@ namespace WEBSITE_MOTEL.Controllers
                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
+                             join d in data.KHUVUCs on a.KhuVuc equals d.Id
                              where a.TrangThai == 1 
                              select new RoomDetail()
                              {
@@ -92,7 +85,7 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sTenKV = a.KhuVuc
+                                 sTenKV = d.Ten,
                              });
 
                 return View(phong.OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
@@ -190,7 +183,7 @@ namespace WEBSITE_MOTEL.Controllers
             return PartialView(listKV);
         }
 
-        public ActionResult SearchKQ(int? page, string IdKV, string IdGia, string IdSL, string IdDT)
+        public ActionResult SearchKQ(int? page, int IdKV, string IdGia, string IdSL, string IdDT)
         {
             int iSize = 5;
             int iPageNum = (page ?? 1);
@@ -198,6 +191,7 @@ namespace WEBSITE_MOTEL.Controllers
                              join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
+                             join d in data.KHUVUCs on a.KhuVuc equals d.Id
                              where a.TrangThai == 1
                              select new RoomDetail()
                              {
@@ -223,13 +217,14 @@ namespace WEBSITE_MOTEL.Controllers
                                  sNuoc = (double)a.Nuoc,
                                  sGuiXe = (double)a.GuiXe,
                                  sInternet = (double)a.Internet,
-                                 sTenKV = a.KhuVuc,
+                                 sTenKV = d.Ten,
+                                 sIdKV = d.Id,
                              };
 
-            // Lọc theo vị trí
-            if (!String.IsNullOrEmpty(IdKV) && IdKV != "Quận/Huyện")
+            // Lọc theo Khu vực
+            if (IdKV != 0)
             {
-                listSearch = listSearch.Where(a => a.sTenKV == IdKV);
+                listSearch = listSearch.Where(a => a.sIdKV == IdKV);
             }
 
             // Lọc theo số lượng người

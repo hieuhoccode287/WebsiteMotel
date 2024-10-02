@@ -55,53 +55,31 @@ namespace WEBSITE_MOTEL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ManageInfoCT(FormCollection f)
+        public ActionResult ManageInfoCT(ChuTro model)
         {
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
+
             if (tk == null)
             {
-                return RedirectToAction("Login", "Account"); // Redirect if not logged in
+                return RedirectToAction("Login", "Account"); // Redirect to login if the user is not logged in
             }
 
-            // Fetch the current user's information
-            var taikhoan = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
-
-            // Validate input fields
-            if (string.IsNullOrEmpty(f["sHotenCT"]))
-            {
-                ModelState.AddModelError("sHotenCT", "Vui lòng nhập họ và tên.");
-            }
-            if (string.IsNullOrEmpty(f["sMatKhauCT"]))
-            {
-                ModelState.AddModelError("sMatKhauCT", "Vui lòng nhập mật khẩu mới.");
-            }
-            if (string.IsNullOrEmpty(f["sSDTCT"]))
-            {
-                ModelState.AddModelError("sSDTCT", "Vui lòng nhập số điện thoại.");
-            }
-            if (string.IsNullOrEmpty(f["sEmailCT"]))
-            {
-                ModelState.AddModelError("sEmailCT", "Vui lòng nhập email.");
-            }
-
-            // Check if the ModelState is valid
             if (!ModelState.IsValid)
             {
-                // Return the current model with validation errors
-                return View();
+                return View(model); // Return the view with validation errors if the model state is invalid
             }
-
+            var taikhoan = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
             // Update the TAIKHOAN entity
-            
+
             if (taikhoan != null)
             {
-                taikhoan.HoTen = f["sHotenCT"];
-                taikhoan.MatKhau = f["sMatKhauCT"]; // Ensure you handle password hashing
-                taikhoan.SDT = f["sSDTCT"];
-                taikhoan.Email = f["sEmailCT"];
-                taikhoan.CCCD = f["sCCCD"];
-                taikhoan.DiaChi = f["sDiaChi"];
-                taikhoan.NgaySinh = Convert.ToDateTime(f["sNgaySinh"]);
+                taikhoan.HoTen = model.sHotenCT;
+                taikhoan.MatKhau = model.sMatKhauCT;
+                taikhoan.SDT = model.sSDTCT;
+                taikhoan.Email = model.sEmailCT;
+                taikhoan.CCCD = model.sCCCD;
+                taikhoan.DiaChi = model.sDiaChi;
+                taikhoan.NgaySinh = Convert.ToDateTime(model.sNgaySinh);
 
                 // Submit changes to the database
                 data.SubmitChanges();
@@ -112,7 +90,7 @@ namespace WEBSITE_MOTEL.Controllers
                 // Redirect to the same action to refresh the page
                 return RedirectToAction("ManageInfoCT");
             }
-            return View();
+            return View(model);
         }
 
         [HttpGet]
@@ -145,57 +123,40 @@ namespace WEBSITE_MOTEL.Controllers
             }
         }
         [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult ManageInfoND(FormCollection f)
+        [ValidateAntiForgeryToken]
+        public ActionResult ManageInfoND(NguoiDung model)
         {
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
 
             if (tk == null)
             {
-                return RedirectToAction("Login", "Account"); // Chuyển hướng tới trang đăng nhập nếu chưa đăng nhập
+                return RedirectToAction("Login", "Account"); // Redirect to login if the user is not logged in
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model); // Return the view with validation errors if the model state is invalid
             }
 
             var taikhoan = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
 
-            // Kiểm tra các trường dữ liệu
-            if (string.IsNullOrEmpty(f["sHotenND"]))
-            {
-                ModelState.AddModelError("sHotenND", "Vui lòng nhập họ và tên.");
-            }
-            if (string.IsNullOrEmpty(f["sMatKhauND"]))
-            {
-                ModelState.AddModelError("sMatKhauND", "Vui lòng nhập mật khẩu mới.");
-            }
-            if (string.IsNullOrEmpty(f["sSDTND"]))
-            {
-                ModelState.AddModelError("sSDTND", "Vui lòng nhập số điện thoại.");
-            }
-            if (string.IsNullOrEmpty(f["sEmailND"]))
-            {
-                ModelState.AddModelError("sEmailND", "Vui lòng nhập email.");
-            }
-
-            // Nếu có lỗi, trả về view với thông báo lỗi
-            if (!ModelState.IsValid)
-            {
-                return View(); // Trả về view với thông báo lỗi
-            }
-
-            // Cập nhật thông tin nếu không có lỗi
             if (taikhoan != null)
             {
-                taikhoan.HoTen = f["sHotenND"];
-                taikhoan.MatKhau = f["sMatKhauND"];
-                taikhoan.SDT = f["sSDTND"];
-                taikhoan.Email = f["sEmailND"];
+                taikhoan.HoTen = model.sHotenND;
+                taikhoan.MatKhau = model.sMatKhauND; // Handle password hashing here
+                taikhoan.SDT = model.sSDTND;
+                taikhoan.Email = model.sEmailND;
 
                 data.SubmitChanges();
+
                 Session["TaiKhoan"] = taikhoan;
                 TempData["SuccessMessage"] = "Thông tin đã được cập nhật thành công!";
-                return RedirectToAction("ManageInfoND"); // Tải lại trang với thông báo thành công
+                return RedirectToAction("ManageInfoND"); // Refresh the page with success message
             }
-            return View(); // Trả về view nếu không tìm thấy tài khoản
+
+            return View(model); // Return the view if the account is not found
         }
+
 
     }
 }

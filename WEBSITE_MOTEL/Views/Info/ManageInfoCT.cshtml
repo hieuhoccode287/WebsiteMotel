@@ -36,7 +36,7 @@
                                 <div class="row">
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="username">Tài khoản</label>
-                                        <input type="text" class="form-control" name="sTaiKhoanCT" value="@Model.sTaiKhoanCT" disabled>
+                                        <input type="text" class="form-control" name="sTaiKhoanCT" value="@tk.TaiKhoan" disabled>
                                     </div>
                                 </div>
                             </div>
@@ -72,6 +72,7 @@
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="">Căn cước công dân</label>
                                         <input type="text" class="form-control" name="sCCCD" value="@Model.sCCCD">
+                                        @Html.ValidationMessageFor(model => model.sCCCD, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
@@ -80,6 +81,7 @@
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="">Địa chỉ</label>
                                         <input type="text" class="form-control" name="sDiaChi" value="@Model.sDiaChi">
+                                        @Html.ValidationMessageFor(model => model.sDiaChi, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +103,7 @@
                                                 <i class="fa fa-eye" id="eye-icon"></i>
                                             </span>
                                         </div>
-                                        @Html.ValidationMessage("sMatKhauND", "", new { @class = "text-danger" })
+                                        @Html.ValidationMessageFor(model => model.sMatKhauCT, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +117,7 @@
                                 </div>*@
 
                             <input type="hidden" name="action" value="update_user_info">
-                            <button type="submit" class="btn btn-primary" id="update">Cập nhật</button>
+                            <button type="submit" class="btn btn-primary" formmethod="post" id="update">Cập nhật</button>
                         </div>
                     </div>
                 </div>
@@ -138,4 +140,5 @@
             eyeIcon.classList.add('fa-eye');
         }
     });
+
 </script>

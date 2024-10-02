@@ -158,7 +158,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                          join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                          join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                          join d in data.TAIKHOANs on b.Id_TaiKhoan equals d.Id
-
+                         join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
                          select new RoomDetail()
                          {
                              sMa = (int)a.Id,
@@ -178,7 +178,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                              sUrl_Path3 = c.Url_Path3,
                              sUrl_Path4 = c.Url_Path4,
                              sIDCT = (int)a.Id_ChuTro,
-                             sTenKV = a.KhuVuc,
+                             sTenKV = kv.Ten,
                          });
             if (phong == null)
             {

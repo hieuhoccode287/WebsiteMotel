@@ -33,7 +33,7 @@ namespace WEBSITE_MOTEL.Models
         public double sGuiXe { get; set; }
         public string sDiaChi { get; set; }
         public byte sTrangThai { get; set; }
-        
+        public int sIdKV { get; set; }
         public string sTenKV { get; set; }
     }
 }

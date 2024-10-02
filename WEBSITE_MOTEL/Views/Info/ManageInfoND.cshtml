@@ -39,7 +39,7 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
                                             <label for="username">Tài khoản</label>
-                                            <input type="text" class="form-control" name="sTaiKhoanND" id="" placeholder="" value="@Model.sTaiKhoanND" disabled="">
+                                            <input type="text" class="form-control" name="sTaiKhoanND" value="@tk.TaiKhoan" disabled="">
                                         </div>
                                     </div>
                                 </div>
@@ -47,8 +47,8 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
                                             <label for="first_name">Họ và tên</label>
-                                            <input type="text" class="form-control" name="sHotenND" id="first_name" placeholder="" value="@Model.sHotenND">
-                                            @Html.ValidationMessage("sHotenND", "", new { @class = "text-danger" })
+                                            <input type="text" class="form-control" name="sHotenND" value="@Model.sHotenND">
+                                            @Html.ValidationMessageFor(model => model.sHotenND, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -56,8 +56,8 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
                                             <label for="phone">Điện thoại</label>
-                                            <input type="text" class="form-control" name="sSDTND" id="phone" placeholder="" value="@tk.SDT">
-                                            @Html.ValidationMessage("sSDTND", "", new { @class = "text-danger" })
+                                            <input type="text" class="form-control" name="sSDTND" value="@Model.sSDTND">
+                                            @Html.ValidationMessageFor(model => model.sSDTND, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -65,8 +65,8 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
                                             <label for="email">Email</label>
-                                            <input type="email" class="form-control" name="sEmailND" id="email" placeholder="" value="@tk.Email">
-                                            @Html.ValidationMessage("sEmailND", "", new { @class = "text-danger" })
+                                            <input type="email" class="form-control" name="sEmailND" value="@Model.sEmailND">
+                                            @Html.ValidationMessageFor(model => model.sEmailND, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
@@ -80,19 +80,10 @@
                                                     <i class="fa fa-eye" id="eye-icon"></i>
                                                 </span>
                                             </div>
-                                            @Html.ValidationMessage("sMatKhauND", "", new { @class = "text-danger" })
+                                            @Html.ValidationMessageFor(model => model.sMatKhauND, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
                                 </div>
-
-                                @*<div class="form-group">
-                                        <div class="row">
-                                            <div class="col-sm-6 col-xs-12">
-                                                <label for="password_new2">Xác nhận mật khẩu mới</label>
-                                                <input type="text" class="form-control" name="sMatKhauNhapLai" id="password_new2" placeholder="" value="">
-                                            </div>
-                                        </div>
-                                    </div>*@
 
                                 <input type="hidden" name="action" value="update_user_info">
                                 <button type="submit" class="btn btn-primary" formmethod="post" id="update">Cập nhật</button>

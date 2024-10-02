@@ -14,23 +14,20 @@ namespace WEBSITE_MOTEL.Controllers
         // GET: RoomPost
         public ActionResult Index()
         {
-           
             if (Session["TaiKhoan"] == null || Session["TaiKhoan"].ToString() == "")
             {
                 return Redirect("~/User/DangNhap");
             }
 
-            else
-            {
+            // Get the list of KhuVuc
+            var khuVucList = data.KHUVUCs.ToList();
 
-                return View();
-            }
-
+            return View(khuVucList); // Pass the list to the view
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Index(PHONGTRO phong,DONHANG pd,FormCollection f, HttpPostedFileBase[] fFileUpLoad, IMAGE images)
+        public ActionResult Index(PHONGTRO phong,FormCollection f, HttpPostedFileBase[] fFileUpLoad, IMAGE images)
         {
             // Check if there are any files to upload
             if (fFileUpLoad == null || !fFileUpLoad.Any())
@@ -128,7 +125,16 @@ namespace WEBSITE_MOTEL.Controllers
 
                 phong.Map = f["sMap"];
                 phong.Diachi = f["sDiaChi"];
-                phong.KhuVuc = f["sKhuVuc"];
+                string selectedKhuVucId = f["sKhuVuc"];
+                if (int.TryParse(selectedKhuVucId, out int khuVucId)) // Use TryParse for safe conversion
+                {
+                    phong.KhuVuc = khuVucId; // Successfully parsed, assign to phong.KhuVuc
+                }
+                else
+                {
+                    ModelState.AddModelError("sKhuVuc", "Vui lòng chọn Phường/Xã hợp lệ."); // Validation error
+                }
+
                 phong.Id_ChuTro = int.Parse(f["sid"]);
 
                 if (ModelState.IsValid) // Re-check if all fields are valid before saving to the database

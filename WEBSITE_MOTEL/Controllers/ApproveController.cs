@@ -39,6 +39,7 @@ namespace WEBSITE_MOTEL.Controllers
                                join b in data.NGUOIDUNGs on c.Id_NguoiDung equals b.Id
                                join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
                                join d in data.CHUTROs on a.Id_ChuTro equals d.Id
+                               join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
                                where (c.TrangThai == 2 || c.TrangThai == 3) && a.Id_ChuTro == chutro.Id
                                select new PhongDuyet()
                                {
@@ -62,7 +63,7 @@ namespace WEBSITE_MOTEL.Controllers
                                    sGuiXe = (double)a.GuiXe,
                                    sInternet = (double)a.Internet,
                                    sTrangThai = (byte)c.TrangThai,
-                                   sTenKV = a.KhuVuc,
+                                   sTenKV = kv.Ten,
                                };
 
             var pagedList = phongTroList.OrderByDescending(n => n.sIdDonHang).ToPagedList(pageNumber, pageSize);

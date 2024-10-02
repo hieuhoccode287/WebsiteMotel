@@ -1,4 +1,4 @@
-﻿@model WEBSITE_MOTEL.Models.PHONGTRO
+﻿@model IEnumerable<WEBSITE_MOTEL.Models.KHUVUC>
 @using WEBSITE_MOTEL.Models
 @{
     TAIKHOAN nd = (TAIKHOAN)Session["TaiKhoan"];
@@ -151,45 +151,45 @@
                     <div class="form-title"><h3>ĐỊA CHỈ</h3></div>
                     <div class="group-form-body">
                         <div class="form-inline">
-                            @*<div class="form-group">
-                        <label for="province">Khu vực</label></br>
-                        <input id="pac-input" class="controls" type="text" placeholder="Nhập khu vực..."  name="sKhuVuc">
-                    </div>*@
                             <div class="form-group">
-                                <label for="ward">Phường/Xã</label></br>
-                                <select class="form-control" id="ward" name="sKhuVuc">
-                                    <option>Phường/Xã</option>
-                                    <option>Định Hòa</option>
-                                    <option>Phú Hòa</option>
-                                    <option>Hoàng Đạo Thúy</option>
+                                <!-- Label for Dropdown -->
+                                <label for="ward">Phường/Xã</label><br />
+                                <!-- Dynamic Dropdown -->
+                                <select class="select" id="ward" name="sKhuVuc" class="form-control">
+                                    <option value="">Phường/Xã</option> <!-- Default option -->
+                                    @foreach (var item in Model)
+                                    {
+                                        <option value="@item.Id">@item.Ten</option>
+                                    }
                                 </select>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <!--Thông tin vị trí cụ thể-->
                             <label for="pac-input">Số nhà, Tên đường cụ thể</label></br>
                             <input id="pac-input" class="controls" type="text" placeholder="  Nhập địa chỉ nhà chi tiết..." name="sDiaChi" style="width:300px">
                             <br />
                             @*<p style="position: absolute; top: 85px; color:rgba(89, 68, 206, 0.88) ">Vị trí trên bản đồ.</p>
-                    <i style="position: absolute; top: 110px;color: #E74C3C; font-size: 0.8em">
-                        Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn,
-                        hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon <img src="~/images/img-map/position-marker.png" style="width: 20px;height: 25px;"> tới đúng vị
-                        trí	của tin rao.
-                    </i>
-                    <div id="map"><input type="url" name="sMap" /></div>*@
+            <i style="position: absolute; top: 110px;color: #E74C3C; font-size: 0.8em">
+                Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn,
+                hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon <img src="~/images/img-map/position-marker.png" style="width: 20px;height: 25px;"> tới đúng vị
+                trí	của tin rao.
+            </i>
+            <div id="map"><input type="url" name="sMap" /></div>*@
                         </div>
                     </div>
                 </div>
                 <!--Thông tin mô tả chi tiết-->
                 @*<div class="group-form">
-            <div class="form-title"><h3>THÔNG TIN MÔ TẢ CHI TIẾT</h3></div>
-            <div class="group-form-body">
-                <div class="form-group">
-                    <label for="comment">Giới thiệu mô tả về tin đăng của bạn. Ví dụ: Khu nhà có vị trí thuận lợi: Gần trường học, gần trạm xe buýt ...Tổng diện tích 52m2, đường đi ô tô vào tận cửa...</label>
-                    <textarea class="form-control" rows="5" id="comment" name="sMoTa"></textarea>
-                </div>
-            </div>
-        </div>*@
+                        <div class="form-title"><h3>THÔNG TIN MÔ TẢ CHI TIẾT</h3></div>
+                        <div class="group-form-body">
+                            <div class="form-group">
+                                <label for="comment">Giới thiệu mô tả về tin đăng của bạn. Ví dụ: Khu nhà có vị trí thuận lợi: Gần trường học, gần trạm xe buýt ...Tổng diện tích 52m2, đường đi ô tô vào tận cửa...</label>
+                                <textarea class="form-control" rows="5" id="comment" name="sMoTa"></textarea>
+                            </div>
+                        </div>
+                    </div>*@
                 <div class="form-group">
                     <div class="form-title"><h3>THÔNG TIN MÔ TẢ CHI TIẾT</h3></div>
                     <div class="group-form-body">
@@ -354,10 +354,10 @@
 
 <style>
     .group-form {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
     }
 
     .form-title h3 {
@@ -397,5 +397,4 @@
         margin-top: 20px;
         color: #007bff;
     }
-
 </style>

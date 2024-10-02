@@ -263,7 +263,7 @@
 </section>
 Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
 <div class="MenuTrang">
-    @Html.PagedListPager(Model, page => Url.Action("SearchKQ", "Motel", new { page, IdKV = ViewBag.IdKV, IdGia = ViewBag.IdGia, IdSL = ViewBag.IdSL, IdDT = ViewBag.IdDT }))
+    @Html.PagedListPager(Model, page => Url.Action("SearchKQ", "Motel", new { page, IdKV = ViewBag.IdKV ?? 0, IdGia = ViewBag.IdGia, IdSL = ViewBag.IdSL, IdDT = ViewBag.IdDT }))
 </div>
 <style>
     .MenuTrang {

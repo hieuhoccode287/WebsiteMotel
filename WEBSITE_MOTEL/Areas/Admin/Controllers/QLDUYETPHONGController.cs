@@ -28,6 +28,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                         join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                         join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                         join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
+                        join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
                         where a.TrangThai == 0
                         select new RoomDetail()
                         {
@@ -52,7 +53,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                             sGuiXe = (double)a.GuiXe,
                             sInternet = (double)a.Internet,
                             sTrangThai = (byte)a.TrangThai,
-                            sTenKV = a.KhuVuc
+                            sTenKV = kv.Ten,
                         };
 
             return View(query.OrderByDescending(n => n.sTrangThai == 4).ToPagedList(iPageNum, iSize));

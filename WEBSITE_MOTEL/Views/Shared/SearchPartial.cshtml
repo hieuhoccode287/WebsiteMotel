@@ -8,10 +8,10 @@
         </div>
         <div class="row">
             <select class="select" name="IdKV">
-                <option value="">Phường/Xã</option>
+                <option value="0">Phường/Xã</option>
                 @foreach (var item in Model)
                 {
-                    <option value="@item.Ten">@item.Ten</option>
+                    <option value="@item.Id">@item.Ten</option>
  <!-- Đảm bảo Id được gửi đi -->
                 }
             </select>
@@ -23,6 +23,7 @@
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
+                <option value="4">4</option>
             </select>
             <select class="select" name="IdDT">
                 <option value="">Diện tích(m2)</option>
