@@ -42,7 +42,7 @@ namespace WEBSITE_MOTEL.Controllers
 
                 if (tk != null)
                 {
-                    CHUTRO ct = data.CHUTROs.FirstOrDefault(n => n.Id_TaiKhoan == tk.Id);
+                    TAIKHOAN ct = data.TAIKHOANs.FirstOrDefault(n => n.Id == tk.Id);
                     Session["ChuTro"] = ct;
                     Session["TaiKhoan"] = tk;
 
@@ -95,25 +95,9 @@ namespace WEBSITE_MOTEL.Controllers
                 tk.TaiKhoan = Taikhoan;
                 tk.MatKhau = Matkhau;
                 tk.PhanQuyen = Phanquyen;
-
+                tk.TrangThai = 0;
                 data.TAIKHOANs.InsertOnSubmit(tk);
                 data.SubmitChanges();
-
-                if (Phanquyen == 3)
-                {
-                    var nd = new NGUOIDUNG();
-                    nd.Id_TaiKhoan = tk.Id;
-                    data.NGUOIDUNGs.InsertOnSubmit(nd);
-                    data.SubmitChanges();
-                }
-                else if (Phanquyen == 2)
-                {
-                    var ct = new CHUTRO();
-                    ct.Id_TaiKhoan = tk.Id;
-                    ct.TrangThai = 0;
-                    data.CHUTROs.InsertOnSubmit(ct);
-                    data.SubmitChanges();
-                }
 
                 if (idCardPhotos != null && idCardPhotos.Length > 0 && idCardPhotos2 != null && idCardPhotos2.Length > 0)
                 {

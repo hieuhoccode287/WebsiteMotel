@@ -25,7 +25,7 @@
             <div class="form-group">
                 <input placeholder="Căn cước công dân*" name="CCCD" type="text" id="user_cccd" class="form-control">
             </div>
-            <div class="form-group">
+            <div class="form-group cccd-file" style="display: none;">
                 <label class="control-label col-sm-3">Hình ảnh CMND/CCCD (mặt trước):</label>
                 <input type="file" id="user_card_photo" accept="image/*" name="idCardPhotos1" required />
                 <br />
@@ -50,7 +50,7 @@
                     });
                 </script>
             </div>
-            <div class="form-group">
+            <div class="form-group cccd-file" style="display: none;">
                 <label class="control-label col-sm-3">Hình ảnh CMND/CCCD (mặt sau):</label>
                 <input type="file" id="user_card_photo_2" accept="image/*" name="idCardPhotos2" required />
                 <br />
@@ -131,60 +131,70 @@
 <script src="~/js/jvdangky.js"></script>
 <script>
     $(document).on('click', "#btnDangki", function () {
-    // Lấy các giá trị từ các trường nhập liệu
-    var name = $('#user_name').val();
-    var mail = $('#user_email').val();
-    var sdt = $('#user_sdt').val();
-    var dc = $('#user_dc').val();
-    var ns = $('#user_ns').val();
-    var cccd = $('#user_cccd').val();
-    var tdn = $('#user_tendn').val();
-    var mk = $('#user_pass').val();
-    var mknl = $('#user_re_pass').val();
-    var phanquyen = $('input[name="phanquyen"]:checked').val();
+        // Lấy các giá trị từ các trường nhập liệu
+        var name = $('#user_name').val();
+        var mail = $('#user_email').val();
+        var sdt = $('#user_sdt').val();
+        var dc = $('#user_dc').val();
+        var ns = $('#user_ns').val();
+        var cccd = $('#user_cccd').val();
+        var tdn = $('#user_tendn').val();
+        var mk = $('#user_pass').val();
+        var mknl = $('#user_re_pass').val();
+        var phanquyen = $('input[name="phanquyen"]:checked').val();
 
-    // Tạo FormData object để chứa dữ liệu form và hình ảnh
-    var formData = new FormData();
-    formData.append('HoTen', name);
-    formData.append('Email', mail);
-    formData.append('SDT', sdt);
-    formData.append('DiaChi', dc);
-    formData.append('NgaySinh', ns);
-    formData.append('CCCD', cccd);
-    formData.append('Taikhoan', tdn);
-    formData.append('Matkhau', mk);
-    formData.append('Phanquyen', phanquyen);
+        // Tạo FormData object để chứa dữ liệu form và hình ảnh
+        var formData = new FormData();
+        formData.append('HoTen', name);
+        formData.append('Email', mail);
+        formData.append('SDT', sdt);
+        formData.append('DiaChi', dc);
+        formData.append('NgaySinh', ns);
+        formData.append('CCCD', cccd);
+        formData.append('Taikhoan', tdn);
+        formData.append('Matkhau', mk);
+        formData.append('Phanquyen', phanquyen);
 
-    // Lấy danh sách hình ảnh đã chọn (mặt trước CCCD)
-    var idCardPhotos = document.getElementById('user_card_photo').files;
-    for (var i = 0; i < idCardPhotos.length; i++) {
-        formData.append('idCardPhotos', idCardPhotos[i]);
-    }
-
-    // Lấy danh sách hình ảnh mặt sau CCCD đã chọn
-    var idCardPhotos2 = document.getElementById('user_card_photo_2').files;
-    for (var i = 0; i < idCardPhotos2.length; i++) {
-        formData.append('idCardPhotos2', idCardPhotos2[i]);
-    }
-
-    // Gửi dữ liệu thông qua Ajax
-    $.ajax({
-        url: '/User/ADDTaiKhoan',
-        type: 'post',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.code === 200) {
-                alert(data.msg);
-                location.href = '@Url.Action("DangNhap", "User")';
-            } else {
-                alert(data.msg);
-            }
-        },
-        error: function () {
-            alert("Đăng kí thất bại. Vui lòng thử lại sau.");
+        // Lấy danh sách hình ảnh đã chọn (mặt trước CCCD)
+        var idCardPhotos = document.getElementById('user_card_photo').files;
+        for (var i = 0; i < idCardPhotos.length; i++) {
+            formData.append('idCardPhotos', idCardPhotos[i]);
         }
+
+        // Lấy danh sách hình ảnh mặt sau CCCD đã chọn
+        var idCardPhotos2 = document.getElementById('user_card_photo_2').files;
+        for (var i = 0; i < idCardPhotos2.length; i++) {
+            formData.append('idCardPhotos2', idCardPhotos2[i]);
+        }
+
+        // Gửi dữ liệu thông qua Ajax
+        $.ajax({
+            url: '/User/ADDTaiKhoan',
+            type: 'post',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.code === 200) {
+                    alert(data.msg);
+                    location.href = '@Url.Action("DangNhap", "User")';
+                } else {
+                    alert(data.msg);
+                }
+            },
+            error: function () {
+                alert("Đăng kí thất bại. Vui lòng thử lại sau.");
+            }
+        });
     });
-});
+    $(document).ready(function () {
+        $("input[name='phanquyen']").change(function () {
+            if ($('#chutro').is(':checked')) {
+                $(".cccd-file").show();
+            } else {
+                $(".cccd-file").hide();
+            }
+        });
+    });
+
 </script>

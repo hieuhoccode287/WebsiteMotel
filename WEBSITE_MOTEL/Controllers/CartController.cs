@@ -33,16 +33,14 @@ namespace WEBSITE_MOTEL.Controllers
             else
             {
                 TAIKHOAN tk = GetAcc();
-                var idnd = data.NGUOIDUNGs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
                 int iSize = 4;
                 int iPageNum = (page ?? 1);
                 var phong = (from a in data.PHONGTROs
-                             join b in data.CHUTROs on a.Id_ChuTro equals b.Id
-                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro  
-                             join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
+                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join g in data.DONHANGs on a.Id equals g.Id_Phong
+                             join e in data.TAIKHOANs on g.Id_NguoiDung equals e.Id
                              join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
-                             where (idnd.Id == g.Id_NguoiDung && g.TrangThai ==2 || g.TrangThai == 3)
+                             where (tk.Id == g.Id_NguoiDung) && (g.TrangThai == 2 || g.TrangThai == 3)
                              select new RoomDetail()
                              {
                                  sMa = g.IdDH,
@@ -68,8 +66,9 @@ namespace WEBSITE_MOTEL.Controllers
                                  sInternet = (double)a.Internet,
                                  sTenKV = kv.Ten,
                                  sTrangThai = (byte)g.TrangThai,
+                                 sNgayDat = (DateTime)g.NgayDat,
                              });
-                return View(phong.ToList().OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
+                return View(phong.ToList().OrderByDescending(n => n.sNgayDat).ToPagedList(iPageNum, iSize));
             }
         }
 

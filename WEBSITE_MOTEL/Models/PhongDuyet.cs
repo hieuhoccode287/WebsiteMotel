@@ -17,10 +17,11 @@ namespace WEBSITE_MOTEL.Models
         public string sTenND { get; set; }
         public string sSDTND { get; set; }
         public int sIDCT { get; set; }
-        public int sSoluong { get; set; }
+        public int sSoLuong { get; set; }
         public int sSoNguoiO { get; set; }
         [DataType(DataType.Date)]
         public DateTime? dNgayCapNhat { get; set; }
+        public DateTime? dNgayDat { get; set; }
         public string sMoTa { get; set; }
         public double dGiaCa { get; set; }
         public string sSDT { get; set; }
@@ -31,7 +32,6 @@ namespace WEBSITE_MOTEL.Models
         public double sGuiXe { get; set; }
         public string sDiaChi { get; set; }
         public byte sTrangThai { get; set; }
-
         public string sTenKV { get; set; }
     }
 }

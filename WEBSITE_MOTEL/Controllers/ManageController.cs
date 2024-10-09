@@ -21,7 +21,7 @@ namespace WEBSITE_MOTEL.Controllers
             // Cập nhật trạng thái của các phòng trọ đã hết hạn
             UpdateExpiredPhongTroStatus();
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
-            var chutro = data.CHUTROs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
+            var chutro = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
             // Lấy danh sách phòng trọ
             var phongTroList = data.PHONGTROs
                 .Where(n => n.Id_ChuTro == chutro.Id)

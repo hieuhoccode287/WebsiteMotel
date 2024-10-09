@@ -20,9 +20,8 @@ namespace WEBSITE_MOTEL.Controllers
             if (!string.IsNullOrEmpty(strSearch))
             {
                 var phong = (from a in data.PHONGTROs
-                             join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-                             join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
+                             join e in data.TAIKHOANs on a.Id_ChuTro equals e.Id
                              join d in data.KHUVUCs on a.KhuVuc equals d.Id
                              where a.TrangThai == 1 && a.TenPhong.Contains(strSearch) || a.MoTa.Contains(strSearch) /*|| a.DienTich.Equals(strSearch) */
                              select new RoomDetail()
@@ -56,9 +55,8 @@ namespace WEBSITE_MOTEL.Controllers
             else
             {
                 var phong = (from a in data.PHONGTROs
-                             join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-                             join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
+                             join e in data.TAIKHOANs on a.Id_ChuTro equals e.Id
                              join d in data.KHUVUCs on a.KhuVuc equals d.Id
                              where a.TrangThai == 1 
                              select new RoomDetail()
@@ -188,9 +186,8 @@ namespace WEBSITE_MOTEL.Controllers
             int iSize = 5;
             int iPageNum = (page ?? 1);
             var listSearch = from a in data.PHONGTROs
-                             join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-                             join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
+                             join e in data.TAIKHOANs on a.Id_ChuTro equals e.Id
                              join d in data.KHUVUCs on a.KhuVuc equals d.Id
                              where a.TrangThai == 1
                              select new RoomDetail()
@@ -357,12 +354,11 @@ namespace WEBSITE_MOTEL.Controllers
             {
                 TAIKHOAN tk = GetAcc();
                 var bookroom = (from a in data.TAIKHOANs
-                                join b in data.NGUOIDUNGs on a.Id equals b.Id_TaiKhoan
-                                where (tk.Id == b.Id_TaiKhoan)
+                                where (tk.Id == a.Id)
                                 select new
                                 {
                                     sHotenND = a.HoTen,
-                                    sId = b.Id,
+                                    sId = a.Id,
                                     sSDTND = a.SDT,
 
                                 }).SingleOrDefault();
@@ -408,7 +404,7 @@ namespace WEBSITE_MOTEL.Controllers
                 }
 
                 // Fetch user information
-                var nd = data.NGUOIDUNGs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
+                var nd = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
                 if (nd == null)
                 {
                     return Json(new { code = 400, msg = "Người dùng không tồn tại." }, JsonRequestBehavior.AllowGet);

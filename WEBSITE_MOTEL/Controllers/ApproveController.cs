@@ -22,7 +22,7 @@ namespace WEBSITE_MOTEL.Controllers
                 return RedirectToAction("DangNhap", "User");
             }
 
-            var chutro = data.CHUTROs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
+            var chutro = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
             if (chutro == null)
             {
                 // Handle the case where the landlord is not found
@@ -36,9 +36,7 @@ namespace WEBSITE_MOTEL.Controllers
             // Lấy danh sách phòng trọ
             var phongTroList = from a in data.PHONGTROs
                                join c in data.DONHANGs on a.Id equals c.Id_Phong
-                               join b in data.NGUOIDUNGs on c.Id_NguoiDung equals b.Id
-                               join e in data.TAIKHOANs on b.Id_TaiKhoan equals e.Id
-                               join d in data.CHUTROs on a.Id_ChuTro equals d.Id
+                               join e in data.TAIKHOANs on c.Id_NguoiDung equals e.Id
                                join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
                                where (c.TrangThai == 2 || c.TrangThai == 3) && a.Id_ChuTro == chutro.Id
                                select new PhongDuyet()
@@ -49,7 +47,7 @@ namespace WEBSITE_MOTEL.Controllers
                                    sTenND = e.HoTen,
                                    sSDTND = e.SDT,
                                    sDienTich = (int)a.DienTich,
-                                   sSoluong = (int)a.SoLuong,
+                                   sSoLuong = (int)a.SoLuong,
                                    sSoNguoiO = (int)a.SoNguoiO,
                                    sAnhBia = a.AnhBia,
                                    sMoTa = a.MoTa,
@@ -69,6 +67,65 @@ namespace WEBSITE_MOTEL.Controllers
             var pagedList = phongTroList.OrderByDescending(n => n.sIdDonHang).ToPagedList(pageNumber, pageSize);
             return View(pagedList);
         }
+        public TAIKHOAN GetAcc()
+        {
+            TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
+            return tk;
+        }
+
+        [HttpGet]
+        public JsonResult GetRoom(int id)
+        {
+            try
+            {
+                TAIKHOAN tk = GetAcc();
+                var getroom = from a in data.PHONGTROs
+                              join c in data.DONHANGs on a.Id equals c.Id_Phong
+                              join e in data.TAIKHOANs on c.Id_NguoiDung equals e.Id
+                              join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
+                              where (c.TrangThai == 2 || c.TrangThai == 3) && c.IdDH == id
+                              select new PhongDuyet()
+                              {
+                                  sMa = a.Id,
+                                  sIdDonHang = c.IdDH,
+                                  sTenPhong = a.TenPhong,
+                                  sTenND = e.HoTen,
+                                  sSDTND = e.SDT,
+                                  sDienTich = (int)a.DienTich,
+                                  sSoLuong = (int)a.SoLuong,
+                                  sSoNguoiO = (int)a.SoNguoiO,
+                                  sAnhBia = a.AnhBia,
+                                  sMoTa = a.MoTa,
+                                  dNgayCapNhat = (DateTime)a.Ngay,
+                                  dNgayDat = (DateTime)c.NgayDat,
+                                  dGiaCa = (double)a.GiaCa,
+                                  sSDT = e.SDT,
+                                  sEmail = e.Email,
+                                  sDiaChi = a.Diachi,
+                                  sDien = (double)a.Dien,
+                                  sNuoc = (double)a.Nuoc,
+                                  sGuiXe = (double)a.GuiXe,
+                                  sInternet = (double)a.Internet,
+                                  sTrangThai = (byte)c.TrangThai,
+                                  sTenKV = kv.Ten,
+                              };
+
+                // Check if the room data exists
+                if (getroom == null)
+                {
+                    return Json(new { code = 404, msg = "Room not found." }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new { code = 200, dh = getroom, msg = "Lấy thông tin phòng thành công." }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return Json(new { code = 500, msg = "Lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         public ActionResult DuyetPhong(int id)
         {

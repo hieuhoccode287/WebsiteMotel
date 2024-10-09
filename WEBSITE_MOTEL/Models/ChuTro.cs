@@ -42,6 +42,6 @@ namespace WEBSITE_MOTEL.Models
         [StringLength(200, ErrorMessage = "Địa chỉ không được vượt quá 200 ký tự.")]
         public string sDiaChi { get; set; }
 
-        public int sPhanQuyen { get; set; }  // E.g., 0 = User, 1 = Admin
+        public int sPhanQuyen { get; set; }
     }
 }

@@ -3,7 +3,6 @@
 
 @{
     TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
-    CHUTRO ct = (CHUTRO)Session["ChuTro"];
 
 }
 
@@ -51,7 +50,7 @@
                         <li class="item"><a href="@Url.Action("Index", "RoomPost")" style="display:none"><i class="fa fa-upload"></i><p>Đăng phòng</p></a></li>
                         @*<li class="item"><a href="@Url.Action("Manage", "Manage")"><i class="fa fa-book"></i><p>Quản lý</p></a></li>*@
                     }
-                    else if (ct.TrangThai == 0)
+                    else if (tk.TrangThai == 0)
                     {
                         <li class="item"><a href="#" onclick="showNotification()"><i class="fa fa-upload"></i><p>Đăng phòng</p></a></li>
                     }

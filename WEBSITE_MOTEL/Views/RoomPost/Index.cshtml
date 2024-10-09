@@ -2,7 +2,6 @@
 @using WEBSITE_MOTEL.Models
 @{
     TAIKHOAN nd = (TAIKHOAN)Session["TaiKhoan"];
-    CHUTRO ct = (CHUTRO)Session["ChuTro"];
 }
 
 @{
@@ -60,7 +59,7 @@
                         </div>
                         <div class="form-inline">
                             <div class="form-group ">
-                                <input type="hidden" size="70" name="sid" value="@ct.Id" readonly />
+                                <input type="hidden" size="70" name="sid" value="@nd.Id" readonly />
                             </div>
 
                         </div>
@@ -169,14 +168,7 @@
                             <!--Thông tin vị trí cụ thể-->
                             <label for="pac-input">Số nhà, Tên đường cụ thể</label></br>
                             <input id="pac-input" class="controls" type="text" placeholder="  Nhập địa chỉ nhà chi tiết..." name="sDiaChi" style="width:300px">
-                            <br />
-                            @*<p style="position: absolute; top: 85px; color:rgba(89, 68, 206, 0.88) ">Vị trí trên bản đồ.</p>
-            <i style="position: absolute; top: 110px;color: #E74C3C; font-size: 0.8em">
-                Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn,
-                hãy sửa vị trí tin rao của bạn trên bản đồ bằng cách kéo icon <img src="~/images/img-map/position-marker.png" style="width: 20px;height: 25px;"> tới đúng vị
-                trí	của tin rao.
-            </i>
-            <div id="map"><input type="url" name="sMap" /></div>*@
+                            <div id="map" style="margin-top:50px"><input type="url" name="sMap" /></div>
                         </div>
                     </div>
                 </div>
@@ -307,6 +299,19 @@
     </div>
 </section>
 
+<script>
+    // Tạo một bản đồ và thiết lập vị trí trung tâm
+    var map = L.map('map').setView([10.762622, 106.660172], 13); // Tọa độ Sài Gòn
+
+    // Thêm tile layer từ OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Tùy chọn: Thêm marker
+    var marker = L.marker([10.762622, 106.660172]).addTo(map);
+    marker.bindPopup("Vị trí của bạn").openPopup();
+</script>
 
 <script>
     var curDate = new Date();

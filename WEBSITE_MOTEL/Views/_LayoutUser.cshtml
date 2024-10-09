@@ -1,6 +1,5 @@
 ﻿<!DOCTYPE html>
-
-<html>
+<html lang="vi">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,29 +8,42 @@
     <link rel="shortcut icon" href="favicon.png">
     <meta name="description" content="">
     <meta name="keywords" content="bootstrap, bootstrap5">
+
+    <!-- Styles Render (custom CSS) -->
     @Styles.Render("~/WEBSITE_MOTEL/css")
+
+    <!-- Shortcut Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="/Images/logo-option2png.ico">
-    <script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/50/10/intl/vi_ALL/common.js"></script>
-    <script type="text/javascript" charset="UTF-8" src="https://maps.googleapis.com/maps-api-v3/api/js/50/10/intl/vi_ALL/util.js"></script>
+
+    <!-- Google Maps API -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps-api-v3/api/js/50/10/intl/vi_ALL/common.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps-api-v3/api/js/50/10/intl/vi_ALL/util.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- jQuery Validate -->
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-    <link href="~/pannellum/pannellum.css" rel="stylesheet">
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
-            integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
-            crossorigin="anonymous">
-    </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <!-- Pannellum (Panorama viewer) -->
+    <link href="~/pannellum/pannellum.css" rel="stylesheet">
+
+    <!-- FontAwesome (icons) -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin='anonymous'></script>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QzqKKEziq2rmWVbnuSG8SyTcF5im6xq8ocSaMDJ38KQTgXkntxCbthI1vnVB0Vfr" crossorigin="anonymous">
+
+    <!-- Leaflet CSS (Interactive maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <!-- Title -->
     <title>@ViewBag.Title</title>
 </head>
-<body data-spy="scroll" data-target=".header" data-offset="475">
-    
-    
-    <div class="wrapper-content">
 
+<body data-spy="scroll" data-target=".header" data-offset="475">
+    <div class="wrapper-content">
         @Html.Partial("BannerPartial")
         @Html.Partial("NavPartial")
         <main class="wrapper">
@@ -54,18 +66,16 @@
                 </section>
             </aside>
         </main>
-                <footer>
-                    @Html.Partial("FooterPartial")
-                </footer>
+        <footer>
+            @Html.Partial("FooterPartial")
+        </footer>
     </div>
-  
-    
-        <script src="~/js/bootstrap.min.js"></script>
-        <script src="~/js/home.js"></script>
-        <script src="~/js/images360.js"></script>
-        <script src="~/js/jquery-3.2.0.min.js"></script>
-        <script src="~/js/pagination.js"></script>
-        <script src="~/js/start-page.js"></script>
-</body>
 
+    <!-- JavaScript Files -->
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/home.js"></script>
+    <script src="~/js/images360.js"></script>
+    <script src="~/js/pagination.js"></script>
+    <script src="~/js/start-page.js"></script>
+</body>
 </html>

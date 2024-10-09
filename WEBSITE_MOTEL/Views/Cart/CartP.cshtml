@@ -62,6 +62,7 @@
                     </div>
                     <div class="item-cr1 local">Khu vực: <span>@item.sTenKV</span></div>
                     <div class="item-cr1 area">Diện tích: <span>@(item.sDienTich)m²</span></div>
+                    <div class="item-cr1 date">Ngày đặt: <span>@Html.FormatValue(item.sNgayDat, "{0:dd/MM/yyyy}")</span></div>
                     <div class="item-cr1 area">
                         Trạng thái:
                         @if (item.sTrangThai == 3)

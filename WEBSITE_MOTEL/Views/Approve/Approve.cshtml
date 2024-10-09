@@ -36,7 +36,7 @@
                                     <tr>
                                         <td class="td_col2 td_matin" style="text-align: center; vertical-align: middle;">@item.sIdDonHang</td>
                                         <td class="td_col3" style="height: 100px; text-align: center; vertical-align: middle;">
-                                            <a target="_blank">@item.sTenPhong</a>
+                                            <a onclick="showRoomDetailsModal('@item.sIdDonHang')">@item.sTenPhong</a>
                                         </td>
                                         <td class="td_col2" style="text-align: center; vertical-align: middle;">
                                             <img src="~/Images/@item.sAnhBia" alt="image" style="width:100px; height:100px" loading="lazy">
@@ -76,11 +76,133 @@
                     <div class="page_navigation">
                         @Html.PagedListPager(Model, page => Url.Action("Approve", new { page }), PagedListRenderOptions.Classic)
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Modal Xem Chi Tiết Phòng -->
+<div class="modal fade" id="roomDetailsModal" tabindex="-1" role="dialog" aria-labelledby="roomDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog custom-modal" role="document">
+        <div class="modal-content" style="top: 150px; border-radius: 12px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);">
+            <div class="modal-header" style="background-color: rgb(51, 204, 102); color: black; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                <h2 class="modal-title" id="roomDetailsLabel" style="font-weight: bold; font-size: 1.5rem;">Chi Tiết Phòng</h2>
+            </div>
+            <div class="modal-body">
+                <!-- Room Image -->
+                <div class="text-center mb-3">
+                    <img id="roomImage" src="" alt="Room Image" class="img-fluid" style="max-height: 200px; max-width: 100%; object-fit: cover; border-radius: 10px;">
+                </div>
+
+                <!-- Modal Fields in 3 Columns -->
+                <div class="row">
+                    <!-- Column 1 -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="roomId">ID</label>
+                            <input type="text" class="form-control" id="roomId" readonly style="background-color: #f8f9fa;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomSoNguoiO">Số Người Ở</label>
+                            <input type="text" class="form-control" id="roomSoNguoiO" readonly style="background-color: #f8f9fa;">
+                        </div>
+                        @*<div class="mb-3">
+                            <label for="roomStatus">Trạng Thái</label>
+                            <input type="text" class="form-control" id="roomStatus" readonly style="background-color: #f8f9fa;">
+                        </div>*@
+                        <div class="mb-3">
+                            <label for="roomTenKH">Tên Khách Hàng</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomTenKH" readonly style="background-color: #f8f9fa;">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomDien">Giá Điện</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomDien" readonly style="background-color: #f8f9fa; max-width: 50%;">
+                                <span style="margin-left: 5px;">đồng/tháng</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomGuiXe">Giá Gửi Xe</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomGuiXe" readonly style="background-color: #f8f9fa; max-width: 50%;">
+                                <span style="margin-left: 5px;">đồng/tháng</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="roomName">Tên Phòng</label>
+                            <input type="text" class="form-control" id="roomName" readonly style="background-color: #f8f9fa;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomType">Khu Vực</label>
+                            <input type="text" class="form-control" id="roomType" readonly style="background-color: #f8f9fa;">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="roomSDTKH">SĐT Khách Hàng</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomSDTKH" readonly style="background-color: #f8f9fa;">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomNuoc">Giá Nước</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomNuoc" readonly style="background-color: #f8f9fa; max-width: 50%;">
+                                <span style="margin-left: 5px;">đồng/tháng</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomInternet">Giá Internet</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomInternet" readonly style="background-color: #f8f9fa; max-width: 50%;">
+                                <span style="margin-left: 5px;">đồng/tháng</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="roomAddress">Địa Chỉ</label>
+                            <textarea class="form-control" id="roomAddress" rows="2" readonly style="background-color: #f8f9fa; min-height: 35px;"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomSoLuong">Số Lượng Phòng Còn</label>
+                            <input type="text" class="form-control" id="roomSoLuong" readonly style="background-color: #f8f9fa;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomDienTich">Diện Tích</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomDienTich" readonly style="background-color: #f8f9fa; max-width: 50%;">
+                                <span style="margin-left: 5px;">m²</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomPrice">Giá Phòng</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomPrice" readonly style="background-color: #f8f9fa; max-width: 50%;">
+                                <span style="margin-left: 5px;">đồng/tháng</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="font-weight: bold; margin-top: 20px;">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 
@@ -126,6 +248,62 @@
             });
         });
     });
+    function showRoomDetailsModal(roomId) {
+        console.log("Fetching details for room ID:", roomId);
+        $.ajax({
+            url: '/Approve/GetRoom',
+            type: 'GET',
+            data: { id: roomId },
+            success: function (response) {
+                console.log(response); // Log response để kiểm tra
+                if (response.code === 200) {
+                    var room = response.dh.find(r => r.sIdDonHang == roomId); // Find room by id
+                    if (room) {
+
+                        // Fill modal fields with room details
+                        $('#roomId').val(room.sIdDonHang);
+                        $('#roomName').val(room.sTenPhong);
+                        $('#roomPrice').val(formatPrice(room.dGiaCa));
+                        $('#roomType').val(room.sTenKV);
+                        $('#roomStatus').val(room.sTrangThai == 3 ? "Đã cho thuê" : "Trống");
+                        $('#roomDienTich').val(room.sDienTich);
+                        $('#roomSoLuong').val(room.sSoLuong);
+                        $('#roomSoNguoiO').val(room.sSoNguoiO);
+                        $('#roomTenKH').val(room.sTenND);
+                        $('#roomSDTKH').val(room.sSDTND);
+                        $('#roomNgayDat').val(formatDateTime(room.dNgayDat));
+                        $('#roomDien').val(formatPrice(room.sDien));
+                        $('#roomNuoc').val(formatPrice(room.sNuoc));
+                        $('#roomGuiXe').val(formatPrice(room.sGuiXe));
+                        $('#roomInternet').val(formatPrice(room.sInternet));
+                        $('#roomAddress').val(room.sDiaChi);
+
+                        // Set room image
+                        $('#roomImage').attr('src', '/Images/' + room.sAnhBia); // Adjust path as needed
+
+                        // Show the modal
+                        $('#roomDetailsModal').modal('show'); // Ensure you use the correct ID for your modal
+                    } else {
+                        alert("Room details not found.");
+                    }
+                } else {
+                    alert("Failed to fetch room details: " + response.msg);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching room details:", xhr.responseText);
+                alert("Error fetching room details: " + error);
+            }
+        });
+    }
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    function formatDateTime(jsonDate) {
+        const timestamp = parseInt(jsonDate.match(/\d+/)[0], 10); // Lấy giá trị timestamp từ chuỗi
+        const date = new Date(timestamp); // Tạo đối tượng Date từ timestamp
+        return date.toLocaleString(); // Trả về ngày và giờ dạng người dùng dễ đọc
+    }
 </script>
 
 <style>
@@ -135,4 +313,15 @@
         text-overflow: ellipsis; /* Thêm dấu chấm lửng nếu nội dung vượt quá */
         white-space: nowrap;
     }
+
+    .mb-3 {
+        margin-top: 10px;
+    }
+
+    .custom-modal {
+        width: 90%; /* Đặt chiều rộng modal, có thể điều chỉnh theo nhu cầu */
+        max-width: 1000px; /* Đặt chiều rộng tối đa, có thể điều chỉnh theo nhu cầu */
+        height: auto; /* Đặt chiều cao tự động hoặc cụ thể nếu muốn */
+    }
+
 </style>

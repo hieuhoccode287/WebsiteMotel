@@ -26,9 +26,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(strSearch))
             {
                 var ct = (from a in data.TAIKHOANs
-                          join b in data.CHUTROs on a.Id equals b.Id_TaiKhoan
                           join c in data.ANH_CCCDs on a.Id equals c.IdTaiKhoan
-                          where b.TrangThai == 0
+                          where a.TrangThai == 0
                           select new TaiKhoan()
                           {
                               sId = a.Id,
@@ -37,7 +36,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                               sHotenCT = a.HoTen,
                               sCCCD = a.CCCD,
                               sDiaChi = a.DiaChi,
-                              sTrangThai = (int)b.TrangThai,
+                              sTrangThai = (int)a.TrangThai,
                               sEmailCT = a.Email,
                               sNgaySinh = (DateTime)a.NgaySinh,
                               sSDTCT = a.SDT,
@@ -49,9 +48,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             else
             {
                 var ct = (from a in data.TAIKHOANs
-                          join b in data.CHUTROs on a.Id equals b.Id_TaiKhoan
                           join c in data.ANH_CCCDs on a.Id equals c.IdTaiKhoan
-                          where b.TrangThai == 0
+                          where a.TrangThai == 0
                           select new TaiKhoan()
                           {
                               sId = a.Id,
@@ -60,7 +58,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                               sHotenCT = a.HoTen,
                               sCCCD = a.CCCD,
                               sDiaChi = a.DiaChi,
-                              sTrangThai = (int)b.TrangThai,
+                              sTrangThai = (int)a.TrangThai,
                               sEmailCT = a.Email,
                               sNgaySinh = (DateTime)a.NgaySinh,
                               sSDTCT = a.SDT,
@@ -72,12 +70,12 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
         }
         public ActionResult DuyetCT(int id)
         {
-            CHUTRO CT = data.CHUTROs.FirstOrDefault(p => p.TrangThai == 0);
+            TAIKHOAN CT = data.TAIKHOANs.FirstOrDefault(p => p.TrangThai == 0);
             if (CT != null)
             {
                 CT.TrangThai = 1;
                 data.SubmitChanges();
-                TempData["Message"] = "Đăng lại tin thành công!";
+                TempData["Message"] = "Duyệt tài khoản thành công!";
             }
             return RedirectToAction("CTApprove");
 
@@ -87,8 +85,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             var anhcccd = data.ANH_CCCDs.Where(p => p.IdTaiKhoan == id);
             data.ANH_CCCDs.DeleteAllOnSubmit(anhcccd);
             data.SubmitChanges();
-            var chutros = data.CHUTROs.Where(p => p.Id_TaiKhoan == id);
-            data.CHUTROs.DeleteAllOnSubmit(chutros);
+            var chutros = data.TAIKHOANs.Where(p => p.Id == id);
+            data.TAIKHOANs.DeleteAllOnSubmit(chutros);
             data.SubmitChanges();
             var tk = data.TAIKHOANs.SingleOrDefault(p => p.Id == id);
             if (tk != null)

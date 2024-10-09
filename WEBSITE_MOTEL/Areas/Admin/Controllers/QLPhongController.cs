@@ -26,9 +26,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(strSearch))
             {
                 var phong = (from a in data.PHONGTROs
-                             join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-                             join d in data.TAIKHOANs on b.Id_TaiKhoan equals d.Id
+                             join d in data.TAIKHOANs on a.Id_ChuTro equals d.Id
                              join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
                              where a.TrangThai == 1 && a.TenPhong.Contains(strSearch) || a.MoTa.Contains(strSearch) || a.DienTich.Equals(strSearch)
                              select new RoomDetail()
@@ -56,9 +55,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             else
             {
                 var phong = (from a in data.PHONGTROs
-                             join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-                             join d in data.TAIKHOANs on b.Id_TaiKhoan equals d.Id
+                             join d in data.TAIKHOANs on a.Id_ChuTro equals d.Id
                              join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
                              where a.TrangThai == 1 
                              select new RoomDetail()

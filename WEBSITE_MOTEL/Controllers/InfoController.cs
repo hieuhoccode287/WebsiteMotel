@@ -33,15 +33,14 @@ namespace WEBSITE_MOTEL.Controllers
 
 
                 var chutro = (from a in data.TAIKHOANs
-
-                              join b in data.CHUTROs on a.Id equals b.Id_TaiKhoan
-                              where (nd.Id== b.Id_TaiKhoan)
+                              where a.PhanQuyen == 2
+                              where (nd.Id== a.Id)
                               select new ChuTro()
                               {
                                   sTaiKhoanCT = a.TaiKhoan,
                                   sHotenCT = a.HoTen,
                                   sMatKhauCT = a.MatKhau,
-                                  sId = b.Id,
+                                  sId = a.Id,
                                   sSDTCT = a.SDT,
                                   sEmailCT = a.Email,
                                   sCCCD = a.CCCD,
@@ -105,15 +104,13 @@ namespace WEBSITE_MOTEL.Controllers
             {
                 TAIKHOAN nd = (TAIKHOAN)Session["TaiKhoan"];
                 var nguoidung = (from a in data.TAIKHOANs
-
-                              join b in data.NGUOIDUNGs on a.Id equals b.Id_TaiKhoan
-                                 where (nd.Id == b.Id_TaiKhoan)
+                                 where (nd.Id == a.Id)
                                  select new NguoiDung()
                               {
                                   sTaiKhoanND = a.TaiKhoan,
                                   sHotenND = a.HoTen,
                                   sMatKhauND = a.MatKhau,
-                                  sId = b.Id,
+                                  sId = a.Id,
                                   sSDTND=a.SDT,
                                   sEmailND=a.Email
                               }).FirstOrDefault();

@@ -36,18 +36,12 @@ namespace WEBSITE_MOTEL.Models
     partial void InsertDONHANG(DONHANG instance);
     partial void UpdateDONHANG(DONHANG instance);
     partial void DeleteDONHANG(DONHANG instance);
-    partial void InsertCHUTRO(CHUTRO instance);
-    partial void UpdateCHUTRO(CHUTRO instance);
-    partial void DeleteCHUTRO(CHUTRO instance);
     partial void InsertHOTRO(HOTRO instance);
     partial void UpdateHOTRO(HOTRO instance);
     partial void DeleteHOTRO(HOTRO instance);
     partial void InsertIMAGE(IMAGE instance);
     partial void UpdateIMAGE(IMAGE instance);
     partial void DeleteIMAGE(IMAGE instance);
-    partial void InsertNGUOIDUNG(NGUOIDUNG instance);
-    partial void UpdateNGUOIDUNG(NGUOIDUNG instance);
-    partial void DeleteNGUOIDUNG(NGUOIDUNG instance);
     partial void InsertKHUVUC(KHUVUC instance);
     partial void UpdateKHUVUC(KHUVUC instance);
     partial void DeleteKHUVUC(KHUVUC instance);
@@ -103,14 +97,6 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		public System.Data.Linq.Table<CHUTRO> CHUTROs
-		{
-			get
-			{
-				return this.GetTable<CHUTRO>();
-			}
-		}
-		
 		public System.Data.Linq.Table<HOTRO> HOTROs
 		{
 			get
@@ -124,14 +110,6 @@ namespace WEBSITE_MOTEL.Models
 			get
 			{
 				return this.GetTable<IMAGE>();
-			}
-		}
-		
-		public System.Data.Linq.Table<NGUOIDUNG> NGUOIDUNGs
-		{
-			get
-			{
-				return this.GetTable<NGUOIDUNG>();
 			}
 		}
 		
@@ -343,8 +321,6 @@ namespace WEBSITE_MOTEL.Models
 		
 		private int _IdDH;
 		
-		private System.Nullable<bool> _DaThanhToan;
-		
 		private System.Nullable<System.DateTime> _NgayDat;
 		
 		private System.Nullable<byte> _TrangThai;
@@ -353,9 +329,9 @@ namespace WEBSITE_MOTEL.Models
 		
 		private System.Nullable<int> _Id_Phong;
 		
-		private EntityRef<NGUOIDUNG> _NGUOIDUNG;
-		
 		private EntityRef<PHONGTRO> _PHONGTRO;
+		
+		private EntityRef<TAIKHOAN> _TAIKHOAN;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -363,8 +339,6 @@ namespace WEBSITE_MOTEL.Models
     partial void OnCreated();
     partial void OnIdDHChanging(int value);
     partial void OnIdDHChanged();
-    partial void OnDaThanhToanChanging(System.Nullable<bool> value);
-    partial void OnDaThanhToanChanged();
     partial void OnNgayDatChanging(System.Nullable<System.DateTime> value);
     partial void OnNgayDatChanged();
     partial void OnTrangThaiChanging(System.Nullable<byte> value);
@@ -377,8 +351,8 @@ namespace WEBSITE_MOTEL.Models
 		
 		public DONHANG()
 		{
-			this._NGUOIDUNG = default(EntityRef<NGUOIDUNG>);
 			this._PHONGTRO = default(EntityRef<PHONGTRO>);
+			this._TAIKHOAN = default(EntityRef<TAIKHOAN>);
 			OnCreated();
 		}
 		
@@ -398,26 +372,6 @@ namespace WEBSITE_MOTEL.Models
 					this._IdDH = value;
 					this.SendPropertyChanged("IdDH");
 					this.OnIdDHChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DaThanhToan", DbType="Bit")]
-		public System.Nullable<bool> DaThanhToan
-		{
-			get
-			{
-				return this._DaThanhToan;
-			}
-			set
-			{
-				if ((this._DaThanhToan != value))
-				{
-					this.OnDaThanhToanChanging(value);
-					this.SendPropertyChanging();
-					this._DaThanhToan = value;
-					this.SendPropertyChanged("DaThanhToan");
-					this.OnDaThanhToanChanged();
 				}
 			}
 		}
@@ -473,7 +427,7 @@ namespace WEBSITE_MOTEL.Models
 			{
 				if ((this._Id_NguoiDung != value))
 				{
-					if (this._NGUOIDUNG.HasLoadedOrAssignedValue)
+					if (this._TAIKHOAN.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -506,40 +460,6 @@ namespace WEBSITE_MOTEL.Models
 					this._Id_Phong = value;
 					this.SendPropertyChanged("Id_Phong");
 					this.OnId_PhongChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NGUOIDUNG_DONHANG", Storage="_NGUOIDUNG", ThisKey="Id_NguoiDung", OtherKey="Id", IsForeignKey=true)]
-		public NGUOIDUNG NGUOIDUNG
-		{
-			get
-			{
-				return this._NGUOIDUNG.Entity;
-			}
-			set
-			{
-				NGUOIDUNG previousValue = this._NGUOIDUNG.Entity;
-				if (((previousValue != value) 
-							|| (this._NGUOIDUNG.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._NGUOIDUNG.Entity = null;
-						previousValue.DONHANGs.Remove(this);
-					}
-					this._NGUOIDUNG.Entity = value;
-					if ((value != null))
-					{
-						value.DONHANGs.Add(this);
-						this._Id_NguoiDung = value.Id;
-					}
-					else
-					{
-						this._Id_NguoiDung = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("NGUOIDUNG");
 				}
 			}
 		}
@@ -578,188 +498,7 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CHUTRO")]
-	public partial class CHUTRO : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private string _Facebook;
-		
-		private string _Avatar;
-		
-		private System.Nullable<byte> _TrangThai;
-		
-		private System.Nullable<int> _Id_TaiKhoan;
-		
-		private EntitySet<PHONGTRO> _PHONGTROs;
-		
-		private EntityRef<TAIKHOAN> _TAIKHOAN;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnFacebookChanging(string value);
-    partial void OnFacebookChanged();
-    partial void OnAvatarChanging(string value);
-    partial void OnAvatarChanged();
-    partial void OnTrangThaiChanging(System.Nullable<byte> value);
-    partial void OnTrangThaiChanged();
-    partial void OnId_TaiKhoanChanging(System.Nullable<int> value);
-    partial void OnId_TaiKhoanChanged();
-    #endregion
-		
-		public CHUTRO()
-		{
-			this._PHONGTROs = new EntitySet<PHONGTRO>(new Action<PHONGTRO>(this.attach_PHONGTROs), new Action<PHONGTRO>(this.detach_PHONGTROs));
-			this._TAIKHOAN = default(EntityRef<TAIKHOAN>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Facebook", DbType="VarChar(100)")]
-		public string Facebook
-		{
-			get
-			{
-				return this._Facebook;
-			}
-			set
-			{
-				if ((this._Facebook != value))
-				{
-					this.OnFacebookChanging(value);
-					this.SendPropertyChanging();
-					this._Facebook = value;
-					this.SendPropertyChanged("Facebook");
-					this.OnFacebookChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Avatar", DbType="VarChar(100)")]
-		public string Avatar
-		{
-			get
-			{
-				return this._Avatar;
-			}
-			set
-			{
-				if ((this._Avatar != value))
-				{
-					this.OnAvatarChanging(value);
-					this.SendPropertyChanging();
-					this._Avatar = value;
-					this.SendPropertyChanged("Avatar");
-					this.OnAvatarChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TrangThai", DbType="TinyInt")]
-		public System.Nullable<byte> TrangThai
-		{
-			get
-			{
-				return this._TrangThai;
-			}
-			set
-			{
-				if ((this._TrangThai != value))
-				{
-					this.OnTrangThaiChanging(value);
-					this.SendPropertyChanging();
-					this._TrangThai = value;
-					this.SendPropertyChanged("TrangThai");
-					this.OnTrangThaiChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_TaiKhoan", DbType="Int")]
-		public System.Nullable<int> Id_TaiKhoan
-		{
-			get
-			{
-				return this._Id_TaiKhoan;
-			}
-			set
-			{
-				if ((this._Id_TaiKhoan != value))
-				{
-					if (this._TAIKHOAN.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnId_TaiKhoanChanging(value);
-					this.SendPropertyChanging();
-					this._Id_TaiKhoan = value;
-					this.SendPropertyChanged("Id_TaiKhoan");
-					this.OnId_TaiKhoanChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHUTRO_PHONGTRO", Storage="_PHONGTROs", ThisKey="Id", OtherKey="Id_ChuTro")]
-		public EntitySet<PHONGTRO> PHONGTROs
-		{
-			get
-			{
-				return this._PHONGTROs;
-			}
-			set
-			{
-				this._PHONGTROs.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_CHUTRO", Storage="_TAIKHOAN", ThisKey="Id_TaiKhoan", OtherKey="Id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_DONHANG", Storage="_TAIKHOAN", ThisKey="Id_NguoiDung", OtherKey="Id", IsForeignKey=true)]
 		public TAIKHOAN TAIKHOAN
 		{
 			get
@@ -776,17 +515,17 @@ namespace WEBSITE_MOTEL.Models
 					if ((previousValue != null))
 					{
 						this._TAIKHOAN.Entity = null;
-						previousValue.CHUTROs.Remove(this);
+						previousValue.DONHANGs.Remove(this);
 					}
 					this._TAIKHOAN.Entity = value;
 					if ((value != null))
 					{
-						value.CHUTROs.Add(this);
-						this._Id_TaiKhoan = value.Id;
+						value.DONHANGs.Add(this);
+						this._Id_NguoiDung = value.Id;
 					}
 					else
 					{
-						this._Id_TaiKhoan = default(Nullable<int>);
+						this._Id_NguoiDung = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("TAIKHOAN");
 				}
@@ -811,18 +550,6 @@ namespace WEBSITE_MOTEL.Models
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_PHONGTROs(PHONGTRO entity)
-		{
-			this.SendPropertyChanging();
-			entity.CHUTRO = this;
-		}
-		
-		private void detach_PHONGTROs(PHONGTRO entity)
-		{
-			this.SendPropertyChanging();
-			entity.CHUTRO = null;
 		}
 	}
 	
@@ -1207,209 +934,6 @@ namespace WEBSITE_MOTEL.Models
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.NGUOIDUNG")]
-	public partial class NGUOIDUNG : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private string _Facebook;
-		
-		private string _Avatar;
-		
-		private System.Nullable<int> _Id_TaiKhoan;
-		
-		private EntitySet<DONHANG> _DONHANGs;
-		
-		private EntityRef<TAIKHOAN> _TAIKHOAN;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnFacebookChanging(string value);
-    partial void OnFacebookChanged();
-    partial void OnAvatarChanging(string value);
-    partial void OnAvatarChanged();
-    partial void OnId_TaiKhoanChanging(System.Nullable<int> value);
-    partial void OnId_TaiKhoanChanged();
-    #endregion
-		
-		public NGUOIDUNG()
-		{
-			this._DONHANGs = new EntitySet<DONHANG>(new Action<DONHANG>(this.attach_DONHANGs), new Action<DONHANG>(this.detach_DONHANGs));
-			this._TAIKHOAN = default(EntityRef<TAIKHOAN>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Facebook", DbType="VarChar(255)")]
-		public string Facebook
-		{
-			get
-			{
-				return this._Facebook;
-			}
-			set
-			{
-				if ((this._Facebook != value))
-				{
-					this.OnFacebookChanging(value);
-					this.SendPropertyChanging();
-					this._Facebook = value;
-					this.SendPropertyChanged("Facebook");
-					this.OnFacebookChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Avatar", DbType="VarChar(255)")]
-		public string Avatar
-		{
-			get
-			{
-				return this._Avatar;
-			}
-			set
-			{
-				if ((this._Avatar != value))
-				{
-					this.OnAvatarChanging(value);
-					this.SendPropertyChanging();
-					this._Avatar = value;
-					this.SendPropertyChanged("Avatar");
-					this.OnAvatarChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id_TaiKhoan", DbType="Int")]
-		public System.Nullable<int> Id_TaiKhoan
-		{
-			get
-			{
-				return this._Id_TaiKhoan;
-			}
-			set
-			{
-				if ((this._Id_TaiKhoan != value))
-				{
-					if (this._TAIKHOAN.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnId_TaiKhoanChanging(value);
-					this.SendPropertyChanging();
-					this._Id_TaiKhoan = value;
-					this.SendPropertyChanged("Id_TaiKhoan");
-					this.OnId_TaiKhoanChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="NGUOIDUNG_DONHANG", Storage="_DONHANGs", ThisKey="Id", OtherKey="Id_NguoiDung")]
-		public EntitySet<DONHANG> DONHANGs
-		{
-			get
-			{
-				return this._DONHANGs;
-			}
-			set
-			{
-				this._DONHANGs.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_NGUOIDUNG", Storage="_TAIKHOAN", ThisKey="Id_TaiKhoan", OtherKey="Id", IsForeignKey=true)]
-		public TAIKHOAN TAIKHOAN
-		{
-			get
-			{
-				return this._TAIKHOAN.Entity;
-			}
-			set
-			{
-				TAIKHOAN previousValue = this._TAIKHOAN.Entity;
-				if (((previousValue != value) 
-							|| (this._TAIKHOAN.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._TAIKHOAN.Entity = null;
-						previousValue.NGUOIDUNGs.Remove(this);
-					}
-					this._TAIKHOAN.Entity = value;
-					if ((value != null))
-					{
-						value.NGUOIDUNGs.Add(this);
-						this._Id_TaiKhoan = value.Id;
-					}
-					else
-					{
-						this._Id_TaiKhoan = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("TAIKHOAN");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_DONHANGs(DONHANG entity)
-		{
-			this.SendPropertyChanging();
-			entity.NGUOIDUNG = this;
-		}
-		
-		private void detach_DONHANGs(DONHANG entity)
-		{
-			this.SendPropertyChanging();
-			entity.NGUOIDUNG = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.KHUVUC")]
 	public partial class KHUVUC : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -1608,25 +1132,17 @@ namespace WEBSITE_MOTEL.Models
 		
 		private string _TenPhong;
 		
-		private string _Slug;
-		
 		private string _AnhBia;
 		
 		private string _MoTa;
 		
 		private System.Nullable<decimal> _GiaCa;
 		
-		private System.Nullable<decimal> _HoaHong;
-		
 		private System.Nullable<int> _DienTich;
 		
 		private System.Nullable<int> _SoLuong;
 		
-		private string _Contents;
-		
 		private string _Map;
-		
-		private string _Video_link;
 		
 		private System.Nullable<System.DateTime> _Ngay;
 		
@@ -1650,9 +1166,9 @@ namespace WEBSITE_MOTEL.Models
 		
 		private EntitySet<IMAGE> _IMAGEs;
 		
-		private EntityRef<CHUTRO> _CHUTRO;
-		
 		private EntityRef<KHUVUC> _KHUVUC1;
+		
+		private EntityRef<TAIKHOAN> _TAIKHOAN;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1664,26 +1180,18 @@ namespace WEBSITE_MOTEL.Models
     partial void OnId_ChuTroChanged();
     partial void OnTenPhongChanging(string value);
     partial void OnTenPhongChanged();
-    partial void OnSlugChanging(string value);
-    partial void OnSlugChanged();
     partial void OnAnhBiaChanging(string value);
     partial void OnAnhBiaChanged();
     partial void OnMoTaChanging(string value);
     partial void OnMoTaChanged();
     partial void OnGiaCaChanging(System.Nullable<decimal> value);
     partial void OnGiaCaChanged();
-    partial void OnHoaHongChanging(System.Nullable<decimal> value);
-    partial void OnHoaHongChanged();
     partial void OnDienTichChanging(System.Nullable<int> value);
     partial void OnDienTichChanged();
     partial void OnSoLuongChanging(System.Nullable<int> value);
     partial void OnSoLuongChanged();
-    partial void OnContentsChanging(string value);
-    partial void OnContentsChanged();
     partial void OnMapChanging(string value);
     partial void OnMapChanged();
-    partial void OnVideo_linkChanging(string value);
-    partial void OnVideo_linkChanged();
     partial void OnNgayChanging(System.Nullable<System.DateTime> value);
     partial void OnNgayChanged();
     partial void OnDiachiChanging(string value);
@@ -1708,8 +1216,8 @@ namespace WEBSITE_MOTEL.Models
 		{
 			this._DONHANGs = new EntitySet<DONHANG>(new Action<DONHANG>(this.attach_DONHANGs), new Action<DONHANG>(this.detach_DONHANGs));
 			this._IMAGEs = new EntitySet<IMAGE>(new Action<IMAGE>(this.attach_IMAGEs), new Action<IMAGE>(this.detach_IMAGEs));
-			this._CHUTRO = default(EntityRef<CHUTRO>);
 			this._KHUVUC1 = default(EntityRef<KHUVUC>);
+			this._TAIKHOAN = default(EntityRef<TAIKHOAN>);
 			OnCreated();
 		}
 		
@@ -1744,7 +1252,7 @@ namespace WEBSITE_MOTEL.Models
 			{
 				if ((this._Id_ChuTro != value))
 				{
-					if (this._CHUTRO.HasLoadedOrAssignedValue)
+					if (this._TAIKHOAN.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -1773,26 +1281,6 @@ namespace WEBSITE_MOTEL.Models
 					this._TenPhong = value;
 					this.SendPropertyChanged("TenPhong");
 					this.OnTenPhongChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Slug", DbType="NVarChar(255)")]
-		public string Slug
-		{
-			get
-			{
-				return this._Slug;
-			}
-			set
-			{
-				if ((this._Slug != value))
-				{
-					this.OnSlugChanging(value);
-					this.SendPropertyChanging();
-					this._Slug = value;
-					this.SendPropertyChanged("Slug");
-					this.OnSlugChanged();
 				}
 			}
 		}
@@ -1857,26 +1345,6 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HoaHong", DbType="Money")]
-		public System.Nullable<decimal> HoaHong
-		{
-			get
-			{
-				return this._HoaHong;
-			}
-			set
-			{
-				if ((this._HoaHong != value))
-				{
-					this.OnHoaHongChanging(value);
-					this.SendPropertyChanging();
-					this._HoaHong = value;
-					this.SendPropertyChanged("HoaHong");
-					this.OnHoaHongChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DienTich", DbType="Int")]
 		public System.Nullable<int> DienTich
 		{
@@ -1917,26 +1385,6 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Contents", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Contents
-		{
-			get
-			{
-				return this._Contents;
-			}
-			set
-			{
-				if ((this._Contents != value))
-				{
-					this.OnContentsChanging(value);
-					this.SendPropertyChanging();
-					this._Contents = value;
-					this.SendPropertyChanged("Contents");
-					this.OnContentsChanged();
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Map", DbType="Text", UpdateCheck=UpdateCheck.Never)]
 		public string Map
 		{
@@ -1953,26 +1401,6 @@ namespace WEBSITE_MOTEL.Models
 					this._Map = value;
 					this.SendPropertyChanged("Map");
 					this.OnMapChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Video_link", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Video_link
-		{
-			get
-			{
-				return this._Video_link;
-			}
-			set
-			{
-				if ((this._Video_link != value))
-				{
-					this.OnVideo_linkChanging(value);
-					this.SendPropertyChanging();
-					this._Video_link = value;
-					this.SendPropertyChanged("Video_link");
-					this.OnVideo_linkChanged();
 				}
 			}
 		}
@@ -2187,40 +1615,6 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHUTRO_PHONGTRO", Storage="_CHUTRO", ThisKey="Id_ChuTro", OtherKey="Id", IsForeignKey=true)]
-		public CHUTRO CHUTRO
-		{
-			get
-			{
-				return this._CHUTRO.Entity;
-			}
-			set
-			{
-				CHUTRO previousValue = this._CHUTRO.Entity;
-				if (((previousValue != value) 
-							|| (this._CHUTRO.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._CHUTRO.Entity = null;
-						previousValue.PHONGTROs.Remove(this);
-					}
-					this._CHUTRO.Entity = value;
-					if ((value != null))
-					{
-						value.PHONGTROs.Add(this);
-						this._Id_ChuTro = value.Id;
-					}
-					else
-					{
-						this._Id_ChuTro = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("CHUTRO");
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="KHUVUC_PHONGTRO", Storage="_KHUVUC1", ThisKey="KhuVuc", OtherKey="Id", IsForeignKey=true)]
 		public KHUVUC KHUVUC1
 		{
@@ -2251,6 +1645,40 @@ namespace WEBSITE_MOTEL.Models
 						this._KhuVuc = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("KHUVUC1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_PHONGTRO", Storage="_TAIKHOAN", ThisKey="Id_ChuTro", OtherKey="Id", IsForeignKey=true)]
+		public TAIKHOAN TAIKHOAN
+		{
+			get
+			{
+				return this._TAIKHOAN.Entity;
+			}
+			set
+			{
+				TAIKHOAN previousValue = this._TAIKHOAN.Entity;
+				if (((previousValue != value) 
+							|| (this._TAIKHOAN.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._TAIKHOAN.Entity = null;
+						previousValue.PHONGTROs.Remove(this);
+					}
+					this._TAIKHOAN.Entity = value;
+					if ((value != null))
+					{
+						value.PHONGTROs.Add(this);
+						this._Id_ChuTro = value.Id;
+					}
+					else
+					{
+						this._Id_ChuTro = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("TAIKHOAN");
 				}
 			}
 		}
@@ -2326,11 +1754,13 @@ namespace WEBSITE_MOTEL.Models
 		
 		private string _CCCD;
 		
+		private System.Nullable<byte> _TrangThai;
+		
 		private EntitySet<ANH_CCCD> _ANH_CCCDs;
 		
-		private EntitySet<CHUTRO> _CHUTROs;
+		private EntitySet<DONHANG> _DONHANGs;
 		
-		private EntitySet<NGUOIDUNG> _NGUOIDUNGs;
+		private EntitySet<PHONGTRO> _PHONGTROs;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2356,13 +1786,15 @@ namespace WEBSITE_MOTEL.Models
     partial void OnNgaySinhChanged();
     partial void OnCCCDChanging(string value);
     partial void OnCCCDChanged();
+    partial void OnTrangThaiChanging(System.Nullable<byte> value);
+    partial void OnTrangThaiChanged();
     #endregion
 		
 		public TAIKHOAN()
 		{
 			this._ANH_CCCDs = new EntitySet<ANH_CCCD>(new Action<ANH_CCCD>(this.attach_ANH_CCCDs), new Action<ANH_CCCD>(this.detach_ANH_CCCDs));
-			this._CHUTROs = new EntitySet<CHUTRO>(new Action<CHUTRO>(this.attach_CHUTROs), new Action<CHUTRO>(this.detach_CHUTROs));
-			this._NGUOIDUNGs = new EntitySet<NGUOIDUNG>(new Action<NGUOIDUNG>(this.attach_NGUOIDUNGs), new Action<NGUOIDUNG>(this.detach_NGUOIDUNGs));
+			this._DONHANGs = new EntitySet<DONHANG>(new Action<DONHANG>(this.attach_DONHANGs), new Action<DONHANG>(this.detach_DONHANGs));
+			this._PHONGTROs = new EntitySet<PHONGTRO>(new Action<PHONGTRO>(this.attach_PHONGTROs), new Action<PHONGTRO>(this.detach_PHONGTROs));
 			OnCreated();
 		}
 		
@@ -2566,6 +1998,26 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TrangThai", DbType="TinyInt")]
+		public System.Nullable<byte> TrangThai
+		{
+			get
+			{
+				return this._TrangThai;
+			}
+			set
+			{
+				if ((this._TrangThai != value))
+				{
+					this.OnTrangThaiChanging(value);
+					this.SendPropertyChanging();
+					this._TrangThai = value;
+					this.SendPropertyChanged("TrangThai");
+					this.OnTrangThaiChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_ANH_CCCD", Storage="_ANH_CCCDs", ThisKey="Id", OtherKey="IdTaiKhoan")]
 		public EntitySet<ANH_CCCD> ANH_CCCDs
 		{
@@ -2579,29 +2031,29 @@ namespace WEBSITE_MOTEL.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_CHUTRO", Storage="_CHUTROs", ThisKey="Id", OtherKey="Id_TaiKhoan")]
-		public EntitySet<CHUTRO> CHUTROs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_DONHANG", Storage="_DONHANGs", ThisKey="Id", OtherKey="Id_NguoiDung")]
+		public EntitySet<DONHANG> DONHANGs
 		{
 			get
 			{
-				return this._CHUTROs;
+				return this._DONHANGs;
 			}
 			set
 			{
-				this._CHUTROs.Assign(value);
+				this._DONHANGs.Assign(value);
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_NGUOIDUNG", Storage="_NGUOIDUNGs", ThisKey="Id", OtherKey="Id_TaiKhoan")]
-		public EntitySet<NGUOIDUNG> NGUOIDUNGs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TAIKHOAN_PHONGTRO", Storage="_PHONGTROs", ThisKey="Id", OtherKey="Id_ChuTro")]
+		public EntitySet<PHONGTRO> PHONGTROs
 		{
 			get
 			{
-				return this._NGUOIDUNGs;
+				return this._PHONGTROs;
 			}
 			set
 			{
-				this._NGUOIDUNGs.Assign(value);
+				this._PHONGTROs.Assign(value);
 			}
 		}
 		
@@ -2637,25 +2089,25 @@ namespace WEBSITE_MOTEL.Models
 			entity.TAIKHOAN = null;
 		}
 		
-		private void attach_CHUTROs(CHUTRO entity)
+		private void attach_DONHANGs(DONHANG entity)
 		{
 			this.SendPropertyChanging();
 			entity.TAIKHOAN = this;
 		}
 		
-		private void detach_CHUTROs(CHUTRO entity)
+		private void detach_DONHANGs(DONHANG entity)
 		{
 			this.SendPropertyChanging();
 			entity.TAIKHOAN = null;
 		}
 		
-		private void attach_NGUOIDUNGs(NGUOIDUNG entity)
+		private void attach_PHONGTROs(PHONGTRO entity)
 		{
 			this.SendPropertyChanging();
 			entity.TAIKHOAN = this;
 		}
 		
-		private void detach_NGUOIDUNGs(NGUOIDUNG entity)
+		private void detach_PHONGTROs(PHONGTRO entity)
 		{
 			this.SendPropertyChanging();
 			entity.TAIKHOAN = null;

@@ -35,5 +35,6 @@ namespace WEBSITE_MOTEL.Models
         public byte sTrangThai { get; set; }
         public int sIdKV { get; set; }
         public string sTenKV { get; set; }
+        public DateTime? sNgayDat { get; set; }
     }
 }

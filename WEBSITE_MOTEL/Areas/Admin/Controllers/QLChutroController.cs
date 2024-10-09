@@ -29,8 +29,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             int pageSize = 5;
             int pageNumber = page ?? 1;
 
-            var chutro = (from a in data.CHUTROs
-                          join b in data.TAIKHOANs on a.Id_TaiKhoan equals b.Id
+            var chutro = (from b in data.TAIKHOANs 
+                          where b.PhanQuyen == 2
                           select new ChuTro()
                           {
                               sHotenCT = b.HoTen,
@@ -42,8 +42,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                               sSDTCT = b.SDT,
                               sPhanQuyen = (int)b.PhanQuyen,
                               sCCCD = b.CCCD,
-                              sFacebook = a.Facebook,
-                              sId = a.Id,
+                              sId = b.Id,
                           });
 
             var pagedChutro = new PagedList<ChuTro>(chutro, pageNumber, pageSize);
@@ -52,9 +51,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var chutro = (from a in data.CHUTROs
-                          join b in data.TAIKHOANs on a.Id_TaiKhoan equals b.Id
-
+            var chutro = (from b in data.TAIKHOANs
+                          where b.PhanQuyen == 2
                           select new ChuTro()
                           {
                               sHotenCT = b.HoTen,
@@ -64,10 +62,9 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                               sEmailCT = b.Email,
                               sDiaChi = b.DiaChi,
                               sSDTCT = b.SDT,
-                              sPhanQuyen = (int)a.Id_TaiKhoan,
+                              sPhanQuyen = (int)b.PhanQuyen,
                               sCCCD = b.CCCD,
-                              sFacebook = a.Facebook,
-                              sId = a.Id,
+                              sId = b.Id,
                           }).SingleOrDefault(n=>n.sId == id);
             if (chutro == null)
             {
@@ -79,7 +76,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirm(int id, FormCollection f)
         {
-            var chutro = data.CHUTROs.SingleOrDefault(n => n.Id == id);
+            var chutro = data.TAIKHOANs.SingleOrDefault(n => n.Id == id);
             if (chutro == null)
             {
                 Response.StatusCode = 404;
@@ -87,7 +84,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             }
 
 
-            data.CHUTROs.DeleteOnSubmit(chutro);
+            data.TAIKHOANs.DeleteOnSubmit(chutro);
             data.SubmitChanges();
             return RedirectToAction("Index");
         }
@@ -98,9 +95,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             {
                 return Redirect("~/Admin/Home/Login");
             }
-            var chutro = (from a in data.CHUTROs
-                          join b in data.TAIKHOANs on a.Id_TaiKhoan equals b.Id
-
+            var chutro = (from b in data.TAIKHOANs
+                          where b.PhanQuyen == 2
                           select new ChuTro()
                           {
                               sHotenCT = b.HoTen,
@@ -110,10 +106,9 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                               sEmailCT = b.Email,
                               sDiaChi = b.DiaChi,
                               sSDTCT = b.SDT,
-                              sPhanQuyen = (int)a.Id_TaiKhoan,
+                              sPhanQuyen = (int)b.PhanQuyen,
                               sCCCD = b.CCCD,
-                              sFacebook = a.Facebook,
-                              sId = a.Id,
+                              sId = b.Id,
                           }).FirstOrDefault();
             if (chutro == null)
             {
@@ -128,7 +123,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
         public ActionResult Edit(FormCollection f)
         {
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
-            var chutro = data.CHUTROs.SingleOrDefault(n => n.Id_TaiKhoan == tk.Id);
+            var chutro = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
             if (ModelState.IsValid)
             {
                 tk.HoTen = f["sHotenCT"];
@@ -155,9 +150,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             int iSize = 4;
             int iPageNum = (page ?? 1);
             var phong = (from a in data.PHONGTROs
-                         join b in data.CHUTROs on a.Id_ChuTro equals b.Id
                          join c in data.IMAGEs on a.Id equals c.Id_PhongTro
-                         join d in data.TAIKHOANs on b.Id_TaiKhoan equals d.Id
+                         join d in data.TAIKHOANs on a.Id_ChuTro equals d.Id
                          join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
                          select new RoomDetail()
                          {
