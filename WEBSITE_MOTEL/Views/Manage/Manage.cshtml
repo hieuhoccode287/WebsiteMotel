@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<WEBSITE_MOTEL.Models.PHONGTRO>
+﻿@model PagedList.IPagedList<WEBSITE_MOTEL.Models.RoomDetail>
 @using PagedList.Mvc;
 @{
     ViewBag.Title = "Manage";
@@ -35,37 +35,37 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td class="td_col2 td_matin" style="text-align: center; vertical-align: middle;">@item.Id</td>
+                                        <td class="td_col2 td_matin" style="text-align: center; vertical-align: middle;">@item.sMa</td>
 
                                         <td class="td_col3" style="height: 100px; text-align: center; vertical-align: middle;">
-                                            <a class="" target="_blank">@item.TenPhong</a>
+                                            <a class="" target="_blank">@item.sTenPhong</a>
                                         </td>
                                         <td class="td_col2" style="text-align: center; vertical-align: middle;">
-                                            <img src="~/Images/@item.AnhBia" alt="image" style="width:100px; height:100px" loading="lazy">
+                                            <img src="~/Images/@item.sAnhBia" alt="image" style="width:100px; height:100px" loading="lazy">
                                         </td>
                                         <td class="td_col2s td_matin" style="color: #4CAF50; text-align: center; vertical-align: middle;">
-                                            @if (item.Ngay?.AddMonths(3) >= DateTime.Today && item.TrangThai == 1)
+                                            @if (item.dNgayCapNhat?.AddMonths(3) >= DateTime.Today && item.sTrangThai == 1)
                                             {
                                                 <span> Tin đang được đăng</span>
                                             }
-                                            else if (item.TrangThai == 2)
+                                            else if (item.sTrangThai == 2)
                                             {
                                                 <span style="color: #ED2327">Tin đã hết hạn</span>
                                             }
-                                            else if (item.TrangThai == 0)
+                                            else if (item.sTrangThai == 0)
                                             {
                                                 <span style="color: #ddec71">Đang chờ admin duyệt phòng</span>
                                             }
                                         </td>
-                                        <td id="dt1" class="ngay" style="color: #4CAF50; text-align: center; vertical-align: middle;">@Html.FormatValue(item.Ngay, "{0:dd/MM/yyyy}")</td>
-                                        <td id="dt2" class="ngay" style="color: #ED23227; text-align: center; vertical-align: middle;">@Html.FormatValue(item.Ngay?.AddMonths(3), "{0:dd/MM/yyyy}")</td>
+                                        <td id="dt1" class="ngay" style="color: #4CAF50; text-align: center; vertical-align: middle;">@Html.FormatValue(item.dNgayCapNhat, "{0:dd/MM/yyyy}")</td>
+                                        <td id="dt2" class="ngay" style="color: #ED23227; text-align: center; vertical-align: middle;">@Html.FormatValue(item.dNgayCapNhat?.AddMonths(3), "{0:dd/MM/yyyy}")</td>
                                         <td>
-                                            <a class="btn btn_action" id="st2" data-id="@item.Id"><i class="fa fa-refresh"></i> Đăng lại</a>
-                                            <a class="btn btn_action" id="st1" data-id="@item.Id"><i class="fa fa-expeditedssl"></i> Ngừng đăng tin</a>
-                                            <a class="btn btn_action" href="#" id="idxoa" data-id="@item.Id"><i class="fa fa-eraser"></i> Xóa</a>
+                                            <a class="btn btn_action" id="st2" data-id="@item.sMa"><i class="fa fa-refresh"></i> Đăng lại</a>
+                                            <a class="btn btn_action" id="st1" data-id="@item.sMa"><i class="fa fa-expeditedssl"></i> Ngừng đăng tin</a>
+                                            <a class="btn btn_action" href="#" id="idxoa" data-id="@item.sMa"><i class="fa fa-eraser"></i> Xóa</a>
                                         </td>
                                         <td style="height: 100px; text-align: center; vertical-align: middle;">
-                                            <a class="btn btn_action btn-success" style="width: 100%">Chỉnh sửa</a>
+                                            <a class="btn btn_action btn-success" style="width: 100%" onclick="showRoomEditModal('@item.sMa')">Chỉnh sửa</a>
                                         </td>
                                     </tr>
                                 }
@@ -81,7 +81,186 @@
     </div>
 </section>
 
+<!-- Modal Xem Chi Tiết Phòng -->
+<div class="modal fade" id="roomEditModal" tabindex="-1" role="dialog" aria-labelledby="roomEditLabel" aria-hidden="true">
+    <div class="modal-dialog custom-modal" role="document">
+        <div class="modal-content" style="top: 150px; border-radius: 12px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);">
+            <div class="modal-header" style="background-color: rgb(51, 204, 102); color: black; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                <h2 class="modal-title" id="roomEditLabel" style="font-weight: bold; font-size: 1.5rem;">Sửa Phòng</h2>
+            </div>
+            <div class="modal-body">
+                <!-- Room Image -->
+                <div class="text-center mb-3">
+                    <img id="roomImage" src="" alt="Room Image" class="img-fluid" style="max-height: 200px; max-width: 100%; object-fit: cover; border-radius: 10px;">
+                </div>
+
+                <!-- Modal Fields in 3 Columns -->
+                <div class="row">
+                    <!-- Column 1 -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="roomId">ID</label>
+                            <input type="text" class="form-control" id="roomId" readonly style="background-color: #f8f9fa;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomSoNguoiO">Số Người Ở</label>
+                            <select class="form-control" id="roomSoNguoiO">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="roomSoLuong">Số Lượng Phòng Còn</label>
+                            <input type="text" class="form-control" id="roomSoLuong">
+                        </div>
+                        @*<div class="mb-3">
+            <label for="roomStatus">Trạng Thái</label>
+            <input type="text" class="form-control" id="roomStatus" >
+        </div>*@
+                        <div class="mb-3">
+                            <label for="roomDien">Giá Điện (đồng/tháng)</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomDien">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomGuiXe">Giá Gửi Xe (đồng/tháng)</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomGuiXe">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="roomName">Tên Phòng</label>
+                            <input type="text" class="form-control" id="roomName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomType">Khu Vực</label>
+                            <select class="form-control" id="roomType">
+                                @foreach (var item in ViewBag.KhuVucList as List<WEBSITE_MOTEL.Models.KHUVUC>) // Assuming KHUVUC is your model for area
+                                {
+                                    <option value="@item.Id">@item.Ten</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomDienTich">Diện Tích (m²)</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomDienTich">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomNuoc">Giá Nước (đồng/tháng)</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomNuoc">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomInternet">Giá Internet (đồng/tháng)</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomInternet">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="roomDescribe">Mô tả</label>
+                            <textarea class="form-control" id="roomDescribe" rows="2" style="min-height: 35px;"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomAddress">Địa Chỉ</label>
+                            <textarea class="form-control" id="roomAddress" rows="2" style="min-height: 35px;"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomNCN">Ngày Cập Nhật (MM/DD/YYYY)</label>
+                            <input type="text" class="form-control" id="roomNCN" readonly style="background-color: #f8f9fa;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomPrice">Giá Phòng (đồng/tháng)</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomPrice">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="font-weight: bold; margin-top: 20px;">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    function showRoomEditModal(roomId) {
+        console.log("Fetching Edit for room ID:", roomId);
+        $.ajax({
+            url: '/Manage/EditRoom',
+            type: 'GET',
+            data: { id: roomId },
+            success: function (response) {
+                console.log(response); // Log response để kiểm tra
+                if (response.code === 200) {
+                    var room = response.dh.find(r => r.sMa == roomId); // Find room by id
+                    if (room) {
+
+                        // Fill modal fields with room Edit
+                        $('#roomId').val(room.sMa);
+                        $('#roomName').val(room.sTenPhong);
+                        $('#roomPrice').val(formatPrice(room.dGiaCa));
+                        $('#roomType').val(room.sIdKV);
+                        $('#roomDienTich').val(room.sDienTich);
+                        $('#roomSoLuong').val(room.sSoluong);
+                        $('#roomSoNguoiO').val(room.sSoNguoiO);
+                        // Check if roomNCN (dNgayCapNhat) is null before formatting
+                        if (room.dNgayCapNhat) {
+                            $('#roomNCN').val(formatDateTime(room.dNgayCapNhat));
+                        } else {
+                            $('#roomNCN').val(''); // Or set to an empty string: ''
+                        }
+                        $('#roomDien').val(formatPrice(room.sDien));
+                        $('#roomNuoc').val(formatPrice(room.sNuoc));
+                        $('#roomGuiXe').val(formatPrice(room.sGuiXe));
+                        $('#roomInternet').val(formatPrice(room.sInternet));
+                        $('#roomAddress').val(room.sDiaChi);
+                        $('#roomDescribe').val(room.sMoTa);
+
+                        // Set room image
+                        $('#roomImage').attr('src', '/Images/' + room.sAnhBia); // Adjust path as needed
+
+                        // Show the modal
+                        $('#roomEditModal').modal('show'); // Ensure you use the correct ID for your modal
+                    } else {
+                        alert("Room Edit not found.");
+                    }
+                } else {
+                    alert("Failed to fetch room Edit: " + response.msg);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching room Edit:", xhr.responseText);
+                alert("Error fetching room Edit: " + error);
+            }
+        });
+    }
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    function formatDateTime(jsonDate) {
+        const timestamp = parseInt(jsonDate.match(/\d+/)[0], 10); // Lấy giá trị timestamp từ chuỗi
+        const date = new Date(timestamp); // Tạo đối tượng Date từ timestamp
+        return date.toLocaleString(); // Trả về ngày và giờ dạng người dùng dễ đọc
+    }
     $(document).ready(function () {
         // Sự kiện click vào nút "Đăng lại"
         $(".table").on("click", "#st2", function () {
@@ -155,9 +334,19 @@
 
 <style>
     .td_col3 {
-        max-width:250px;
+        max-width: 250px;
         overflow: hidden;
         text-overflow: ellipsis; /* Thêm dấu chấm lửng nếu nội dung vượt quá */
         white-space: nowrap;
+    }
+
+    .mb-3 {
+        margin-top: 10px;
+    }
+
+    .custom-modal {
+        width: 90%; /* Đặt chiều rộng modal, có thể điều chỉnh theo nhu cầu */
+        max-width: 1000px; /* Đặt chiều rộng tối đa, có thể điều chỉnh theo nhu cầu */
+        height: auto; /* Đặt chiều cao tự động hoặc cụ thể nếu muốn */
     }
 </style>
