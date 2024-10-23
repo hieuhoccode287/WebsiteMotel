@@ -45,18 +45,6 @@
                         </div>
 
                         <!--form-row 1-->
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="type">Loại hình cho thuê:</label>
-                                <select class="form-control" id="type">
-                                    <option>Chọn loại hình cho thuê</option>
-                                    <option>Thuê phòng trọ</option>
-                                    <option>Thuê nhà</option>
-                                    <option>Chung cư mini</option>
-                                    <option>Mặt bằng kinh doanh</option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="form-inline">
                             <div class="form-group ">
                                 <input type="hidden" size="70" name="sid" value="@nd.Id" readonly />
@@ -168,9 +156,15 @@
                             <!--Thông tin vị trí cụ thể-->
                             <label for="pac-input">Số nhà, Tên đường cụ thể</label></br>
                             <input id="pac-input" class="controls" type="text" placeholder="  Nhập địa chỉ nhà chi tiết..." name="sDiaChi" style="width:300px">
-                            <div id="map" style="margin-top:50px"><input type="url" name="sMap" /></div>
+                            <!-- Form để gửi tên địa điểm và tọa độ -->
+                            <form action="/submit-location" method="POST" >
+                                <!-- Trường ẩn để lưu tọa độ -->
+                                <input type="hidden" id="sMap" name="sMap" />
+                            </form>
+                            <br />
+                            <div id="map" style="margin-top:50px">
+                            </div>
                         </div>
-                    </div>
                 </div>
                 <!--Thông tin mô tả chi tiết-->
                 @*<div class="group-form">
@@ -300,18 +294,39 @@
 </section>
 
 <script>
-    // Tạo một bản đồ và thiết lập vị trí trung tâm
-    var map = L.map('map').setView([10.762622, 106.660172], 13); // Tọa độ Sài Gòn
+    // Tạo bản đồ tại vị trí mặc định (Thủ Dầu Một)
+    var map = L.map('map').setView([10.9804, 106.6519], 13); // Tọa độ và mức zoom
 
-    // Thêm tile layer từ OpenStreetMap
+
+    // Thêm lớp bản đồ OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Tùy chọn: Thêm marker
-    var marker = L.marker([10.762622, 106.660172]).addTo(map);
-    marker.bindPopup("Vị trí của bạn").openPopup();
+    // Tạo marker tại vị trí Đại học Thủ Dầu Một
+    var marker = L.marker([10.980746, 106.674011]).addTo(map)
+        .bindPopup('Đại học Thủ Dầu Một')
+        .openPopup();
+
+
+    // Khi người dùng nhấp vào bản đồ
+    map.on('click', function (e) {
+        var latlng = e.latlng; // Lấy tọa độ của vị trí nhấp
+
+        // Hiển thị thông báo với tọa độ được chọn
+        alert("Bạn đã chọn vị trí: " + latlng.lat + ", " + latlng.lng);
+
+        // Lưu tọa độ vào input ẩn để gửi lên server
+        document.getElementById("sMap").value = latlng.lat + "," + latlng.lng;
+
+        // Di chuyển marker đến vị trí mới và cập nhật popup
+        marker.setLatLng(latlng)
+            .bindPopup("Vị trí đã chọn: " + latlng.lat + ", " + latlng.lng)
+            .openPopup();
+    });
 </script>
+
+
 
 <script>
     var curDate = new Date();

@@ -70,7 +70,11 @@ namespace WEBSITE_MOTEL.Controllers
             // Sử dụng PagedList để phân trang
             int pageSize = 5; // Số mục trên mỗi trang
             int pageNumber = (page ?? 1); // Số trang hiện tại
-            var pagedList = phongTroList.ToPagedList(pageNumber, pageSize);
+            var pagedList = phongTroList
+                .OrderByDescending(n => n.dNgayCapNhat == null) // Ưu tiên những phòng có dNgayCapNhat là null
+                .ThenBy(n => n.sTrangThai) // Ưu tiên sắp xếp theo TrangThai (giá trị lớn hơn trước)
+                .ThenByDescending(n => n.dNgayCapNhat) // Sau đó sắp xếp giảm dần theo dNgayCapNhat (nếu không null)
+                .ToPagedList(pageNumber, pageSize);
 
             ViewBag.KhuVucList = khuVucList; // Pass the area list to the view
             return View(pagedList);
@@ -80,7 +84,15 @@ namespace WEBSITE_MOTEL.Controllers
         private void UpdateExpiredPhongTroStatus()
         {
             // Lấy danh sách các phòng trọ đã hết hạn
-            var expiredPhongTroList = data.PHONGTROs.Where(p => p.Ngay.GetValueOrDefault().AddMonths(3) < DateTime.Today && p.TrangThai == 1).ToList();
+            var expiredPhongTroList = data.PHONGTROs
+                                    .Where(p => p.TrangThai == 1)
+                                    .ToList()
+                                    .Where(p => {
+                                        DateTime ngay;
+                                        return DateTime.TryParse(p.Ngay.ToString(), out ngay) &&
+                                               ngay.AddMonths(3) < DateTime.Today;
+                                    })
+                                    .ToList();
 
             // Cập nhật trạng thái của các phòng trọ đã hết hạn
             foreach (var phongTro in expiredPhongTroList)
@@ -154,6 +166,123 @@ namespace WEBSITE_MOTEL.Controllers
                 return Json(new { code = 500, msg = "Lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+        [HttpPost]
+        public JsonResult UpdateRoom()
+        {
+            try
+            {
+                // Xác thực phiên
+                TAIKHOAN tk = GetAcc();
+                if (tk == null)
+                {
+                    return Json(new { code = 401, msg = "Unauthorized access." }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Lấy dữ liệu từ request
+                int sMa = int.Parse(Request.Form["sMa"]);
+                string sTenPhong = Request.Form["sTenPhong"];
+                decimal dGiaCa = decimal.Parse(Request.Form["dGiaCa"]);
+                int sIdKV = int.Parse(Request.Form["sIdKV"]);
+                int sDienTich = int.Parse(Request.Form["sDienTich"]);
+                int sSoluong = int.Parse(Request.Form["sSoluong"]);
+                int sSoNguoiO = int.Parse(Request.Form["sSoNguoiO"]);
+                string dNgayCapNhat = Request.Form["dNgayCapNhat"];
+                int sDien = int.Parse(Request.Form["sDien"]);
+                int sNuoc = int.Parse(Request.Form["sNuoc"]);
+                int sGuiXe = int.Parse(Request.Form["sGuiXe"]);
+                int sInternet = int.Parse(Request.Form["sInternet"]);
+                string sMoTa = Request.Form["sMoTa"];
+                string sDiaChi = Request.Form["sDiaChi"];
+
+                // Tìm phòng cần cập nhật trong cơ sở dữ liệu
+                var roomToUpdate = data.PHONGTROs.SingleOrDefault(r => r.Id == sMa);
+                var imgdetail = data.IMAGEs.SingleOrDefault(r => r.Id_PhongTro == roomToUpdate.Id);
+                if (roomToUpdate == null)
+                {
+                    return Json(new { code = 404, msg = "Room not found." }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Cập nhật các thuộc tính phòng
+                roomToUpdate.TenPhong = sTenPhong;
+                roomToUpdate.GiaCa = dGiaCa;
+                roomToUpdate.KhuVuc = sIdKV;
+                roomToUpdate.DienTich = sDienTich;
+                roomToUpdate.SoLuong = sSoluong;
+                roomToUpdate.SoNguoiO = sSoNguoiO;
+                roomToUpdate.MoTa = sMoTa;
+                roomToUpdate.Diachi = sDiaChi;
+                roomToUpdate.Dien = sDien;
+                roomToUpdate.Nuoc = sNuoc;
+                roomToUpdate.GuiXe = sGuiXe;
+                roomToUpdate.Internet = sInternet;
+                roomToUpdate.Ngay = null;
+                roomToUpdate.TrangThai = 0;
+
+                var roomImage = Request.Files["roomImage"];
+                string roomImageFileName = null;
+
+                if (roomImage != null && roomImage.ContentLength > 0)
+                {
+                    // Đường dẫn lưu ảnh bìa
+                    var imagePath = Path.Combine(Server.MapPath("~/Images"), roomImage.FileName);
+                    roomImage.SaveAs(imagePath);
+                    roomToUpdate.AnhBia = roomImage.FileName; // Cập nhật tên ảnh bìa vào cơ sở dữ liệu
+                    roomImageFileName = roomImage.FileName; // Lưu tên file của roomImage để sử dụng sau
+                }
+
+                // Biến để đếm các ảnh bổ sung, bắt đầu từ 1 cho các Url_Path1, Url_Path2,...
+                int additionalImageIndex = 1;
+
+                // Xử lý các ảnh bổ sung
+                for (int i = 0; i < Request.Files.Count; i++)
+                {
+                    var additionalImage = Request.Files[i]; // Lấy tệp theo chỉ số
+
+                    // Kiểm tra nếu ảnh hiện tại không phải là roomImage (nếu roomImage không null)
+                    if (additionalImage != null && additionalImage.ContentLength > 0
+                        && (roomImageFileName == null || additionalImage.FileName != roomImageFileName))
+                    {
+                        // Đường dẫn lưu ảnh bổ sung
+                        var additionalImagePath = Path.Combine(Server.MapPath("~/Images"), additionalImage.FileName);
+                        additionalImage.SaveAs(additionalImagePath);
+
+                        // Cập nhật tên ảnh vào cơ sở dữ liệu dựa trên additionalImageIndex
+                        switch (additionalImageIndex)
+                        {
+                            case 1:
+                                imgdetail.Url_Path = additionalImage.FileName; // Cập nhật Url_Path1
+                                break;
+                            case 2:
+                                imgdetail.Url_Path2 = additionalImage.FileName; // Cập nhật Url_Path2
+                                break;
+                            case 3:
+                                imgdetail.Url_Path3 = additionalImage.FileName; // Cập nhật Url_Path3
+                                break;
+                            case 4:
+                                imgdetail.Url_Path4 = additionalImage.FileName; // Cập nhật Url_Path4
+                                break;
+                        }
+                        // Tăng chỉ mục cho ảnh bổ sung
+                        additionalImageIndex++;
+                    }
+                }
+
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                data.SubmitChanges();
+
+                return Json(new { code = 200, msg = "Room updated successfully." }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại ngoại lệ
+                Console.WriteLine(ex.Message);
+                return Json(new { code = 500, msg = "Error: " + ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
 
         public ActionResult DangLai(int id)
         {
@@ -163,8 +292,8 @@ namespace WEBSITE_MOTEL.Controllers
 
             if (phongTro != null)
             {
-                phongTro.TrangThai = 1;
-                phongTro.Ngay = DateTime.Now;
+                phongTro.TrangThai = 0;
+                //phongTro.Ngay = DateTime.Now;
                 data.SubmitChanges();
                 TempData["Message"] = "Đăng lại tin thành công!";
             }

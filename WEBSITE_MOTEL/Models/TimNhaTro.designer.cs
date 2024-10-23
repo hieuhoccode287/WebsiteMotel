@@ -705,8 +705,6 @@ namespace WEBSITE_MOTEL.Models
 		
 		private string _Url_Path4;
 		
-		private string _Url_Path5;
-		
 		private EntityRef<PHONGTRO> _PHONGTRO;
 		
     #region Extensibility Method Definitions
@@ -725,8 +723,6 @@ namespace WEBSITE_MOTEL.Models
     partial void OnUrl_Path3Changed();
     partial void OnUrl_Path4Changing(string value);
     partial void OnUrl_Path4Changed();
-    partial void OnUrl_Path5Changing(string value);
-    partial void OnUrl_Path5Changed();
     #endregion
 		
 		public IMAGE()
@@ -855,26 +851,6 @@ namespace WEBSITE_MOTEL.Models
 					this._Url_Path4 = value;
 					this.SendPropertyChanged("Url_Path4");
 					this.OnUrl_Path4Changed();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Url_Path5", DbType="NVarChar(255)")]
-		public string Url_Path5
-		{
-			get
-			{
-				return this._Url_Path5;
-			}
-			set
-			{
-				if ((this._Url_Path5 != value))
-				{
-					this.OnUrl_Path5Changing(value);
-					this.SendPropertyChanging();
-					this._Url_Path5 = value;
-					this.SendPropertyChanged("Url_Path5");
-					this.OnUrl_Path5Changed();
 				}
 			}
 		}
@@ -1142,8 +1118,6 @@ namespace WEBSITE_MOTEL.Models
 		
 		private System.Nullable<int> _SoLuong;
 		
-		private string _Map;
-		
 		private System.Nullable<System.DateTime> _Ngay;
 		
 		private string _Diachi;
@@ -1161,6 +1135,8 @@ namespace WEBSITE_MOTEL.Models
 		private System.Nullable<int> _SoNguoiO;
 		
 		private System.Nullable<byte> _TrangThai;
+		
+		private string _Map;
 		
 		private EntitySet<DONHANG> _DONHANGs;
 		
@@ -1190,8 +1166,6 @@ namespace WEBSITE_MOTEL.Models
     partial void OnDienTichChanged();
     partial void OnSoLuongChanging(System.Nullable<int> value);
     partial void OnSoLuongChanged();
-    partial void OnMapChanging(string value);
-    partial void OnMapChanged();
     partial void OnNgayChanging(System.Nullable<System.DateTime> value);
     partial void OnNgayChanged();
     partial void OnDiachiChanging(string value);
@@ -1210,6 +1184,8 @@ namespace WEBSITE_MOTEL.Models
     partial void OnSoNguoiOChanged();
     partial void OnTrangThaiChanging(System.Nullable<byte> value);
     partial void OnTrangThaiChanged();
+    partial void OnMapChanging(string value);
+    partial void OnMapChanged();
     #endregion
 		
 		public PHONGTRO()
@@ -1381,26 +1357,6 @@ namespace WEBSITE_MOTEL.Models
 					this._SoLuong = value;
 					this.SendPropertyChanged("SoLuong");
 					this.OnSoLuongChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Map", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Map
-		{
-			get
-			{
-				return this._Map;
-			}
-			set
-			{
-				if ((this._Map != value))
-				{
-					this.OnMapChanging(value);
-					this.SendPropertyChanging();
-					this._Map = value;
-					this.SendPropertyChanged("Map");
-					this.OnMapChanged();
 				}
 			}
 		}
@@ -1585,6 +1541,26 @@ namespace WEBSITE_MOTEL.Models
 					this._TrangThai = value;
 					this.SendPropertyChanged("TrangThai");
 					this.OnTrangThaiChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Map", DbType="NVarChar(300)")]
+		public string Map
+		{
+			get
+			{
+				return this._Map;
+			}
+			set
+			{
+				if ((this._Map != value))
+				{
+					this.OnMapChanging(value);
+					this.SendPropertyChanging();
+					this._Map = value;
+					this.SendPropertyChanged("Map");
+					this.OnMapChanged();
 				}
 			}
 		}

@@ -1509,7 +1509,6 @@
     <Content Include="Images\user.jpg" />
     <Content Include="js\bootstrap.min.js" />
     <Content Include="js\home.js" />
-    <Content Include="js\images360.js" />
     <Content Include="js\jquery-3.2.0.min.js" />
     <Content Include="js\jvdangky.js" />
     <Content Include="js\jvdangnhap.js" />

@@ -8,18 +8,7 @@
 @{
     TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
 }
-<div class="search_place">
-    <div class="map-search">
-        <span>Bán kính tìm kiếm (đv: mét)</span>
-        <input class="input-radius" type="text" value="500">
-        <button class="search-by-radius" onclick="search_locale()"><i class="fa fa-search"></i> Tìm</button>
-        <div id="mapholder"></div>
-    </div>
-    <div class="result-search">
-        <i class="fa fa-hand-o-right"></i>
-        <span> Tìm được 5 địa điểm cho thuê quanh vị trí của bạn.</span>
-    </div>
-</div>
+
 <div class="nav-text">
     <ol>
         <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
@@ -116,7 +105,7 @@
                         <li><a data-toggle="tab" href="#menu2_@i">MÔ TẢ CHI TIẾT</a></li>
                         <li><a data-toggle="tab" href="#menu3_@i">HÌNH ẢNH</a></li>
                         @*<li><a data-toggle="tab" href="#menu5_@i">ẢNH 360<sup>o</sup></a></li>*@
-                        <li class="position item1"><a data-toggle="tab" href="#menu4_@i">VỊ TRÍ</a></li>
+                        <li class="position item1"><a class="nav-link" data-toggle="tab" href="#menu4_@i">VỊ TRÍ</a></li>
                     </ul>
                     <!-- Content navs tabs-->
                     <div class="tab-content">
@@ -128,28 +117,22 @@
                                         <td colspan="3">@item.sDiaChi,@item.sTenKV </td>
                                     </tr>
                                     <tr>
-                                        <th>Loại hình cho thuê</th>
-                                        <td>Nhà trọ sinh viên</td>
+                                        <th>Người đăng</th>
+                                        <td>@item.sHoTen</td>
                                         <th>Ngày cập nhật</th>
                                         <td>@Html.FormatValue(item.dNgayCapNhat, "{0:dd/MM/yyyy}")</td>
                                     </tr>
                                     <tr>
-                                        <th>Người đăng</th>
-                                        <td>@item.sHoTen</td>
+                                        <th>Email</th>
+                                        <td>@item.sEmail</td>
                                         <th>Điện thoại</th>
                                         <td>@item.sSDT</td>
                                     </tr>
                                     <tr>
-                                        <th>Email</th>
-                                        <td>@item.sEmail</td>
-                                        <th>Số phòng còn</th>
-                                        <td>@item.sSoluong</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Diện tích</th>
-                                        <td>@item.sDienTich m2</td>
                                         <th>Số người ở</th>
                                         <td>@item.sSoNguoiO</td>
+                                        <th>Số phòng còn</th>
+                                        <td>@item.sSoluong</td>
                                     </tr>
                                     <tr>
                                         <th>Giá cho thuê</th>
@@ -165,15 +148,15 @@
                             <div id="detail-item2" class="des-detail-content">
                                 <p>
                                     @*Nhà cao cấp giá bình dân chỉ 2tr5 bạn đã sở hữu 1 phòng sạch sẽ và an ninh nhất quận 9.Đến xem là mê liền * Giảm 10% cho bạn thuê phòng lần đầu tiên Hiện tại bên mình đang có phòng trọ cho thuê, mình xin mô tả thông tin như sau:
-                                        <br>
-                                        Địa chỉ: SỐ 3/108 Nguyễn Trãi, Thượng Đình, Thanh Xuân, Hà Nội.  Nhà gần chợ và siêu thị bạn thoải mái nấu những món ăn mà mình yêu thích nhé
-                                        <br>
-                                        - Gần các trường ĐH giao thông vận tải, ĐH sư phạm kĩ thuật thuận lợi cho các bạn sinh viên
-                                        <br>
-                                        - Gần nơi sầm uất như VINCOM PLAZA, siêu thị CoopMart, cây xăng Tân phú, bệnh viện quận 9....
-                                        <br>
-                                        - Toàn bộ phòng được lát gạch men nên phòng ốc rất sạch sẽ và cao cấp<br> Vì số lượng có hạn nên gọi ngay cho mình để đặt phòng nhé.(MS. HẰNG)*@
-                                    
+                    <br>
+                    Địa chỉ: SỐ 3/108 Nguyễn Trãi, Thượng Đình, Thanh Xuân, Hà Nội.  Nhà gần chợ và siêu thị bạn thoải mái nấu những món ăn mà mình yêu thích nhé
+                    <br>
+                    - Gần các trường ĐH giao thông vận tải, ĐH sư phạm kĩ thuật thuận lợi cho các bạn sinh viên
+                    <br>
+                    - Gần nơi sầm uất như VINCOM PLAZA, siêu thị CoopMart, cây xăng Tân phú, bệnh viện quận 9....
+                    <br>
+                    - Toàn bộ phòng được lát gạch men nên phòng ốc rất sạch sẽ và cao cấp<br> Vì số lượng có hạn nên gọi ngay cho mình để đặt phòng nhé.(MS. HẰNG)*@
+
                                     @Html.Raw(item.sMoTa)
                                 </p>
                             </div>
@@ -216,17 +199,60 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="menu4_@i" class="tab-pane fade" style="position: relative;">
+                        <!-- Tab content -->
+                        <div id="menu4_@i" class="tab-pane fade">
                             <div class="des-detail-content">
-                                <div id="map"></div>
+                                <div id="map_@i" style="height: 400px; width: 100%;"></div>
                             </div>
+
+                            <script>
+                                var mapInstance; // Declare the map instance variable
+
+                                function initMap(lat, lng, mapId) {
+                                    // Create a new map instance for each tab
+                                    var mapInstance = L.map(mapId).setView([lat, lng], 13);
+
+                                    // Add tile layer to the map
+                                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    }).addTo(mapInstance);
+
+                                    // Add a unique marker for this map instance
+                                    L.marker([lat, lng]).addTo(mapInstance)
+                                        .bindPopup('Vị trí chính xác')
+                                        .openPopup();
+                                }
+
+                                $(document).ready(function() {
+                                    // Event listener for tab shown
+                                    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                                        if ($(e.target).attr('href') === '#menu4_@i') {
+                                            console.log('Tab menu4_@i is shown, initializing map...');
+
+                                            // Ensure the map container exists
+                                            var mapContainer = $('#map_@i');
+                                            if (mapContainer.length > 0) {
+                                                var mapData = '@item.sMap'; // Assuming sMap contains coordinates as "lat,lng"
+                                                var latLng = mapData.split(',');
+                                                var lat = parseFloat(latLng[0]);
+                                                var lng = parseFloat(latLng[1]);
+
+                                                console.log('Lat:', lat, 'Lng:', lng); // Log the coordinates
+
+                                                // Call the initMap function with unique map ID
+                                                setTimeout(function() {
+                                                    initMap(lat, lng, 'map_@i'); // Pass the unique map ID
+                                                }, 300);
+                                            } else {
+                                                console.log('Map container not found.');
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
                         </div>
-                        <div id="menu5_@i" class="tab-pane fade">
-                            <p style="color: green">Tính năng này hiện chỉ hỗ trợ trên Chrome Browser</p>
-                            <div id="panorama1" class="panorama" style="width: 100%; height: 400px"></div>
-                        </div>
+
                     </div>
-                </div>
                 @if (Session["TaiKhoan"] == null)
                 {
                     <form style="text-align:center">
@@ -368,6 +394,7 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
     }
 
 </style>
+
 <script>
     $(document).on('click', "close", (function () {
         location.reload();

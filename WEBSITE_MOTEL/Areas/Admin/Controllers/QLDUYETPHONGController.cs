@@ -78,6 +78,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             if (phong != null)
             {
                 phong.TrangThai = 1;
+                phong.Ngay = DateTime.Now;
                 data.SubmitChanges();
                 TempData["Message"] = "Duyệt phòng thành công!";
             }

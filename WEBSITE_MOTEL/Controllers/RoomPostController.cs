@@ -124,6 +124,7 @@ namespace WEBSITE_MOTEL.Controllers
                 else ModelState.AddModelError("TrangThai", "Invalid value for TrangThai");
 
                 phong.Map = f["sMap"];
+
                 phong.Diachi = f["sDiaChi"];
                 string selectedKhuVucId = f["sKhuVuc"];
                 if (int.TryParse(selectedKhuVucId, out int khuVucId)) // Use TryParse for safe conversion

@@ -37,7 +37,7 @@
                                     <tr>
                                         <td class="td_col2 td_matin" style="text-align: center; vertical-align: middle;">@item.sMa</td>
 
-                                        <td class="td_col3" style="height: 100px; text-align: center; vertical-align: middle;">
+                                        <td class="td_col3" style="height: 100px; text-align: center; vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
                                             <a class="" target="_blank">@item.sTenPhong</a>
                                         </td>
                                         <td class="td_col2" style="text-align: center; vertical-align: middle;">
@@ -59,10 +59,10 @@
                                         </td>
                                         <td id="dt1" class="ngay" style="color: #4CAF50; text-align: center; vertical-align: middle;">@Html.FormatValue(item.dNgayCapNhat, "{0:dd/MM/yyyy}")</td>
                                         <td id="dt2" class="ngay" style="color: #ED23227; text-align: center; vertical-align: middle;">@Html.FormatValue(item.dNgayCapNhat?.AddMonths(3), "{0:dd/MM/yyyy}")</td>
-                                        <td>
+                                        <td style="vertical-align: middle;">
                                             <a class="btn btn_action" id="st2" data-id="@item.sMa"><i class="fa fa-refresh"></i> Đăng lại</a>
                                             <a class="btn btn_action" id="st1" data-id="@item.sMa"><i class="fa fa-expeditedssl"></i> Ngừng đăng tin</a>
-                                            <a class="btn btn_action" href="#" id="idxoa" data-id="@item.sMa"><i class="fa fa-eraser"></i> Xóa</a>
+                                            <a class="btn btn_action" id="idxoa" data-id="@item.sMa"><i class="fa fa-eraser"></i> Xóa</a>
                                         </td>
                                         <td style="height: 100px; text-align: center; vertical-align: middle;">
                                             <a class="btn btn_action btn-success" style="width: 100%" onclick="showRoomEditModal('@item.sMa')">Chỉnh sửa</a>
@@ -89,9 +89,41 @@
                 <h2 class="modal-title" id="roomEditLabel" style="font-weight: bold; font-size: 1.5rem;">Sửa Phòng</h2>
             </div>
             <div class="modal-body">
-                <!-- Room Image -->
-                <div class="text-center mb-3">
-                    <img id="roomImage" src="" alt="Room Image" class="img-fluid" style="max-height: 200px; max-width: 100%; object-fit: cover; border-radius: 10px;">
+                <!-- Modal for Full-Size Image -->
+                <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body text-center">
+                                <img id="modalImage" src="" alt="Full Size Image" class="img-fluid" style="height: 500px; width:500px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-image-container mb-3">
+                    <!-- Room Image -->
+                    <div class="text-center image-item">
+                        <div style="position: relative; display: inline-block;">
+                            <img id="roomImage" src="" alt="Room Image" class="img-fluid" style="height: 200px; width: 250px; object-fit: cover; border-radius: 10px; cursor: pointer;" onclick="openImageModal(this.src)">
+                            <i class="fa fa-camera" style="position: absolute; top: 5px; right: 5px; color: white; font-size: 24px; cursor: pointer;" onclick="document.getElementById('roomImageUpload').click();"></i>
+                        </div>
+                        <label style="margin-top: 5px; display: block;">Ảnh bìa</label> <!-- Label for Room Image -->
+                    </div>
+
+                    <!-- Composite Image Canvas -->
+                    <div class="text-center image-item">
+                        <div style="position: relative; display: inline-block;">
+                            <canvas id="compositeImageCanvas" width="400" height="400" style="display: none;"></canvas>
+                            <img id="compositeImage" src="" alt="Composite Room Image" class="img-fluid" style="height: 200px; width: 250px; object-fit: cover; border-radius: 10px; cursor: pointer;" onclick="openImageModal(this.src)" />
+                            <i class="fa fa-camera" style="position: absolute; top: 5px; right: 5px; color: white; font-size: 24px; cursor: pointer;" onclick="document.getElementById('compositeImageUpload').click();"></i>
+                        </div>
+                        <label style="margin-top: 5px; display: block;">Ảnh chi tiết</label> <!-- Label for Composite Image -->
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <input type="file" class="form-control" id="roomImageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                    <input type="file" multiple="multiple" class="form-control" id="compositeImageUpload" accept="image/*" style="display: none;" onchange="previewCompositeImage(event)">
                 </div>
 
                 <!-- Modal Fields in 3 Columns -->
@@ -117,19 +149,19 @@
                             <input type="text" class="form-control" id="roomSoLuong">
                         </div>
                         @*<div class="mb-3">
-            <label for="roomStatus">Trạng Thái</label>
-            <input type="text" class="form-control" id="roomStatus" >
-        </div>*@
+                    <label for="roomStatus">Trạng Thái</label>
+                    <input type="text" class="form-control" id="roomStatus" >
+                </div>*@
                         <div class="mb-3">
                             <label for="roomDien">Giá Điện (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomDien">
+                                <input type="text" class="form-control" id="roomDien" oninput="formatNumber(this)">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="roomGuiXe">Giá Gửi Xe (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomGuiXe">
+                                <input type="text" class="form-control" id="roomGuiXe" oninput="formatNumber(this)">
                             </div>
                         </div>
                     </div>
@@ -158,13 +190,13 @@
                         <div class="mb-3">
                             <label for="roomNuoc">Giá Nước (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomNuoc">
+                                <input type="text" class="form-control" id="roomNuoc" oninput="formatNumber(this)">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="roomInternet">Giá Internet (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomInternet">
+                                <input type="text" class="form-control" id="roomInternet" oninput="formatNumber(this)">
                             </div>
                         </div>
                     </div>
@@ -178,15 +210,17 @@
                         <div class="mb-3">
                             <label for="roomAddress">Địa Chỉ</label>
                             <textarea class="form-control" id="roomAddress" rows="2" style="min-height: 35px;"></textarea>
+                            <i class="fa fa-map-marker" style="margin-left: px; margin-top: 5px; cursor: pointer; font-size: 30px; color: #5cb85c;" onclick="openMapModal()"> Vị trí trên bản đồ</i>
+
                         </div>
                         <div class="mb-3">
-                            <label for="roomNCN">Ngày Cập Nhật (MM/DD/YYYY)</label>
+                            <label for="roomNCN">Ngày Đăng Tin (MM/DD/YYYY)</label>
                             <input type="text" class="form-control" id="roomNCN" readonly style="background-color: #f8f9fa;">
                         </div>
                         <div class="mb-3">
                             <label for="roomPrice">Giá Phòng (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomPrice">
+                                <input type="text" class="form-control" id="roomPrice" oninput="formatNumber(this)">
                             </div>
                         </div>
 
@@ -195,13 +229,15 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" style="font-weight: bold; margin-top: 20px;">Đóng</button>
+                <button id="saveChangesButton" type="submit" class="btn btn-success" data-dismiss="modal" style="font-weight: bold;">Lưu thay đổi</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="font-weight: bold;">Đóng</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+
     function showRoomEditModal(roomId) {
         console.log("Fetching Edit for room ID:", roomId);
         $.ajax({
@@ -209,12 +245,11 @@
             type: 'GET',
             data: { id: roomId },
             success: function (response) {
-                console.log(response); // Log response để kiểm tra
+                console.log(response);
                 if (response.code === 200) {
-                    var room = response.dh.find(r => r.sMa == roomId); // Find room by id
+                    var room = response.dh.find(r => r.sMa == roomId);
                     if (room) {
-
-                        // Fill modal fields with room Edit
+                        // Set room details
                         $('#roomId').val(room.sMa);
                         $('#roomName').val(room.sTenPhong);
                         $('#roomPrice').val(formatPrice(room.dGiaCa));
@@ -222,12 +257,11 @@
                         $('#roomDienTich').val(room.sDienTich);
                         $('#roomSoLuong').val(room.sSoluong);
                         $('#roomSoNguoiO').val(room.sSoNguoiO);
-                        // Check if roomNCN (dNgayCapNhat) is null before formatting
+
                         if (room.dNgayCapNhat) {
                             $('#roomNCN').val(formatDateTime(room.dNgayCapNhat));
-                        } else {
-                            $('#roomNCN').val(''); // Or set to an empty string: ''
                         }
+
                         $('#roomDien').val(formatPrice(room.sDien));
                         $('#roomNuoc').val(formatPrice(room.sNuoc));
                         $('#roomGuiXe').val(formatPrice(room.sGuiXe));
@@ -235,34 +269,195 @@
                         $('#roomAddress').val(room.sDiaChi);
                         $('#roomDescribe').val(room.sMoTa);
 
-                        // Set room image
-                        $('#roomImage').attr('src', '/Images/' + room.sAnhBia); // Adjust path as needed
+                        // Set the primary room image
+                        $('#roomImage').attr('src', '/Images/' + room.sAnhBia);
+
+                        // Load images onto the canvas
+                        const canvas = document.getElementById('compositeImageCanvas');
+                        const ctx = canvas.getContext('2d');
+                        const images = [
+                            new Image(),
+                            new Image(),
+                            new Image(),
+                            new Image()
+                        ];
+
+                        let loadedImages = 0;
+                        images.forEach((img, index) => {
+                            img.src = '/Images/' + (room['sUrl_Path' + (index ? index + 1 : '')] || '');
+                            img.onload = () => {
+                                loadedImages++;
+                                // Draw images on canvas once loaded
+                                const x = (index % 2) * 200; // X position for the image
+                                const y = Math.floor(index / 2) * 200; // Y position for the image
+                                ctx.drawImage(img, x, y, 200, 200); // Draw image at specified position
+
+                                // Set composite image source to canvas data once all images are loaded
+                                if (loadedImages === images.length) {
+                                    document.getElementById('compositeImage').src = canvas.toDataURL();
+                                    // Optionally hide the canvas if you only want to show the composite image
+                                    canvas.style.display = 'none';
+                                }
+                            };
+
+                            img.onerror = () => {
+                                console.error('Image failed to load:', img.src);
+                            };
+                        });
 
                         // Show the modal
-                        $('#roomEditModal').modal('show'); // Ensure you use the correct ID for your modal
+                        $('#roomEditModal').modal('show');
                     } else {
-                        alert("Room Edit not found.");
+                        alert("Room not found.");
                     }
                 } else {
-                    alert("Failed to fetch room Edit: " + response.msg);
+                    alert("Failed to fetch room details: " + response.msg);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching room Edit:", xhr.responseText);
-                alert("Error fetching room Edit: " + error);
             }
         });
     }
+
+
+
+    $('#saveChangesButton').click(function () {
+
+        var roomData = {
+            sMa: $('#roomId').val(),
+            sTenPhong: $('#roomName').val(),
+            dGiaCa: parseNumber($('#roomPrice').val()),
+            sIdKV: $('#roomType').val(),
+            sDienTich: $('#roomDienTich').val(),
+            sSoluong: $('#roomSoLuong').val(),
+            sSoNguoiO: $('#roomSoNguoiO').val(),
+            dNgayCapNhat: $('#roomNCN').val(),
+            sDien: parseNumber($('#roomDien').val()),
+            sNuoc: parseNumber($('#roomNuoc').val()),
+            sGuiXe: parseNumber($('#roomGuiXe').val()),
+            sInternet: parseNumber($('#roomInternet').val()),
+            sMoTa: $('#roomDescribe').val(),
+            sDiaChi: $('#roomAddress').val()
+        };
+
+        var formData = new FormData();
+        var roomImageUpload = $('#roomImageUpload')[0].files[0];
+        var compositeImageUpload = $('#compositeImageUpload')[0].files;
+
+        if (roomImageUpload) {
+            formData.append('roomImage', roomImageUpload);
+        }
+
+        if (compositeImageUpload.length > 0) {
+            for (let i = 0; i < compositeImageUpload.length; i++) {
+                formData.append('compositeImages[]', compositeImageUpload[i]);
+            }
+        }
+        Object.keys(roomData).forEach(key => {
+            formData.append(key, roomData[key]);
+        });
+
+        $.ajax({
+            url: '/Manage/UpdateRoom',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (response) {
+                if (response.code === 200) {
+                    alert('Cập nhật thành công!');
+                    location.reload();
+                } else {
+                    alert('Có lỗi xảy ra: ' + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Có lỗi xảy ra khi gửi dữ liệu: ' + error);
+            }
+        });
+    });
+
+    function previewImage(event) {
+        var output = document.getElementById('roomImage');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+            URL.revokeObjectURL(output.src) // free memory
+        }
+    }
+
+    function previewCompositeImage(event) {
+        var canvas = document.getElementById('compositeImageCanvas');
+        var ctx = canvas.getContext('2d');
+        var files = event.target.files;
+        var images = [];
+
+        // Clear the canvas before drawing new images
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Count how many images are loaded
+        let imagesLoaded = 0;
+
+        for (let i = 0; i < files.length; i++) {
+            let img = new Image();
+            img.src = URL.createObjectURL(files[i]);
+            img.onload = function () {
+                images.push(img);
+                imagesLoaded++;
+
+                // Check if all images are loaded
+                if (imagesLoaded === files.length) {
+                    drawImagesOnCanvas(images, ctx, canvas);
+                }
+            }
+        }
+    }
+
+    function drawImagesOnCanvas(images, ctx, canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        images.forEach((img, index) => {
+            const x = (index % 2) * 200;
+            const y = Math.floor(index / 2) * 200;
+            ctx.drawImage(img, x, y, 200, 200);
+        });
+        document.getElementById('compositeImage').src = canvas.toDataURL();
+    }
+
+
     function formatPrice(price) {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
+
     function formatDateTime(jsonDate) {
-        const timestamp = parseInt(jsonDate.match(/\d+/)[0], 10); // Lấy giá trị timestamp từ chuỗi
-        const date = new Date(timestamp); // Tạo đối tượng Date từ timestamp
-        return date.toLocaleString(); // Trả về ngày và giờ dạng người dùng dễ đọc
+        const timestamp = parseInt(jsonDate.match(/\d+/)[0], 10);
+        const date = new Date(timestamp);
+        return date.toLocaleString();
     }
+
+    function formatNumber(input) {
+        let value = input.value.replace(/[^0-9]/g, '');
+        input.value = new Intl.NumberFormat('vi-VN', { style: 'decimal', minimumFractionDigits: 0 }).format(value);
+    }
+
+    function parseNumber(value) {
+        if (value == null || typeof value !== 'string') {
+            return NaN;
+        }
+
+        const cleanedValue = value.replace(/\./g, '').replace(/,/g, '.');
+
+        const number = parseFloat(cleanedValue);
+
+        return isNaN(number) ? NaN : number;
+    }
+
+    function openImageModal(imageSrc) {
+        // Set the image in the modal
+        document.getElementById('modalImage').src = imageSrc;
+
+        // Show the modal
+        $('#imageModal').modal('show');
+    }
+
+
     $(document).ready(function () {
-        // Sự kiện click vào nút "Đăng lại"
         $(".table").on("click", "#st2", function () {
             var id = $(this).data("id");
             $.ajax({
@@ -270,19 +465,15 @@
                 type: "POST",
                 data: { id: id },
                 success: function (result) {
-                    // Hiển thị thông báo
                     alert("Cập nhật thành công");
-                    // Reload trang để cập nhật lại danh sách phòng trọ
                     window.location.reload();
                 },
                 error: function () {
-                    // Hiển thị thông báo lỗi
                     alert("Đăng lại tin không thành công!");
                 }
             });
         });
 
-        // Sự kiện click vào nút "Ngừng đăng tin"
         $(".table").on("click", "#st1", function () {
             var id = $(this).data("id");
             $.ajax({
@@ -290,25 +481,20 @@
                 type: "POST",
                 data: { id: id },
                 success: function (result) {
-                    // Hiển thị thông báo
                     alert("Cập nhật thành công");
-                    // Reload trang để cập nhật lại danh sách phòng trọ
                     window.location.reload();
                 },
                 error: function () {
-                    // Hiển thị thông báo lỗi
                     alert("Ngừng đăng tin không thành công!");
                 }
             });
         });
-        // Sự kiện click vào nút "Sửa"
+
         $(".table").on("click", "#idsua", function () {
             var id = $(this).data("id");
-            // Chuyển hướng đến trang Sửa phòng trọ
             window.location.href = "/Manage/Sua/" + id;
         });
 
-        // Sự kiện click vào nút "Xóa"
         $(".table").on("click", "#idxoa", function () {
             var id = $(this).data("id");
             if (confirm("Bạn có chắc chắn muốn xóa phòng trọ này không?")) {
@@ -317,13 +503,10 @@
                     type: "POST",
                     data: { id: id },
                     success: function (result) {
-                        // Hiển thị thông báo
                         alert("Cập nhật thành công");
-                        // Reload trang để cập nhật lại danh sách phòng trọ
                         window.location.reload();
                     },
                     error: function () {
-                        // Hiển thị thông báo lỗi
                         alert("Xóa phòng trọ không thành công!");
                     }
                 });
@@ -334,9 +517,10 @@
 
 <style>
     .td_col3 {
-        max-width: 250px;
+        width: 300px;
+        max-width: 300px;
         overflow: hidden;
-        text-overflow: ellipsis; /* Thêm dấu chấm lửng nếu nội dung vượt quá */
+        text-overflow: ellipsis;
         white-space: nowrap;
     }
 
@@ -345,8 +529,35 @@
     }
 
     .custom-modal {
-        width: 90%; /* Đặt chiều rộng modal, có thể điều chỉnh theo nhu cầu */
-        max-width: 1000px; /* Đặt chiều rộng tối đa, có thể điều chỉnh theo nhu cầu */
-        height: auto; /* Đặt chiều cao tự động hoặc cụ thể nếu muốn */
+        width: 90%;
+        max-width: 1000px;
+        height: auto;
     }
+
+    .fa-camera {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        padding: 5px;
+    }
+
+    .custom-image-container {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .image-item {
+        flex: 0 0 auto;
+        margin-right: 50px;
+        margin-left: 50px;
+        position: relative;
+    }
+
+        .image-item label {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+            display: block;
+        }
 </style>
