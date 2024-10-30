@@ -39,6 +39,8 @@ namespace WEBSITE_MOTEL.Models
 
         [Range(0, double.MaxValue, ErrorMessage = "Giá cả phải là một số hợp lệ.")]
         public double dGiaCa { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "Giá cọc phải là một số hợp lệ.")]
+        public double dGiaCoc { get; set; }
 
         [Phone(ErrorMessage = "Số điện thoại không hợp lệ.")]
         public string sSDT { get; set; }
@@ -66,7 +68,7 @@ namespace WEBSITE_MOTEL.Models
         [Required(ErrorMessage = "Địa chỉ là bắt buộc.")]
         public string sDiaChi { get; set; }
 
-        public byte sTrangThai { get; set; }
+        public int sTrangThai { get; set; }
         public int sIdKV { get; set; }
         public string sTenKV { get; set; }
 

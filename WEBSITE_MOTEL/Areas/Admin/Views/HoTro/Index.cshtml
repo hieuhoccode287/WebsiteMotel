@@ -10,15 +10,8 @@
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">
-
                 <div class="table-responsive">
-                    @using (Html.BeginForm("Index", "HoTro", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
-                    {
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
-                        </div>
-                    }
-                    <table class="table">
+                    <table class="table text-center">
                         <tr>
                             <th style="text-align:center">
                                 Họ tên
@@ -36,13 +29,13 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>
+                                <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
                                     @Html.DisplayFor(modelItem => item.Ten)
                                 </td>
-                                <td>
+                                <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
                                     @Html.DisplayFor(modelItem => item.Sdt)
                                 </td>
-                                <td>
+                                <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
                                     @Html.DisplayFor(modelItem => item.MotaVande)
                                 </td>
                                 <td style="text-align:right">
@@ -83,17 +76,20 @@
     });
 </script>
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-12">
         <div class="MenuTrang">
             @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }))
         </div>
     </div>
-</div>
+</div>*@
 
 <style>
     .MenuTrang {
         display: inline;
         text-align: center;
+    }
+    .table th, .table td {
+        vertical-align: middle;
     }
 </style>

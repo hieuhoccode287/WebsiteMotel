@@ -49,12 +49,14 @@ namespace WEBSITE_MOTEL.Controllers
                                     sMoTa = a.MoTa,
                                     dNgayCapNhat = (DateTime)a.Ngay,
                                     dGiaCa = (double)a.GiaCa,
+                                    dGiaCoc = (double)a.GiaCoc,
                                     sSDT = e.SDT,
                                     sEmail = e.Email,
                                     sUrl_Path = b.Url_Path,
                                     sUrl_Path2 = b.Url_Path2,
                                     sUrl_Path3 = b.Url_Path3,
                                     sUrl_Path4 = b.Url_Path4,
+                                    sMap = a.Map,
                                     sDiaChi = a.Diachi,
                                     sDien = (double)a.Dien,
                                     sNuoc = (double)a.Nuoc,
@@ -118,6 +120,7 @@ namespace WEBSITE_MOTEL.Controllers
                 TAIKHOAN tk = GetAcc();
                 var khuVucList = data.KHUVUCs.ToList(); // Lấy danh sách Khu Vực từ bảng KHUVUC
                 ViewBag.KhuvucList = khuVucList;
+
                 var getroom = from a in data.PHONGTROs
                               join b in data.IMAGEs on a.Id equals b.Id_PhongTro
                               join e in data.TAIKHOANs on a.Id_ChuTro equals e.Id
@@ -136,12 +139,14 @@ namespace WEBSITE_MOTEL.Controllers
                                   sMoTa = a.MoTa,
                                   dNgayCapNhat = (DateTime)a.Ngay,
                                   dGiaCa = (double)a.GiaCa,
+                                  dGiaCoc = (double)a.GiaCoc,
                                   sSDT = e.SDT,
                                   sEmail = e.Email,
                                   sUrl_Path = b.Url_Path,
                                   sUrl_Path2 = b.Url_Path2,
                                   sUrl_Path3 = b.Url_Path3,
                                   sUrl_Path4 = b.Url_Path4,
+                                  sMap = a.Map,
                                   sDiaChi = a.Diachi,
                                   sDien = (double)a.Dien,
                                   sNuoc = (double)a.Nuoc,
@@ -155,6 +160,18 @@ namespace WEBSITE_MOTEL.Controllers
                 if (getroom == null)
                 {
                     return Json(new { code = 404, msg = "Room not found." }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Execute the query and get the result
+                var roomDetails = getroom.FirstOrDefault(); // Use FirstOrDefault to get a single result
+
+                if (roomDetails != null) // Check if roomDetails is not null
+                {
+                    ViewBag.ID = roomDetails.sMa; // Now you can access sMa from the single result
+                }
+                else
+                {
+                    ViewBag.ID = null; // Handle the case when no room is found
                 }
 
                 return Json(new { code = 200, dh = getroom, msg = "Lấy thông tin phòng thành công." }, JsonRequestBehavior.AllowGet);
@@ -182,6 +199,7 @@ namespace WEBSITE_MOTEL.Controllers
                 int sMa = int.Parse(Request.Form["sMa"]);
                 string sTenPhong = Request.Form["sTenPhong"];
                 decimal dGiaCa = decimal.Parse(Request.Form["dGiaCa"]);
+                decimal dGiaCoc = decimal.Parse(Request.Form["dGiaCoc"]);
                 int sIdKV = int.Parse(Request.Form["sIdKV"]);
                 int sDienTich = int.Parse(Request.Form["sDienTich"]);
                 int sSoluong = int.Parse(Request.Form["sSoluong"]);
@@ -193,6 +211,7 @@ namespace WEBSITE_MOTEL.Controllers
                 int sInternet = int.Parse(Request.Form["sInternet"]);
                 string sMoTa = Request.Form["sMoTa"];
                 string sDiaChi = Request.Form["sDiaChi"];
+                string sMap = Request.Form["sMap"];
 
                 // Tìm phòng cần cập nhật trong cơ sở dữ liệu
                 var roomToUpdate = data.PHONGTROs.SingleOrDefault(r => r.Id == sMa);
@@ -205,6 +224,7 @@ namespace WEBSITE_MOTEL.Controllers
                 // Cập nhật các thuộc tính phòng
                 roomToUpdate.TenPhong = sTenPhong;
                 roomToUpdate.GiaCa = dGiaCa;
+                roomToUpdate.GiaCoc = dGiaCoc;
                 roomToUpdate.KhuVuc = sIdKV;
                 roomToUpdate.DienTich = sDienTich;
                 roomToUpdate.SoLuong = sSoluong;
@@ -217,6 +237,10 @@ namespace WEBSITE_MOTEL.Controllers
                 roomToUpdate.Internet = sInternet;
                 roomToUpdate.Ngay = null;
                 roomToUpdate.TrangThai = 0;
+                if (!string.IsNullOrEmpty(sMap))
+                {
+                    roomToUpdate.Map = sMap;
+                }
 
                 var roomImage = Request.Files["roomImage"];
                 string roomImageFileName = null;
@@ -226,8 +250,8 @@ namespace WEBSITE_MOTEL.Controllers
                     // Đường dẫn lưu ảnh bìa
                     var imagePath = Path.Combine(Server.MapPath("~/Images"), roomImage.FileName);
                     roomImage.SaveAs(imagePath);
-                    roomToUpdate.AnhBia = roomImage.FileName; // Cập nhật tên ảnh bìa vào cơ sở dữ liệu
-                    roomImageFileName = roomImage.FileName; // Lưu tên file của roomImage để sử dụng sau
+                    roomToUpdate.AnhBia = roomImage.FileName;
+                    roomImageFileName = roomImage.FileName;
                 }
 
                 // Biến để đếm các ảnh bổ sung, bắt đầu từ 1 cho các Url_Path1, Url_Path2,...
@@ -250,16 +274,16 @@ namespace WEBSITE_MOTEL.Controllers
                         switch (additionalImageIndex)
                         {
                             case 1:
-                                imgdetail.Url_Path = additionalImage.FileName; // Cập nhật Url_Path1
+                                imgdetail.Url_Path = additionalImage.FileName;
                                 break;
                             case 2:
-                                imgdetail.Url_Path2 = additionalImage.FileName; // Cập nhật Url_Path2
+                                imgdetail.Url_Path2 = additionalImage.FileName;
                                 break;
                             case 3:
-                                imgdetail.Url_Path3 = additionalImage.FileName; // Cập nhật Url_Path3
+                                imgdetail.Url_Path3 = additionalImage.FileName;
                                 break;
                             case 4:
-                                imgdetail.Url_Path4 = additionalImage.FileName; // Cập nhật Url_Path4
+                                imgdetail.Url_Path4 = additionalImage.FileName;
                                 break;
                         }
                         // Tăng chỉ mục cho ảnh bổ sung
@@ -343,18 +367,19 @@ namespace WEBSITE_MOTEL.Controllers
             }
             return Json(new { success = false, message = "Không tìm thấy phòng trọ có mã số tương ứng!" });
         }
-
+        [HttpPost]
         public ActionResult Xoa(int id)
         {
             // Lấy thông tin phòng trọ cần xóa
             var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
+            var img = data.IMAGEs.SingleOrDefault(n => n.Id_PhongTro == phongTro.Id);
             if (phongTro == null)
             {
                 TempData["Message"] = "Không tìm thấy phòng trọ có mã số tương ứng!";
                 return RedirectToAction("Manage");
             }
 
-            // Xóa phòng trọ
+            data.IMAGEs.DeleteOnSubmit(img);
             data.PHONGTROs.DeleteOnSubmit(phongTro);
             data.SubmitChanges();
 
@@ -362,38 +387,6 @@ namespace WEBSITE_MOTEL.Controllers
             return RedirectToAction("Manage");
         }
 
-        [HttpPost]
-        public ActionResult XoaAjax(int id)
-        {
-            // Lấy thông tin phòng trọ cần xóa
-            var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
-            if (phongTro != null)
-            {
-                try
-                {
-                    data.PHONGTROs.DeleteOnSubmit(phongTro);
-                    data.SubmitChanges();
-                    return Json(new
-                    {
-                        success = true,
-                        message = "Xóa phòng trọ thành công!"
-                    });
-                }
-                catch (Exception ex)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        message = "Lỗi xóa phòng trọ: " + ex.Message
-                    });
-                }
-            }
-            return Json(new
-            {
-                success = false,
-                message = "Không tìm thấy phòng trọ có mã số tương ứng!"
-            });
-        }
     }
         
 }

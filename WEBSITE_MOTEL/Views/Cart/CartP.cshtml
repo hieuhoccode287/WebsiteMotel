@@ -73,16 +73,20 @@
                         {
                             <span colspan="3" style="color: #c1c117;">Đang chờ được duyệt</span>
                         }
+                        else if (item.sTrangThai == 1)
+                        {
+                            <span colspan="3" style="color: #1fefed;">Đang chờ thanh toán</span>
+                        }
                     </div>
                 </div>
                 <div class="content-right2 col-xs-12 col-md-4">
                     <p class="hide_op">GIÁ DỊCH VỤ:</p>
                     <ul>
-                        <li class="item-cr1 water-price hide_op"><i class="fa fa-shower"></i> Nước: <span>@string.Format("{0:#,##0}", item.sNuoc).Replace(',', '.')đ/m3</span></li>
+                        <li class="item-cr1 water-price hide_op"><i class="fa fa-tint"></i> Nước: <span>@string.Format("{0:#,##0}", item.sNuoc).Replace(',', '.')đ/m3</span></li>
                         <li class="item-cr1 electric-price hide_op"><i class="fa fa-bolt"></i> Điện: <span>@string.Format("{0:#,##0}", item.sDien).Replace(',', '.')đ/số</span></li>
                         <li class="item-cr1 internet-price hide_op"><i class="fa fa-wifi"></i> Mạng: <span>@string.Format("{0:#,##0}", item.sInternet).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 park-price hide_op"><i class="fa fa-motorcycle"></i> Gửi xe: <span>@string.Format("{0:#,##0}", item.sGuiXe).Replace(',', '.')đ/tháng</span></li>
-                        <li class="item-cr1 price"><i class="fa fa-money"></i> Phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</span></li>
+                        <li class="item-cr1 price"><i class="fa fa-money"></i> Giá tiền phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 phone"><i class="fa fa-phone"></i> LH:@item.sSDT <span></span></li>
                     </ul>
                     <button class="button-detail" data-toggle="collapse" data-target="#content-detail1_@i"><i class="fa fa-arrow-right"></i> Xem chi tiết</button>
@@ -110,8 +114,8 @@
                         <li class="active"><a data-toggle="tab" href="#menu1_@i">THÔNG TIN CHUNG</a></li>
                         <li><a data-toggle="tab" href="#menu2_@i">MÔ TẢ CHI TIẾT</a></li>
                         <li><a data-toggle="tab" href="#menu3_@i">HÌNH ẢNH</a></li>
-                        @*<li><a data-toggle="tab" href="#menu5_@i">ẢNH 360<sup>o</sup></a></li>
-                        <li class="position item1"><a data-toggle="tab" href="#menu4_@i">VỊ TRÍ</a></li>*@
+                        @*<li><a data-toggle="tab" href="#menu5_@i">ẢNH 360<sup>o</sup></a></li>*@
+                        <li class="position item1"><a data-toggle="tab" href="#menu4_@i">VỊ TRÍ</a></li>
                     </ul>
                     <!-- Content navs tabs-->
                     <div class="tab-content">
@@ -137,16 +141,19 @@
                                     <tr>
                                         <th>Email</th>
                                         <td>@item.sEmail</td>
-                                        <th>Giá cho thuê</th>
-                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')    đ/tháng</td>
-                                    </tr>
-                                    <tr>
                                         <th>Số người ở</th>
                                         <td>@item.sSoNguoiO</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Giá tiền cọc</th>
+                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCoc).Replace(',', '.')đ</td>
                                         <th>Số phòng còn</th>
                                         <td>@item.sSoluong</td>
                                     </tr>
-
+                                    <tr>
+                                        <th>Giá tiền phòng</th>
+                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')    đ/tháng</td>
+                                    </tr>
 
                                 </tbody>
                             </table>
@@ -155,14 +162,14 @@
                             <div id="detail-item2" class="des-detail-content">
                                 <p>
                                     @*Nhà cao cấp giá bình dân chỉ 2tr5 bạn đã sở hữu 1 phòng sạch sẽ và an ninh nhất quận 9.Đến xem là mê liền * Giảm 10% cho bạn thuê phòng lần đầu tiên Hiện tại bên mình đang có phòng trọ cho thuê, mình xin mô tả thông tin như sau:
-                                        <br>
-                                        Địa chỉ: SỐ 3/108 Nguyễn Trãi, Thượng Đình, Thanh Xuân, Hà Nội.  Nhà gần chợ và siêu thị bạn thoải mái nấu những món ăn mà mình yêu thích nhé
-                                        <br>
-                                        - Gần các trường ĐH giao thông vận tải, ĐH sư phạm kĩ thuật thuận lợi cho các bạn sinh viên
-                                        <br>
-                                        - Gần nơi sầm uất như VINCOM PLAZA, siêu thị CoopMart, cây xăng Tân phú, bệnh viện quận 9....
-                                        <br>
-                                        - Toàn bộ phòng được lát gạch men nên phòng ốc rất sạch sẽ và cao cấp<br> Vì số lượng có hạn nên gọi ngay cho mình để đặt phòng nhé.(MS. HẰNG)*@
+                    <br>
+                    Địa chỉ: SỐ 3/108 Nguyễn Trãi, Thượng Đình, Thanh Xuân, Hà Nội.  Nhà gần chợ và siêu thị bạn thoải mái nấu những món ăn mà mình yêu thích nhé
+                    <br>
+                    - Gần các trường ĐH giao thông vận tải, ĐH sư phạm kĩ thuật thuận lợi cho các bạn sinh viên
+                    <br>
+                    - Gần nơi sầm uất như VINCOM PLAZA, siêu thị CoopMart, cây xăng Tân phú, bệnh viện quận 9....
+                    <br>
+                    - Toàn bộ phòng được lát gạch men nên phòng ốc rất sạch sẽ và cao cấp<br> Vì số lượng có hạn nên gọi ngay cho mình để đặt phòng nhé.(MS. HẰNG)*@
                                     @item.sMoTa
                                 </p>
                             </div>
@@ -205,26 +212,62 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="menu4_@i" class="tab-pane fade" style="position: relative;">
+                        <!-- Tab content -->
+                        <div id="menu4_@i" class="tab-pane fade">
                             <div class="des-detail-content">
-                                <p style="color: green">Click vào địa điểm để nhận chỉ đường!</p>
-                                <div id="googleMap1" style="width:100%;height:400px;"></div>
-                                <div class="right-panel right-panel1">
-                                    <select class="near_by_item">
-                                        <option>Địa điểm lân cận</option>
-                                        <option>Trường CĐ, ĐH</option>
-                                        <option>Điểm buýt</option>
-                                        <option>Bệnh viện</option>
-                                        <option>Bãi gửi xe</option>
-                                    </select>
-                                    <ul class="places place1"></ul>
-                                </div>
+                                <div id="map_@i" style="height: 400px; width: 100%;"></div>
                             </div>
+
+                            <script>
+                                var mapInstance; // Declare the map instance variable
+
+                                function initMap(lat, lng, mapId) {
+                                    // Create a new map instance for each tab
+                                    var mapInstance = L.map(mapId).setView([lat, lng], 13);
+
+                                    // Add tile layer to the map
+                                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    }).addTo(mapInstance);
+
+                                    // Add a unique marker for this map instance
+                                    L.marker([lat, lng]).addTo(mapInstance)
+                                        .bindPopup('Vị trí chính xác')
+                                        .openPopup();
+                                }
+
+                                $(document).ready(function() {
+                                    // Event listener for tab shown
+                                    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                                        if ($(e.target).attr('href') === '#menu4_@i') {
+                                            console.log('Tab menu4_@i is shown, initializing map...');
+
+                                            // Ensure the map container exists
+                                            var mapContainer = $('#map_@i');
+                                            if (mapContainer.length > 0) {
+                                                var mapData = '@item.sMap'; // Assuming sMap contains coordinates as "lat,lng"
+                                                var latLng = mapData.split(',');
+                                                var lat = parseFloat(latLng[0]);
+                                                var lng = parseFloat(latLng[1]);
+
+                                                console.log('Lat:', lat, 'Lng:', lng); // Log the coordinates
+
+                                                // Call the initMap function with unique map ID
+                                                setTimeout(function() {
+                                                    initMap(lat, lng, 'map_@i'); // Pass the unique map ID
+                                                }, 300);
+                                            } else {
+                                                console.log('Map container not found.');
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
                         </div>
-                        <div id="menu5_@i" class="tab-pane fade">
+                        @*<div id="menu5_@i" class="tab-pane fade">
                             <p style="color: green">Tính năng này hiện chỉ hỗ trợ trên Chrome Browser</p>
                             <div id="panorama1" class="panorama" style="width: 100%; height: 400px"></div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
                 <form style="text-align:center">
@@ -236,6 +279,10 @@
                     else if (item.sTrangThai == 2)
                     {
                         <button style="width:300px" type="button" name="delete" id="@item.sMa">XÓA ĐƠN ĐẶT HÀNG</button>
+                    }
+                    else if (item.sTrangThai == 1)
+                    {
+                        <button style="width:300px" type="button" name="pay" id="@item.sMa">THANH TOÁN TIỀN CỌC</button>
                     }
                 </form>
             </article>

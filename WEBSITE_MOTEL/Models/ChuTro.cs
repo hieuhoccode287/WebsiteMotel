@@ -8,7 +8,6 @@ namespace WEBSITE_MOTEL.Models
         [Required(ErrorMessage = "Họ và tên không được để trống.")]
         [StringLength(100, ErrorMessage = "Họ và tên không được vượt quá 100 ký tự.")]
         public string sHotenCT { get; set; }
-
         public string sTaiKhoanCT { get; set; }
 
         [Required(ErrorMessage = "Mật khẩu không được để trống.")]
@@ -32,7 +31,6 @@ namespace WEBSITE_MOTEL.Models
         [Range(typeof(DateTime), "1/1/1900", "1/1/2100", ErrorMessage = "Ngày sinh phải trong khoảng {1} đến {2}.")]
         public DateTime? sNgaySinh { get; set; }
 
-        public string sFacebook { get; set; }
 
         [Required(ErrorMessage = "Căn cước công dân không được để trống.")]
         [StringLength(12, ErrorMessage = "CCCD phải có 12 ký tự.", MinimumLength = 12)]

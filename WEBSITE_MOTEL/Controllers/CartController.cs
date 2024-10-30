@@ -40,7 +40,7 @@ namespace WEBSITE_MOTEL.Controllers
                              join g in data.DONHANGs on a.Id equals g.Id_Phong
                              join e in data.TAIKHOANs on g.Id_NguoiDung equals e.Id
                              join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
-                             where (tk.Id == g.Id_NguoiDung) && (g.TrangThai == 2 || g.TrangThai == 3)
+                             where (tk.Id == g.Id_NguoiDung) && (g.TrangThai == 2 || g.TrangThai == 3|| g.TrangThai == 1)
                              select new RoomDetail()
                              {
                                  sMa = g.IdDH,
@@ -53,12 +53,14 @@ namespace WEBSITE_MOTEL.Controllers
                                  sMoTa = a.MoTa,
                                  dNgayCapNhat = (DateTime)a.Ngay,
                                  dGiaCa = (double)a.GiaCa,
+                                 dGiaCoc = (double)a.GiaCoc,
                                  sSDT = e.SDT,
                                  sEmail = e.Email,
                                  sUrl_Path = c.Url_Path,
                                  sUrl_Path2 = c.Url_Path2,
                                  sUrl_Path3 = c.Url_Path3,
                                  sUrl_Path4 = c.Url_Path4,
+                                 sMap = a.Map,
                                  sDiaChi = a.Diachi,
                                  sDien = (double)a.Dien,
                                  sNuoc = (double)a.Nuoc,

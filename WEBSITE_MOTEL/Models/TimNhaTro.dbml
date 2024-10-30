@@ -56,6 +56,7 @@
       <Column Name="AnhBia" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="MoTa" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
       <Column Name="GiaCa" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="GiaCoc" Type="System.Decimal" DbType="Money" CanBeNull="true" />
       <Column Name="DienTich" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="SoLuong" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Ngay" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />

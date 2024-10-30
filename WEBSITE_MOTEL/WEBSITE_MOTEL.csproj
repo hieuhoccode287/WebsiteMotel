@@ -127,7 +127,6 @@
     <Compile Include="Areas\Admin\Controllers\ThongKeController.cs" />
     <Compile Include="Controllers\ApproveController.cs" />
     <Compile Include="Controllers\CartController.cs" />
-    <Compile Include="Controllers\CHUTROController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InfoController.cs" />
@@ -1653,7 +1652,6 @@
     <Content Include="Areas\assets\vendors\mdi\fonts\materialdesignicons-webfont.ttf" />
     <Content Include="Areas\assets\vendors\mdi\fonts\materialdesignicons-webfont.woff" />
     <Content Include="Areas\assets\vendors\mdi\fonts\materialdesignicons-webfont.woff2" />
-    <Content Include="Areas\Admin\Views\QLChutro\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\QLChutro\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\QLChutro\Details.cshtml" />
     <Content Include="Areas\Admin\Views\QLChutro\DeleteP.cshtml" />
@@ -1764,7 +1762,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Views\ADMIN\" />
-    <Folder Include="Views\CHUTRO\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

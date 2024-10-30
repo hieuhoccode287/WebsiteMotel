@@ -76,11 +76,11 @@
                 <div class="content-right2 col-xs-12 col-md-4">
                     <p class="hide_op">GIÁ DỊCH VỤ:</p>
                     <ul>
-                        <li class="item-cr1 water-price hide_op"><i class="fa fa-shower"></i> Nước: <span>@string.Format("{0:#,##0}", item.sNuoc).Replace(',', '.')đ/m3</span></li>
+                        <li class="item-cr1 water-price hide_op"><i class="fa fa-tint"></i> Nước: <span>@string.Format("{0:#,##0}", item.sNuoc).Replace(',', '.')đ/m3</span></li>
                         <li class="item-cr1 electric-price hide_op"><i class="fa fa-bolt"></i> Điện: <span>@string.Format("{0:#,##0}", item.sDien).Replace(',', '.')đ/số</span></li>
                         <li class="item-cr1 internet-price hide_op"><i class="fa fa-wifi"></i> Mạng: <span>@string.Format("{0:#,##0}", item.sInternet).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 park-price hide_op"><i class="fa fa-motorcycle"></i> Gửi xe: <span>@string.Format("{0:#,##0}", item.sGuiXe).Replace(',', '.')đ/tháng</span></li>
-                        <li class="item-cr1 price"><i class="fa fa-money"></i> Phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</span></li>
+                        <li class="item-cr1 price"><i class="fa fa-money"></i> Giá tiền phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 phone"><i class="fa fa-phone"></i> LH:@item.sSDT <span></span></li>
                     </ul>
                     <button class="button-detail" data-toggle="collapse" data-target="#content-detail1_@i"><i class="fa fa-arrow-right"></i> Xem chi tiết</button>
@@ -135,7 +135,9 @@
                                         <td>@item.sSoluong</td>
                                     </tr>
                                     <tr>
-                                        <th>Giá cho thuê</th>
+                                        <th>Giá tiền cọc</th>
+                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCoc).Replace(',', '.')đ</td>
+                                        <th>Giá tiền phòng</th>
                                         <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</td>
                                     </tr>
 

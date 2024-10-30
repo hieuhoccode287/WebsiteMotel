@@ -1114,6 +1114,8 @@ namespace WEBSITE_MOTEL.Models
 		
 		private System.Nullable<decimal> _GiaCa;
 		
+		private System.Nullable<decimal> _GiaCoc;
+		
 		private System.Nullable<int> _DienTich;
 		
 		private System.Nullable<int> _SoLuong;
@@ -1162,6 +1164,8 @@ namespace WEBSITE_MOTEL.Models
     partial void OnMoTaChanged();
     partial void OnGiaCaChanging(System.Nullable<decimal> value);
     partial void OnGiaCaChanged();
+    partial void OnGiaCocChanging(System.Nullable<decimal> value);
+    partial void OnGiaCocChanged();
     partial void OnDienTichChanging(System.Nullable<int> value);
     partial void OnDienTichChanged();
     partial void OnSoLuongChanging(System.Nullable<int> value);
@@ -1317,6 +1321,26 @@ namespace WEBSITE_MOTEL.Models
 					this._GiaCa = value;
 					this.SendPropertyChanged("GiaCa");
 					this.OnGiaCaChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GiaCoc", DbType="Money")]
+		public System.Nullable<decimal> GiaCoc
+		{
+			get
+			{
+				return this._GiaCoc;
+			}
+			set
+			{
+				if ((this._GiaCoc != value))
+				{
+					this.OnGiaCocChanging(value);
+					this.SendPropertyChanging();
+					this._GiaCoc = value;
+					this.SendPropertyChanged("GiaCoc");
+					this.OnGiaCocChanged();
 				}
 			}
 		}

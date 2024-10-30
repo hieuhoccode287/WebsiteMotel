@@ -33,7 +33,7 @@ namespace WEBSITE_MOTEL.Controllers
 
 
                 var chutro = (from a in data.TAIKHOANs
-                              where a.PhanQuyen == 2
+                              where a.PhanQuyen == 2 || a.PhanQuyen == 3
                               where (nd.Id== a.Id)
                               select new ChuTro()
                               {

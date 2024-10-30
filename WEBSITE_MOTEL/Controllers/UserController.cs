@@ -42,7 +42,7 @@ namespace WEBSITE_MOTEL.Controllers
 
                 if (tk != null)
                 {
-                    TAIKHOAN ct = data.TAIKHOANs.FirstOrDefault(n => n.Id == tk.Id);
+                    TAIKHOAN ct = data.TAIKHOANs.FirstOrDefault(n => n.Id == tk.Id && n.PhanQuyen == 2);
                     Session["ChuTro"] = ct;
                     Session["TaiKhoan"] = tk;
 
@@ -80,60 +80,100 @@ namespace WEBSITE_MOTEL.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public JsonResult CheckUsername(string tendn)
+        {
+            var existingUser = data.TAIKHOANs.SingleOrDefault(u => u.TaiKhoan == tendn);
+
+            if (existingUser != null)
+            {
+                return Json(new { available = false, message = "Tên đăng nhập đã tồn tại." }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { available = true, message = "Tên đăng nhập có sẵn." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
         [HttpPost]
         public JsonResult ADDTaiKhoan(string HoTen, string Email, string SDT, string DiaChi, DateTime NgaySinh, string CCCD, string Taikhoan, string Matkhau, int Phanquyen, HttpPostedFileBase[] idCardPhotos, HttpPostedFileBase[] idCardPhotos2)
         {
             try
             {
-                var tk = new TAIKHOAN();
-                tk.HoTen = HoTen;
-                tk.Email = Email;
-                tk.SDT = SDT;
-                tk.DiaChi = DiaChi;
-                tk.NgaySinh = NgaySinh;
-                tk.CCCD = CCCD;
-                tk.TaiKhoan = Taikhoan;
-                tk.MatKhau = Matkhau;
-                tk.PhanQuyen = Phanquyen;
-                tk.TrangThai = 0;
+                // Kiểm tra đầu vào
+                if (string.IsNullOrEmpty(HoTen) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Taikhoan) || string.IsNullOrEmpty(Matkhau) ||
+                    idCardPhotos == null || idCardPhotos.Length == 0 || idCardPhotos2 == null || idCardPhotos2.Length == 0)
+                {
+                    return Json(new { code = 400, msg = "Đăng ký thất bại. Vui lòng cung cấp đầy đủ thông tin." }, JsonRequestBehavior.AllowGet);
+                }
+
+                var tk = new TAIKHOAN
+                {
+                    HoTen = HoTen,
+                    Email = Email,
+                    SDT = SDT,
+                    DiaChi = DiaChi,
+                    NgaySinh = NgaySinh,
+                    CCCD = CCCD,
+                    TaiKhoan = Taikhoan,
+                    MatKhau = Matkhau,
+                    PhanQuyen = Phanquyen,
+                    TrangThai = 0
+                };
+
+                // Thêm tài khoản vào cơ sở dữ liệu
                 data.TAIKHOANs.InsertOnSubmit(tk);
                 data.SubmitChanges();
 
-                if (idCardPhotos != null && idCardPhotos.Length > 0 && idCardPhotos2 != null && idCardPhotos2.Length > 0)
+                // Lưu ảnh ID
+                for (int i = 0; i < idCardPhotos.Length; i++)
                 {
-                    for (int i = 0; i < idCardPhotos.Length; i++)
+                    var idCardPhoto = idCardPhotos[i];
+                    var idCardPhoto2 = idCardPhotos2[i];
+
+                    // Kiểm tra xem cả hai ảnh có hợp lệ không
+                    if (idCardPhoto != null && idCardPhoto.ContentLength > 0 && idCardPhoto2 != null && idCardPhoto2.ContentLength > 0)
                     {
-                        var idCardPhoto = idCardPhotos[i];
-                        var idCardPhoto2 = idCardPhotos2[i];
-                        if (idCardPhoto != null && idCardPhoto.ContentLength > 0 && idCardPhoto2 != null && idCardPhoto2.ContentLength > 0)
+                        var fileName1 = Path.GetFileName(idCardPhoto.FileName);
+                        var fileName2 = Path.GetFileName(idCardPhoto2.FileName);
+                        var path1 = Path.Combine(Server.MapPath("~/Images"), fileName1);
+                        var path2 = Path.Combine(Server.MapPath("~/Images"), fileName2);
+
+                        // Lưu ảnh vào server
+                        idCardPhoto.SaveAs(path1);
+                        idCardPhoto2.SaveAs(path2);
+
+                        // Thêm thông tin ảnh vào cơ sở dữ liệu
+                        var image = new ANH_CCCD
                         {
-                            var fileName1 = Path.GetFileName(idCardPhoto.FileName);
-                            var fileName2 = Path.GetFileName(idCardPhoto2.FileName);
-                            var path1 = Path.Combine(Server.MapPath("~/Images"), fileName1);
-                            var path2 = Path.Combine(Server.MapPath("~/Images"), fileName2);
-                            idCardPhoto.SaveAs(path1);
-                            idCardPhoto2.SaveAs(path2);
+                            IdTaiKhoan = tk.Id,
+                            IdCardPhoto = fileName1,
+                            IdCardPhoto2 = fileName2
+                        };
 
-                            var image = new ANH_CCCD
-                            {
-                                IdTaiKhoan = tk.Id,
-                                IdCardPhoto = fileName1,
-                                IdCardPhoto2 = fileName2
-                                // Gán các thuộc tính khác liên quan đến hình ảnh
-                            };
-
-                            data.ANH_CCCDs.InsertOnSubmit(image);
-                            data.SubmitChanges();
-                        }
+                        data.ANH_CCCDs.InsertOnSubmit(image);
+                    }
+                    else
+                    {
+                        // Nếu ảnh không hợp lệ, xóa tài khoản đã tạo
+                        data.TAIKHOANs.DeleteOnSubmit(tk);
+                        data.SubmitChanges();
+                        return Json(new { code = 400, msg = "Đăng ký thất bại. Ảnh không hợp lệ." }, JsonRequestBehavior.AllowGet);
                     }
                 }
 
-                return Json(new { code = 200, msg = "Đăng kí thành công." }, JsonRequestBehavior.AllowGet);
+                // Lưu tất cả các ảnh đã thêm vào cơ sở dữ liệu
+                data.SubmitChanges();
+
+                return Json(new { code = 200, msg = "Đăng ký thành công." }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                return Json(new { code = 500, msg = "Đăng kí thất bại. Lỗi " + ex.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { code = 500, msg = "Đăng ký thất bại. Lỗi: " + ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
     }
 }

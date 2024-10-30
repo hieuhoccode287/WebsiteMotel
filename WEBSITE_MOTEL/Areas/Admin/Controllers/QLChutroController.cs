@@ -29,65 +29,52 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             int pageSize = 5;
             int pageNumber = page ?? 1;
 
-            var chutro = (from b in data.TAIKHOANs 
-                          where b.PhanQuyen == 2
+            var chutro = (from b in data.TAIKHOANs
+                          where b.PhanQuyen == 2 && b.TrangThai == 1
                           select new ChuTro()
                           {
                               sHotenCT = b.HoTen,
                               sTaiKhoanCT = b.TaiKhoan,
                               sMatKhauCT = b.MatKhau,
-                              /* sNgaySinh =  a.NgaySinh,*/
+                              sNgaySinh = b.NgaySinh,
                               sEmailCT = b.Email,
                               sDiaChi = b.DiaChi,
                               sSDTCT = b.SDT,
                               sPhanQuyen = (int)b.PhanQuyen,
                               sCCCD = b.CCCD,
                               sId = b.Id,
-                          });
+                          })
+                  .OrderByDescending(ct => ct.sId); // Sắp xếp theo Id
+
 
             var pagedChutro = new PagedList<ChuTro>(chutro, pageNumber, pageSize);
             return View(pagedChutro);
         }
-        [HttpGet]
+
         public ActionResult Delete(int id)
         {
-            var chutro = (from b in data.TAIKHOANs
-                          where b.PhanQuyen == 2
-                          select new ChuTro()
-                          {
-                              sHotenCT = b.HoTen,
-                              sTaiKhoanCT = b.TaiKhoan,
-                              sMatKhauCT = b.MatKhau,
-                              /* sNgaySinh =  a.NgaySinh,*/
-                              sEmailCT = b.Email,
-                              sDiaChi = b.DiaChi,
-                              sSDTCT = b.SDT,
-                              sPhanQuyen = (int)b.PhanQuyen,
-                              sCCCD = b.CCCD,
-                              sId = b.Id,
-                          }).SingleOrDefault(n=>n.sId == id);
-            if (chutro == null)
+            try
             {
-                Response.StatusCode = 404;
-                return null;
+                var chuTro = data.TAIKHOANs.SingleOrDefault(pt => pt.Id == id);
+                if (chuTro != null)
+                {
+                    data.TAIKHOANs.DeleteOnSubmit(chuTro);
+                    data.SubmitChanges();
+                    TempData["ThongBao"] = "Xóa thành công";
+                }
+                else
+                {
+                    TempData["ThongBao"] = "Không tìm thấy thông tin tài khoản";
+                }
             }
-            return View(chutro);
-        }
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirm(int id, FormCollection f)
-        {
-            var chutro = data.TAIKHOANs.SingleOrDefault(n => n.Id == id);
-            if (chutro == null)
+            catch (Exception ex)
             {
-                Response.StatusCode = 404;
-                return null;
+                TempData["ThongBao"] = "Xóa thất bại. Lỗi: " + ex.Message;
             }
 
-
-            data.TAIKHOANs.DeleteOnSubmit(chutro);
-            data.SubmitChanges();
             return RedirectToAction("Index");
         }
+
         [HttpGet]
         public ActionResult Edit(int id)
         {
@@ -96,13 +83,13 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                 return Redirect("~/Admin/Home/Login");
             }
             var chutro = (from b in data.TAIKHOANs
-                          where b.PhanQuyen == 2
+                          where b.PhanQuyen == 2 && b.Id == id
                           select new ChuTro()
                           {
                               sHotenCT = b.HoTen,
                               sTaiKhoanCT = b.TaiKhoan,
                               sMatKhauCT = b.MatKhau,
-                              /* sNgaySinh =  a.NgaySinh,*/
+                              sNgaySinh = b.NgaySinh,
                               sEmailCT = b.Email,
                               sDiaChi = b.DiaChi,
                               sSDTCT = b.SDT,
@@ -119,28 +106,49 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult Edit(FormCollection f)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(ChuTro model)
         {
-            TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
-            var chutro = data.TAIKHOANs.SingleOrDefault(n => n.Id == tk.Id);
-            if (ModelState.IsValid)
+            if (Session["Admin"] == null || Session["Admin"].ToString() == "")
             {
-                tk.HoTen = f["sHotenCT"];
-                tk.MatKhau = f["sMatKhauCT"];
-                tk.SDT = f["sSDTCT"];
-                tk.Email = f["sEmailCT"];
-                tk.CCCD = f["sCCCD"];
-                tk.DiaChi = f["sDiaChi"];
-                tk.NgaySinh = Convert.ToDateTime(f["sNgaySinh"]);
-   
-                /*chutro.sCCCD = f["sCCCD"];
-                chutro.sFacebook = f["sFacebook"];*/
-                data.SubmitChanges();
-                return RedirectToAction("Index");
+                return Redirect("~/Admin/Home/Login");
             }
-            return View(chutro);
+
+            if (!ModelState.IsValid)
+            {
+                return View(model); // Return the view with validation errors if the model state is invalid
+            }
+
+            // Find the TAIKHOAN entity based on the user ID from the model
+            var taikhoan = data.TAIKHOANs.FirstOrDefault(t => t.Id == model.sId); // Replace 'Id' with the actual primary key field of your TAIKHOAN model
+
+            if (taikhoan != null)
+            {
+                // Update the fields with the new data from the model
+                taikhoan.HoTen = model.sHotenCT;
+                taikhoan.MatKhau = model.sMatKhauCT;
+                taikhoan.SDT = model.sSDTCT;
+                taikhoan.Email = model.sEmailCT;
+                taikhoan.CCCD = model.sCCCD;
+                taikhoan.DiaChi = model.sDiaChi;
+                taikhoan.NgaySinh = Convert.ToDateTime(model.sNgaySinh);
+
+                // Submit changes to the database
+                data.SubmitChanges();
+
+                // Update the session with the new account information
+                Session["TaiKhoan"] = taikhoan;
+                TempData["SuccessMessage"] = "Thông tin đã được cập nhật thành công!";
+
+                // Redirect to the Index action after successful update
+                return RedirectToAction("Edit");
+            }
+
+            // If no account found, return the view with the model for user feedback
+            ModelState.AddModelError("", "Không tìm thấy tài khoản để cập nhật.");
+            return View(model);
         }
+
         public ActionResult Details(int? page,int id)
         {
             if (Session["Admin"] == null || Session["Admin"].ToString() == "")
@@ -149,6 +157,15 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             }
             int iSize = 4;
             int iPageNum = (page ?? 1);
+
+            var test = data.TAIKHOANs.FirstOrDefault(n => n.Id == id);
+
+            var tenct = test?.HoTen;
+            var idct = test?.Id;
+
+            ViewBag.TenCT = tenct;
+            ViewBag.ID = idct;
+
             var phong = (from a in data.PHONGTROs
                          join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                          join d in data.TAIKHOANs on a.Id_ChuTro equals d.Id
@@ -157,8 +174,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                          {
                              sMa = (int)a.Id,
                              sTenPhong = a.TenPhong,
-                             /*sHoTen = b.HoTen,*/
-                            
+                             sHoTen = d.HoTen,
+                             sTrangThai = (int)a.TrangThai,
                              sDienTich = (int)a.DienTich,
                              sSoluong = (int)a.SoLuong,
                              sAnhBia = a.AnhBia,
@@ -181,6 +198,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             }
             return View(phong.ToList().Where(n => n.sIDCT == id).OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
         }
+
         [HttpGet]
         public ActionResult DeleteP(int id)
         {

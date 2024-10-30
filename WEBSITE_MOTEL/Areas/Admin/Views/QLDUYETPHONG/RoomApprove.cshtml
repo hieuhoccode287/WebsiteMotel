@@ -13,13 +13,6 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    @using (Html.BeginForm("RoomApprove", "QLDUYETPHONG", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
-                    {
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
-                        </div>
-                    }
-
                     <table class="table">
                         <thead>
                             <tr>
@@ -100,7 +93,7 @@
                                     </td>
                                     <td>
                                         <a href="@Url.Action("DuyetPhong", new { id = item.sMa })" class="btn btn-success" role="button">Duyệt</a> |
-                                        <a href="@Url.Action("TuChoiPhong", new { id = item.sMa })" class="btn btn-danger" role="button">Từ Chối</a>
+                                        <a href="@Url.Action("TuChoiPhong", new { id = item.sMa })" class="btn btn-danger" role="button">Xóa phòng</a>
                                     </td>
                                 </tr>
                             }

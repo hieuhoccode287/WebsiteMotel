@@ -38,7 +38,7 @@ namespace WEBSITE_MOTEL.Controllers
                                join c in data.DONHANGs on a.Id equals c.Id_Phong
                                join e in data.TAIKHOANs on c.Id_NguoiDung equals e.Id
                                join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
-                               where (c.TrangThai == 2 || c.TrangThai == 3) && a.Id_ChuTro == chutro.Id
+                               where (c.TrangThai == 1 || c.TrangThai == 2 || c.TrangThai == 3) && a.Id_ChuTro == chutro.Id
                                select new PhongDuyet()
                                {
                                    sMa = a.Id,
@@ -133,7 +133,7 @@ namespace WEBSITE_MOTEL.Controllers
             var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == dh.Id_Phong);
             if (dh != null && phongTro != null && dh.TrangThai == 2)
             {
-                dh.TrangThai = 3;
+                dh.TrangThai = 1;
                 phongTro.SoLuong -= 1;
                 data.SubmitChanges();
                 TempData["Message"] = "Duyệt phòng thành công!";

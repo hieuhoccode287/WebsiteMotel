@@ -1,130 +1,139 @@
-﻿@using WEBSITE_MOTEL.Models
-@using PagedList.Mvc;
+﻿@using PagedList.Mvc;
 @model PagedList.PagedList<WEBSITE_MOTEL.Models.RoomDetail>
-@helper Truncate(string s, int length)
-{
-    if (s.Length < length)
-    {
-        @s
-    }
-    else
-    {
-        @s.Substring(0, length)<text>...</text>
-    }
-}
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
 }
 
-@using (Html.BeginForm("Index", "QLPhong", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
+@if (!string.IsNullOrEmpty(ViewBag.TenCT))
 {
-    <div class="form-group">
-        <input type="text" class="form-control" name="strSearch" value="@ViewData["strSearch"]" placeholder="Tìm kiếm">
-    </div>
-    <button type="submit" class="btn btn-default">Tìm</button>
+    <h3>ID: @ViewBag.ID</h3>
+    <h3>Tên chủ trọ: @ViewBag.TenCT</h3>
 }
-<table class="table">
-    <tr>
-        <th style="text-align:center">
-            Tên phòng
-        </th>
-        <th style="text-align:center">
-            ID_Chủ trọ
-        </th>
-        <th style="text-align:center">
-            Ảnh bìa
-        </th>
-        <th style="text-align:center">
-            Mô tả
-        </th>
-        <th style="text-align:center">
-            Giá cả
-        </th>
-       @* <th style="text-align:center">
-            Trạng thái
-        </th>*@
-        <th style="text-align:center">
-            Diện tích
-        </th>
-        <th style="text-align:center">
-            Ngày đăng
-        </th>
+else
+{
+    <p>Dữ liệu không có sẵn.</p>
+}
 
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+<table class="table table-bordered text-center">
+    <thead>
         <tr>
-            <td>
-                @*Sử dụng helper để cắt TenSach lấy 50 ký tự*@
-                @Html.DisplayFor(modelItem => item.sTenPhong)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Id_KhuVuc)
-                </td>*@
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.TenPhong)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.sIDCT)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.sAnhBia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.sMoTa)
-            </td>
-            <td>
-                @Html.FormatValue(item.dGiaCa, "{0:#,##0}")
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.HoaHong)
-                </td>*@
-            @* <td>
-
-                    @Html.DisplayFor(modelItem => item.sTrangThai)
-                </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.sDienTich)
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.SoLuong)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Contents)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Doituong)
-                </td>*@
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Map)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Video_link)
-                </td>*@
-            <td>
-                @*Định dạng hiển thị*@
-                @Html.FormatValue(@item.dNgayCapNhat, "{0:dd/MM/yyyy}")
-            </td>
-            <td>
-                @*<a href="@Url.Action("Edit", new { id = item.Id })" class="btn btnwarning form-control" style="color: blue; display: inline; background-color: #FFFF00;" role="button">Sửa</a>*@
-                <a href="@Url.Action("Detail", new { id = item.sMa })" class="btn btnprimary" style="color: blue; display: inline; background-color: #FF0000;" role="button">Chi tiết</a>
-                <a href="@Url.Action("DeleteP", new { id = item.sMa })" class="btn btndanger" style="color: blue; display: inline; background-color: #33FF00;" role="button">Xóa</a>
-            </td>
+            <th>Tên phòng</th>
+            <th>Ảnh bìa</th>
+            <th>Mô tả</th>
+            <th>Giá cả</th>
+            <th>Diện tích</th>
+            <th>Trạng thái</th>
+            <th>Ngày đăng</th>
+            <th>Thao tác</th>
         </tr>
-    }
-
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                    @Html.DisplayFor(modelItem => item.sTenPhong)
+                </td>
+                <td>
+                    <img src="~/Images/@item.sAnhBia" alt="Ảnh bìa" class="img-thumbnail" style="width:100px; height:100px;" />
+                </td>
+                <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                    @Html.DisplayFor(modelItem => item.sMoTa)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.dGiaCa)</td>
+                <td>@Html.DisplayFor(modelItem => item.sDienTich)</td>
+                <td class="td_col2s td_matin" style="color: #4CAF50; text-align: center; vertical-align: middle;">
+                    @if (item.dNgayCapNhat?.AddMonths(3) >= DateTime.Today && item.sTrangThai == 1)
+                    {
+                        <span> Tin đang được đăng</span>
+                    }
+                    else if (item.sTrangThai == 2)
+                    {
+                        <span style="color: #ED2327">Tin đã hết hạn</span>
+                    }
+                    else if (item.sTrangThai == 0)
+                    {
+                        <span style="color: #ddec71">Đang chờ admin duyệt phòng</span>
+                    }
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.dNgayCapNhat)</td>
+                <td>
+                    <a href="@Url.Action("Detail", new { id = item.sMa })" class="btn btn-primary">Chi tiết</a>
+                    <a href="@Url.Action("DeleteP", new { id = item.sMa })" class="btn btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
-Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)/@Model.PageCount
-<div class="MenuTrang">
-    @Html.PagedListPager(Model, page => Url.Action("Details", new { page = page }))
+
+@{
+    var pagedListRenderOptions = new PagedListRenderOptions
+    {
+        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination justify-content-center" },
+        ContainerDivClasses = new[] { "pagination-wrapper" },
+        LiElementClasses = new[] { "page-item" }
+    };
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="pagination-wrapper">
+            @Html.PagedListPager(Model, page => Url.Action("Details", new { page = page }), pagedListRenderOptions)
+        </div>
+    </div>
 </div>
 
 <style>
-    .MenuTrang {
-        display: inline;
-        text-align: center;
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .page-item {
+        margin: 0 5px;
+    }
+
+    .page-link {
+        display: block;
+        padding: 8px 12px;
+        background: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        transition: background 0.3s, color 0.3s;
+        text-decoration: none;
+    }
+
+        .page-link:hover {
+            background: #0056b3;
+            color: #fff;
+        }
+
+    .page-item.active .page-link {
+        background: #0056b3;
+        color: #fff;
+    }
+
+    .page-item.disabled .page-link {
+        pointer-events: none;
+        opacity: 0.6;
     }
 </style>

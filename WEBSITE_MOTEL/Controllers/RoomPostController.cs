@@ -39,6 +39,7 @@ namespace WEBSITE_MOTEL.Controllers
                 ViewBag.DienTich = f["sDienTich"];
                 ViewBag.SoLuong = int.Parse(f["iSoLuong"]);
                 ViewBag.GiaCa = decimal.Parse(f["mGiaCa"]);
+                ViewBag.GiaCoc = decimal.Parse(f["mGiaCoc"]);
 
                 return View();
             }
@@ -86,6 +87,12 @@ namespace WEBSITE_MOTEL.Controllers
                     phong.GiaCa = giaCa;
                 else
                     ModelState.AddModelError("GiaCa", "Invalid value for GiaCa");
+
+                string giaCocString = f["mGiaCoc"].Replace(".", ""); // Bỏ dấu chấm
+                if (decimal.TryParse(giaCocString, out decimal giaCoc))
+                    phong.GiaCoc = giaCoc;
+                else
+                    ModelState.AddModelError("GiaCoc", "Invalid value for GiaCoc");
 
 
                 string dienString = f["sDien"].Replace(".", ""); // Bỏ dấu chấm

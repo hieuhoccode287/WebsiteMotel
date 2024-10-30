@@ -21,7 +21,7 @@
         @TempData["SuccessMessage"]
     </div>
 }
-@using (Html.BeginForm("ManageInfoCT", "Info", FormMethod.Post))
+@using (Html.BeginForm("ManageInfoCT", "Info", FormMethod.Post, new { @enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <section class="wrap-content">
@@ -90,6 +90,7 @@
                                     <div class="col-sm-6 col-xs-12">
                                         <label for="">Ngày sinh</label>
                                         <input type="date" class="form-control" name="sNgaySinh" value="@Html.FormatValue(Model.sNgaySinh, "{0:yyyy-MM-dd}")">
+                                        @Html.ValidationMessageFor(m => m.sNgaySinh, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>

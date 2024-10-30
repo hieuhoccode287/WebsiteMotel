@@ -149,9 +149,9 @@
                             <input type="text" class="form-control" id="roomSoLuong">
                         </div>
                         @*<div class="mb-3">
-                    <label for="roomStatus">Trạng Thái</label>
-                    <input type="text" class="form-control" id="roomStatus" >
-                </div>*@
+                                <label for="roomStatus">Trạng Thái</label>
+                                <input type="text" class="form-control" id="roomStatus" >
+                            </div>*@
                         <div class="mb-3">
                             <label for="roomDien">Giá Điện (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
@@ -210,12 +210,16 @@
                         <div class="mb-3">
                             <label for="roomAddress">Địa Chỉ</label>
                             <textarea class="form-control" id="roomAddress" rows="2" style="min-height: 35px;"></textarea>
-                            <i class="fa fa-map-marker" style="margin-left: px; margin-top: 5px; cursor: pointer; font-size: 30px; color: #5cb85c;" onclick="openMapModal()"> Vị trí trên bản đồ</i>
+                            <i class="fa fa-map-marker" style="margin-top: 5px; cursor: pointer; font-size: 25px; color: #5cb85c;"
+                               onclick="openMapModal(document.getElementById('roomId').value)"> Vị trí</i>
+                            <span id="coordinateStatus" style="margin-left: 5px; color: #5cb85c;"></span>
 
                         </div>
                         <div class="mb-3">
-                            <label for="roomNCN">Ngày Đăng Tin (MM/DD/YYYY)</label>
-                            <input type="text" class="form-control" id="roomNCN" readonly style="background-color: #f8f9fa;">
+                            <label for="roomPilePrice">Giá Cọc (đồng)</label>
+                            <div style="display: flex; align-items: center;">
+                                <input type="text" class="form-control" id="roomPilePrice" oninput="formatNumber(this)">
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="roomPrice">Giá Phòng (đồng/tháng)</label>
@@ -230,13 +234,141 @@
 
             <div class="modal-footer">
                 <button id="saveChangesButton" type="submit" class="btn btn-success" data-dismiss="modal" style="font-weight: bold;">Lưu thay đổi</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" style="font-weight: bold;">Đóng</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="font-weight: bold;" onclick="reloadPage()">Đóng</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Reload the page when the modal is closed
+    $('#roomEditModal').on('hidden.bs.modal', function () {
+        location.reload(); // This will reload the current page
+    });
+
+    function reloadPage() {
+        location.reload(); // This will reload the current page
+    }
+</script>
+
+<div id="mapModal" class="modal map-modal">
+    <div class="modal-content map-modal-content">
+        <span class="close" style="font-size: 4rem;" onclick="closeMapModal()">&times;</span>
+        <div id="amap" style="width: 100%; height: 600px; margin-top: 40px"></div> <!-- Reduced height for the map -->
+        <div style="align-items:center ; display: flex" >
+            <button id="okButton" style="margin-top: 20px;" onclick="saveCoordinates()">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let map;
+    let selectedLat = null;
+    let selectedLng = null;
+
+    // Đảm bảo mapModal bị tắt khi load trang
+    $(document).ready(function () {
+        const mapModal = document.getElementById('mapModal');
+        console.log("Page loaded, hiding modal");
+        mapModal.style.display = 'none';
+    });
+
+    function openMapModal(roomId) {
+        console.log("openMapModal called with roomId:", roomId);
+        $.ajax({
+            type: 'GET',
+            url: '/Manage/EditRoom',
+            data: { id: roomId },
+            success: function (response) {
+                console.log(response);
+
+                if (response.code === 200) {
+                    $('#amap').data('id', response.dh.sMa);
+
+                    if (response.dh && response.dh.length > 0 && response.dh[0].sMap) {
+                        var mapData = response.dh[0].sMap;
+
+                        var latLng = mapData.split(',');
+                        var lat = parseFloat(latLng[0]);
+                        var lng = parseFloat(latLng[1]);
+
+                        if (!isNaN(lat) && !isNaN(lng)) {
+                            initializeMap(lat, lng);
+                            $('#mapModal').css('display', 'flex');
+
+                            // Đảm bảo bản đồ được điều chỉnh kích thước sau khi modal hiển thị
+                            setTimeout(() => {
+                                map.invalidateSize();
+                            }, 0);
+                        } else {
+                            console.error("Vĩ độ hoặc kinh độ không hợp lệ.");
+                        }
+                    } else {
+                        console.error("Không thể trích xuất sMap từ phản hồi.");
+                    }
+                } else {
+                    alert(response.msg);
+                }
+            },
+            error: function () {
+                alert("An error occurred while fetching room details.");
+            }
+        });
+    }
+
+    function closeMapModal() {
+        const mapModal = document.getElementById('mapModal');
+        console.log("Closing modal");
+        mapModal.style.display = 'none';
+
+        if (map) {
+            map.remove();
+            map = null;
+        }
+    }
+
+    function initializeMap(lat, lng) {
+        // Tạo một phiên bản bản đồ mới
+        map = L.map('amap').setView([lat, lng], 13);
+
+        // Thêm lớp tile vào bản đồ
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Thêm một marker cho vị trí này
+        const marker = L.marker([lat, lng]).addTo(map)
+            .openPopup();
+
+        // Cập nhật tọa độ đã chọn khi nhấp vào bản đồ
+        map.on('click', function (e) {
+            selectedLat = e.latlng.lat;
+            selectedLng = e.latlng.lng;
+
+            // Cập nhật marker với tọa độ mới
+            marker.setLatLng([selectedLat, selectedLng]).update();
+            console.log("Selected coordinates:", selectedLat, selectedLng);
+        });
+
+        // Đảm bảo bản đồ được điều chỉnh kích thước đúng
+        setTimeout(() => {
+            map.invalidateSize(); // Điều chỉnh kích thước bản đồ sau khi modal hiển thị
+        }, 300);
+    }
+
+    function saveCoordinates() {
+        if (selectedLat !== undefined && selectedLng !== undefined) {
+            console.log("Saved coordinates:", selectedLat, selectedLng);
+
+            document.getElementById('coordinateStatus').innerText = "(có thay đổi)";
+
+            alert(`Đã lưu tọa độ: Vĩ độ: ${selectedLat}, Kinh độ: ${selectedLng}`);
+            closeMapModal();
+        } else {
+            alert("Vui lòng chọn một tọa độ mới trước khi lưu.");
+        }
+    }
+
 
     function showRoomEditModal(roomId) {
         console.log("Fetching Edit for room ID:", roomId);
@@ -253,6 +385,7 @@
                         $('#roomId').val(room.sMa);
                         $('#roomName').val(room.sTenPhong);
                         $('#roomPrice').val(formatPrice(room.dGiaCa));
+                        $('#roomPilePrice').val(formatPrice(room.dGiaCoc));
                         $('#roomType').val(room.sIdKV);
                         $('#roomDienTich').val(room.sDienTich);
                         $('#roomSoLuong').val(room.sSoluong);
@@ -325,6 +458,7 @@
             sMa: $('#roomId').val(),
             sTenPhong: $('#roomName').val(),
             dGiaCa: parseNumber($('#roomPrice').val()),
+            dGiaCoc: parseNumber($('#roomPilePrice').val()),
             sIdKV: $('#roomType').val(),
             sDienTich: $('#roomDienTich').val(),
             sSoluong: $('#roomSoLuong').val(),
@@ -335,8 +469,12 @@
             sGuiXe: parseNumber($('#roomGuiXe').val()),
             sInternet: parseNumber($('#roomInternet').val()),
             sMoTa: $('#roomDescribe').val(),
-            sDiaChi: $('#roomAddress').val()
+            sDiaChi: $('#roomAddress').val(),     
         };
+
+        if (selectedLat != null && selectedLng != null) {
+            roomData.sMap = selectedLat + ',' + selectedLng;
+        }
 
         var formData = new FormData();
         var roomImageUpload = $('#roomImageUpload')[0].files[0];
@@ -516,6 +654,43 @@
 </script>
 
 <style>
+    .map-modal {
+        display: none;
+        background-color: rgba(0, 0, 0, 0.5); /* Màu nền tối */
+        display: flex;
+        align-items: center; /* Căn giữa theo chiều dọc */
+        justify-content: center; /* Căn giữa theo chiều ngang */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Styling specific to the map modal */
+    .map-modal-content {
+        position: relative;
+        margin: auto;
+        padding: 10px;
+        width: 50%; /* Smaller width for map modal */
+        max-width: 800px; /* Set a maximum width */
+        background-color: white;
+        border-radius: 8px;
+    }
+
+    .map-modal-content {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+
     .td_col3 {
         width: 300px;
         max-width: 300px;
@@ -560,4 +735,28 @@
             text-align: center;
             display: block;
         }
+
+    #okButton {
+        margin: auto;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        margin-top: 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+        #okButton:hover {
+            background-color: #45a049; /* Màu nền khi hover */
+        }
+
+        #okButton:active {
+            background-color: #3e8e41; /* Màu nền khi nhấn */
+        }
+        
 </style>
