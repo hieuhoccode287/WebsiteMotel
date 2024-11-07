@@ -122,7 +122,6 @@
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\HoTroController.cs" />
     <Compile Include="Areas\Admin\Controllers\QLChutroController.cs" />
-    <Compile Include="Areas\Admin\Controllers\QLDUYETPHONGController.cs" />
     <Compile Include="Areas\Admin\Controllers\QLPhongController.cs" />
     <Compile Include="Areas\Admin\Controllers\ThongKeController.cs" />
     <Compile Include="Controllers\ApproveController.cs" />
@@ -132,6 +131,7 @@
     <Compile Include="Controllers\InfoController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MotelController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\RoomPostController.cs" />
     <Compile Include="Controllers\StartPageController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -1654,7 +1654,6 @@
     <Content Include="Areas\assets\vendors\mdi\fonts\materialdesignicons-webfont.woff2" />
     <Content Include="Areas\Admin\Views\QLChutro\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\QLChutro\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\QLChutro\DeleteP.cshtml" />
     <Content Include="Areas\Admin\Views\HoTro\Index.cshtml" />
     <Content Include="ckeditor\bender-runner.config.json" />
     <Content Include="ckeditor\CHANGES.md" />
@@ -1696,7 +1695,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Admin\Views\QLChutro\DuyetChuTro.cshtml" />
-    <Content Include="Areas\Admin\Views\QLDUYETPHONG\RoomApprove.cshtml" />
     <Content Include="Areas\Admin\Views\DUYETCT\CTApprove.cshtml" />
     <Content Include="Areas\Admin\Views\DSPhong\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ThongKe\Index.cshtml" />
@@ -1757,6 +1755,8 @@
     <Content Include="Views\Motel\SearchKQ.cshtml" />
     <Content Include="Views\Default\Index.cshtml" />
     <Content Include="Views\Approve\Approve.cshtml" />
+    <Content Include="Views\Payment\CreatePayment.cshtml" />
+    <Content Include="Views\Payment\PaymentReturn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

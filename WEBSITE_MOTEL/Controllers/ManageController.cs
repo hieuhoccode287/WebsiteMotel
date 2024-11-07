@@ -317,7 +317,7 @@ namespace WEBSITE_MOTEL.Controllers
             if (phongTro != null)
             {
                 phongTro.TrangThai = 0;
-                //phongTro.Ngay = DateTime.Now;
+                phongTro.Ngay = null;
                 data.SubmitChanges();
                 TempData["Message"] = "Đăng lại tin thành công!";
             }

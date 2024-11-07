@@ -1,4 +1,4 @@
-﻿@using WEBSITE_MOTEL.Models
+﻿
 @using PagedList.Mvc;
 @model PagedList.PagedList<WEBSITE_MOTEL.Models.RoomDetail>
 @{
@@ -161,15 +161,6 @@
                         <div id="menu2_@i" class="tab-pane fade">
                             <div id="detail-item2" class="des-detail-content">
                                 <p>
-                                    @*Nhà cao cấp giá bình dân chỉ 2tr5 bạn đã sở hữu 1 phòng sạch sẽ và an ninh nhất quận 9.Đến xem là mê liền * Giảm 10% cho bạn thuê phòng lần đầu tiên Hiện tại bên mình đang có phòng trọ cho thuê, mình xin mô tả thông tin như sau:
-                    <br>
-                    Địa chỉ: SỐ 3/108 Nguyễn Trãi, Thượng Đình, Thanh Xuân, Hà Nội.  Nhà gần chợ và siêu thị bạn thoải mái nấu những món ăn mà mình yêu thích nhé
-                    <br>
-                    - Gần các trường ĐH giao thông vận tải, ĐH sư phạm kĩ thuật thuận lợi cho các bạn sinh viên
-                    <br>
-                    - Gần nơi sầm uất như VINCOM PLAZA, siêu thị CoopMart, cây xăng Tân phú, bệnh viện quận 9....
-                    <br>
-                    - Toàn bộ phòng được lát gạch men nên phòng ốc rất sạch sẽ và cao cấp<br> Vì số lượng có hạn nên gọi ngay cho mình để đặt phòng nhé.(MS. HẰNG)*@
                                     @item.sMoTa
                                 </p>
                             </div>
@@ -361,4 +352,29 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
             })
         }
     }));
+
+    $(document).on('click', "button[name='pay']", function () {
+        let MaDH = $(this).attr('id');
+        // Bạn có thể mở một modal để nhập thông tin thanh toán hoặc chuyển hướng đến trang thanh toán
+        // Dưới đây là ví dụ sử dụng confirm đơn giản
+        if (confirm('Bạn có muốn thanh toán tiền cọc cho đơn đặt hàng này?')) {
+            // Gửi AJAX request tới server để xử lý thanh toán
+            $.ajax({
+                url: '/Cart/Pay',
+                type: 'post',
+                data: { maDH: MaDH },
+                success: function (data) {
+                    if (data.code == 200) {
+                        alert(data.msg);
+                        location.reload();
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi trong quá trình thanh toán.');
+                }
+            });
+        }
+    });
 </script>

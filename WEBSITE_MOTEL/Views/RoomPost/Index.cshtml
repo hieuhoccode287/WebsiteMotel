@@ -342,19 +342,18 @@
 
 
 <script>
-    var curDate = new Date();
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy thời gian hiện tại
+        var curDate = new Date();
 
-    // Ngày hiện tại
-    var curDay = curDate.getDate();
+        // Định dạng ngày theo kiểu YYYY-MM-DD
+        var year = curDate.getFullYear();
+        var month = ("0" + (curDate.getMonth() + 1)).slice(-2); // Thêm 0 nếu tháng < 10
+        var day = ("0" + curDate.getDate()).slice(-2); // Thêm 0 nếu ngày < 10
 
-    // Tháng hiện tại
-    var curMonth = curDate.getMonth() + 1;
-
-    // Năm hiện tại
-    var curYear = curDate.getFullYear();
-
-    // Gán vào thẻ HTML
-    document.getElementById('current-time').innerHTML = curDay + "/" + curMonth + "/" + curYear;
+        // Thiết lập ngày hiện tại vào trường input
+        document.getElementById("dNgayCapNhat").value = year + "-" + month + "-" + day;
+    });
 
     // Hàm thêm dấu chấm phân tách hàng nghìn cho số
     function formatNumber(input) {

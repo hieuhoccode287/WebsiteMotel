@@ -1,0 +1,11 @@
+﻿@model WEBSITE_MOTEL.Models.RoomDetail
+@{
+    ViewBag.Title = "Thanh Toán";
+}
+
+<h2>Thanh Toán Tiền Cọc</h2>
+<p>Giá tiền cọc: @Model.dGiaCoc đ</p>
+<form action="/Payment/CreatePayment" method="post">
+    <input type="hidden" name="amount" value="@Model.dGiaCoc" />
+    <button type="submit" class="btn btn-primary">Thanh Toán Qua VNPAY</button>
+</form>

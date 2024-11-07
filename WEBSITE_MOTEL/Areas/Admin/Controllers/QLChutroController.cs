@@ -29,37 +29,74 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             int pageSize = 5;
             int pageNumber = page ?? 1;
 
-            var chutro = (from b in data.TAIKHOANs
-                          where b.PhanQuyen == 2 && b.TrangThai == 1
-                          select new ChuTro()
-                          {
-                              sHotenCT = b.HoTen,
-                              sTaiKhoanCT = b.TaiKhoan,
-                              sMatKhauCT = b.MatKhau,
-                              sNgaySinh = b.NgaySinh,
-                              sEmailCT = b.Email,
-                              sDiaChi = b.DiaChi,
-                              sSDTCT = b.SDT,
-                              sPhanQuyen = (int)b.PhanQuyen,
-                              sCCCD = b.CCCD,
-                              sId = b.Id,
-                          })
-                  .OrderByDescending(ct => ct.sId); // Sắp xếp theo Id
+            // Truy vấn danh sách chủ trọ
+            var chutroQuery = from b in data.TAIKHOANs
+                              where b.TrangThai == 1
+                              select new ChuTro()
+                              {
+                                  sHotenCT = b.HoTen,
+                                  sTaiKhoanCT = b.TaiKhoan,
+                                  sMatKhauCT = b.MatKhau,
+                                  sNgaySinh = b.NgaySinh,
+                                  sEmailCT = b.Email,
+                                  sDiaChi = b.DiaChi,
+                                  sSDTCT = b.SDT,
+                                  sPhanQuyen = (int)b.PhanQuyen,
+                                  sCCCD = b.CCCD,
+                                  sId = b.Id,
+                              };
 
+            // Materialize chutroQuery in memory
+            var chutroList = chutroQuery.ToList();
 
-            var pagedChutro = new PagedList<ChuTro>(chutro, pageNumber, pageSize);
+            // Tính số phòng chờ duyệt cho mỗi chủ trọ
+            Dictionary<int, int> pendingRoomsCounts = new Dictionary<int, int>();
+
+            foreach (var chuTro in chutroList)
+            {
+                var roomsForChuTro = data.PHONGTROs.Where(p => p.Id_ChuTro == chuTro.sId);
+                var pendingRoomsCount = roomsForChuTro.Count(p => p.TrangThai == 0); // Số phòng chờ duyệt
+                pendingRoomsCounts[chuTro.sId] = pendingRoomsCount; // Store count by ChuTro Id
+            }
+
+            ViewBag.PendingRoomsCounts = pendingRoomsCounts;
+
+            // Sort the list by pending rooms count in descending order, then by Id if counts are equal
+            var chutroPaged = chutroList
+                .OrderByDescending(ct => pendingRoomsCounts.ContainsKey(ct.sId) ? pendingRoomsCounts[ct.sId] : 0)
+                .ThenByDescending(ct => ct.sId)
+                .ToList();
+
+            var pagedChutro = new PagedList<ChuTro>(chutroPaged, pageNumber, pageSize);
+
             return View(pagedChutro);
         }
+
+
 
         public ActionResult Delete(int id)
         {
             try
             {
-                var chuTro = data.TAIKHOANs.SingleOrDefault(pt => pt.Id == id);
+                // Lấy tài khoản chủ trọ theo id
+                var chuTro = data.TAIKHOANs.SingleOrDefault(ct => ct.Id == id);
                 if (chuTro != null)
                 {
+                    // Lấy tất cả các phòng trọ liên kết với tài khoản này
+                    var phongTros = data.PHONGTROs.Where(pt => pt.Id_ChuTro == chuTro.Id).ToList();
+
+                    // Xóa tất cả các phòng trọ liên kết
+                    foreach (var phong in phongTros)
+                    {
+                        var images = data.IMAGEs.Where(i => i.Id_PhongTro == phong.Id).ToList();
+                        data.IMAGEs.DeleteAllOnSubmit(images); // Xóa tất cả ảnh liên quan đến phòng trọ
+                        data.PHONGTROs.DeleteOnSubmit(phong); // Xóa phòng trọ
+                    }
+
+                    // Xóa tài khoản chủ trọ
                     data.TAIKHOANs.DeleteOnSubmit(chuTro);
                     data.SubmitChanges();
+
                     TempData["ThongBao"] = "Xóa thành công";
                 }
                 else
@@ -75,6 +112,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+
         [HttpGet]
         public ActionResult Edit(int id)
         {
@@ -83,7 +121,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                 return Redirect("~/Admin/Home/Login");
             }
             var chutro = (from b in data.TAIKHOANs
-                          where b.PhanQuyen == 2 && b.Id == id
+                          where b.Id == id
                           select new ChuTro()
                           {
                               sHotenCT = b.HoTen,
@@ -149,7 +187,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Details(int? page,int id)
+        public ActionResult Details(int? page,int? id)
         {
             if (Session["Admin"] == null || Session["Admin"].ToString() == "")
             {
@@ -180,7 +218,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                              sSoluong = (int)a.SoLuong,
                              sAnhBia = a.AnhBia,
                              sMoTa = a.MoTa,
-                             dNgayCapNhat = (DateTime)a.Ngay,
+                             dNgayCapNhat = (DateTime?)a.Ngay, // Đảm bảo kiểu nullable cho dNgayCapNhat
                              dGiaCa = (double)a.GiaCa,
                              sSDT = d.SDT,
                              sEmail = d.Email,
@@ -191,38 +229,61 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                              sIDCT = (int)a.Id_ChuTro,
                              sTenKV = kv.Ten,
                          });
-            if (phong == null)
-            {
-                Response.StatusCode = 404;
-                return null;
-            }
-            return View(phong.ToList().Where(n => n.sIDCT == id).OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
-        }
 
-        [HttpGet]
-        public ActionResult DeleteP(int id)
-        {
-            var phong = data.PHONGTROs.SingleOrDefault(n => n.Id == id);
-            if (phong == null)
-            {
-                Response.StatusCode = 404;
-                return null;
-            }
-            return View(phong);
-        }
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeletePConfirm(int id, FormCollection f)
-        {
-            var phong = data.PHONGTROs.SingleOrDefault(n => n.Id == id);
-            if (phong == null)
+
+            // Kiểm tra nếu không có phòng nào
+            if (phong == null || !phong.Any())
             {
                 Response.StatusCode = 404;
                 return null;
             }
 
-            data.PHONGTROs.DeleteOnSubmit(phong);
+            // Áp dụng các điều kiện sắp xếp:
+            // 1. Ưu tiên phòng có dNgayCapNhat là null
+            // 2. Sắp xếp theo TrangThai (giá trị lớn hơn trước)
+            // 3. Sắp xếp giảm dần theo dNgayCapNhat nếu không null
+            return View(phong
+                        .Where(n => n.sIDCT == id) // Lọc theo ID chủ trọ
+                        .OrderByDescending(n => n.dNgayCapNhat.HasValue ? 0 : 1) // Ưu tiên phòng có dNgayCapNhat là null (null được sắp xếp trước)
+                        .ThenByDescending(n => n.sTrangThai) // Sắp xếp theo TrangThai (lớn hơn trước)
+                        .ThenByDescending(n => n.dNgayCapNhat) // Sắp xếp giảm dần theo dNgayCapNhat nếu không null
+                        .ToPagedList(iPageNum, iSize)); // Phân trang
+
+        }
+
+        public ActionResult DuyetPhong(int id)
+        {
+            PHONGTRO phong = data.PHONGTROs.FirstOrDefault(p => p.Id == id && p.TrangThai == 0);
+            var tk = data.TAIKHOANs.SingleOrDefault(t => t.Id == phong.Id_ChuTro);
+            if (phong != null)
+            {
+                phong.TrangThai = 1;
+                phong.Ngay = DateTime.Now;
+                data.SubmitChanges();
+                TempData["Message"] = "Duyệt phòng thành công!";
+            }
+
+            return RedirectToAction("Details", new { id = tk.Id });
+        }
+
+        public ActionResult TuChoiPhong(int id)
+        {
+            // Lấy thông tin phòng trọ cần xóa
+            var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == id);
+            var img = data.IMAGEs.SingleOrDefault(n => n.Id_PhongTro == phongTro.Id);
+            var tk = data.TAIKHOANs.SingleOrDefault(t => t.Id == phongTro.Id_ChuTro);
+            if (phongTro == null)
+            {
+                TempData["Message"] = "Không tìm thấy phòng trọ có mã số tương ứng!";
+                return RedirectToAction("Details", new { id = tk.Id });
+            }
+
+            data.IMAGEs.DeleteOnSubmit(img);
+            data.PHONGTROs.DeleteOnSubmit(phongTro);
             data.SubmitChanges();
-            return Redirect("~/Areas/Admin/QLChutro");
+
+            TempData["Message"] = "Xóa phòng trọ thành công!";
+            return RedirectToAction("Details", new { id = tk.Id });
         }
     }
 }
