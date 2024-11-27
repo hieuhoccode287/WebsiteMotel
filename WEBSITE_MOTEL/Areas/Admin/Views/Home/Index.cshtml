@@ -1,10 +1,82 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
 }
 
-<h2 style="text-align:center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-    QUẢN TRỊ HỖ TRỢ ĐẶT PHÒNG TRỌ ONLINE
-</h2>
+<div class="header-container my-4 p-4 rounded">
+    <h2 class="header-title text-center">
+        QUẢN TRỊ HỖ TRỢ ĐẶT PHÒNG TRỌ ONLINE TRÊN ĐỊA BÀN THÀNH PHỐ THỦ DẦU MỘT
+    </h2>
+</div>
 
+<div class="admin-stats-container my-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="info-box bg-primary text-white p-4 rounded shadow d-flex flex-column align-items-center">
+                <i class="fas fa-home fa-2x mb-2"></i>
+                <h5 class="info-title">Phòng đang được đăng tin</h5>
+                <p class="info-count">@ViewBag.PendingRoomCount</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="info-box bg-warning text-white p-4 rounded shadow d-flex flex-column align-items-center">
+                <i class="fas fa-hourglass-half fa-2x mb-2"></i>
+                <h5 class="info-title">Phòng chờ duyệt</h5>
+                <p class="info-count">@ViewBag.ApprovalRoomCount</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="info-box bg-danger text-white p-4 rounded shadow d-flex flex-column align-items-center">
+                <i class="fas fa-calendar-times fa-2x mb-2"></i>
+                <h5 class="info-title">Phòng hết hạn đăng</h5>
+                <p class="info-count">@ViewBag.ExpiredRoomCount</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="info-box bg-info text-white p-4 rounded shadow d-flex flex-column align-items-center">
+                <i class="fas fa-user-clock fa-2x mb-2"></i>
+                <h5 class="info-title">Tài khoản chờ duyệt</h5>
+                <p class="info-count">@ViewBag.PendingAccountCount</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .header-container {
+        background: linear-gradient(135deg, #007bff, #6c63ff);
+        color: #fff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .admin-stats-container .info-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        height: 180px;
+        gap: 0.5rem;
+    }
+
+    .info-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .info-count {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+
+    .info-box i {
+        font-size: 2.5rem;
+    }
+</style>

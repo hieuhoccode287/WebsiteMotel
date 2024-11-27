@@ -22,6 +22,13 @@ namespace WEBSITE_MOTEL
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "StartPage", action = "StartPage", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "VnPayReturn",
+                url: "Cart/VnPayReturn",
+                defaults: new { controller = "Cart", action = "VnPayReturn" }
+            );
+
         }
     }
 }

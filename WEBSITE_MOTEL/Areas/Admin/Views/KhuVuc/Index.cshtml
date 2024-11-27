@@ -1,0 +1,227 @@
+﻿@using WEBSITE_MOTEL.Models
+@using PagedList.Mvc;
+@model PagedList.PagedList<WEBSITE_MOTEL.Models.KHUVUC>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h4>QUẢN LÝ KHU VỰC</h4>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#createModal">Thêm Khu Vực</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="alertContainer">
+                            @if (!string.IsNullOrEmpty(TempData["ThongBao"] as string))
+                            {
+                                <div class="alert alert-success">
+                                    @TempData["ThongBao"]
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table text-center">
+                        <tr>
+                            <th style="text-align:center">ID</th>
+                            <th style="text-align:center">Tên khu vực</th>
+                            <th style="text-align:right">Hành động</th>
+                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Ten)</td>
+                                <td style="text-align:right">
+                                    <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" onclick="loadEditModal(@item.Id, '@item.Ten')">Sửa</button>
+                                    <a href="@Url.Action("XoaKhuVuc", new { id = item.Id })" class="btn btn-danger" role="button" onclick="return confirm('Bạn có chắc chắn muốn xóa khu vực này không?')">Xóa</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Thêm Khu Vực</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm">
+                    <div class="form-group">
+                        <label for="Ten">Tên khu vực</label>
+                        <input type="text" class="form-control" id="createTen" name="Ten" required />
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="createKhuVuc()">Lưu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Sửa Khu Vực</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId" name="Id" />
+                    <div class="form-group">
+                        <label for="Ten">Tên khu vực</label>
+                        <input type="text" class="form-control" id="editTen" name="Ten" required />
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="editKhuVuc()">Lưu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadEditModal(id, ten) {
+        $('#editId').val(id);
+        $('#editTen').val(ten);
+    }
+
+    function createKhuVuc() {
+        var ten = $('#createTen').val();
+        $.ajax({
+            url: '@Url.Action("CreateKhuVuc", "KhuVuc")',
+            type: 'POST',
+            data: { Ten: ten },
+            success: function (response) {
+                location.reload();
+            },
+            error: function () {
+                alert("Thêm khu vực thất bại!");
+            }
+        });
+    }
+
+    function editKhuVuc() {
+        var id = $('#editId').val();
+        var ten = $('#editTen').val();
+        $.ajax({
+            url: '@Url.Action("EditKhuVuc", "KhuVuc")',
+            type: 'POST',
+            data: { Id: id, Ten: ten },
+            success: function (response) {
+                location.reload();
+            },
+            error: function () {
+                alert("Cập nhật khu vực thất bại!");
+            }
+        });
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#alertContainer").fadeOut("slow");
+        }, 5000); // 5 seconds
+    });
+</script>
+
+@{
+    var pagedListRenderOptions = new PagedListRenderOptions
+    {
+        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination justify-content-center" },
+        ContainerDivClasses = new[] { "pagination-wrapper" },
+        LiElementClasses = new[] { "page-item" }
+    };
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="pagination-wrapper">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }), pagedListRenderOptions)
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .page-item {
+        margin: 0 5px;
+    }
+
+    .page-link {
+        display: block;
+        padding: 8px 12px;
+        background: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        transition: background 0.3s, color 0.3s;
+        text-decoration: none;
+    }
+
+        .page-link:hover {
+            background: #0056b3;
+            color: #fff;
+        }
+
+    .page-item.active .page-link {
+        background: #0056b3;
+        color: #fff;
+    }
+
+    .page-item.disabled .page-link {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    .btn-primary {
+        margin-bottom: 15px;
+    }
+</style>

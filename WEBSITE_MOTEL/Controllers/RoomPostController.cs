@@ -79,8 +79,8 @@ namespace WEBSITE_MOTEL.Controllers
                 if (int.TryParse(f["sDienTich"], out int dienTich)) phong.DienTich = dienTich;
                 else ModelState.AddModelError("DienTich", "Invalid value for DienTich");
 
-                if (DateTime.TryParse(f["dNgayCapNhat"], out DateTime ngayCapNhat)) phong.Ngay = ngayCapNhat;
-                else ModelState.AddModelError("NgayCapNhat", "Invalid value for NgayCapNhat");
+                /*if (DateTime.TryParse(f["dNgayCapNhat"], out DateTime ngayCapNhat)) phong.Ngay = ngayCapNhat;
+                else ModelState.AddModelError("NgayCapNhat", "Invalid value for NgayCapNhat");*/
 
                 string giaCaString = f["mGiaCa"].Replace(".", ""); // Bỏ dấu chấm
                 if (decimal.TryParse(giaCaString, out decimal giaCa))

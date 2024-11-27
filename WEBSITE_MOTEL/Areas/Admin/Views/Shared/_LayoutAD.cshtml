@@ -18,7 +18,7 @@
     <link rel="shortcut icon" href="~/Areas/assets/images/favicon.png" />
     <script src="https://unpkg.com/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.1/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -41,23 +41,30 @@
                         <span class="menu-title">QUẢN LÝ TÀI KHOẢN</span>
                     </a>
                 </li>
-
                 <li class="nav-item menu-items">
-                    <a class="nav-link" href="@Url.Action("Index","DSPhong")">
+                    <a class="nav-link" href="@Url.Action("Index","KhuVuc")">
                         <span class="menu-icon">
-                            <i class="mdi mdi-contacts"></i>
+                            <i class="mdi mdi-map-marker"></i>
                         </span>
-                        <span class="menu-title">PHÒNG ĐĂNG TIN</span>
+                        <span class="menu-title">QUẢN LÝ KHU VỰC</span>
                     </a>
                 </li>
-                <li class="nav-item menu-items">
-                    <a class="nav-link" href="@Url.Action("Index","ThongKe")">
-                        <span class="menu-icon">
-                            <i class="mdi mdi-star-three-points"></i>
-                        </span>
-                        <span class="menu-title">THỐNG KÊ</span>
-                    </a>
-                </li>
+                @*<li class="nav-item menu-items">
+            <a class="nav-link" href="@Url.Action("Index","DSPhong")">
+                <span class="menu-icon">
+                    <i class="mdi mdi-contacts"></i>
+                </span>
+                <span class="menu-title">PHÒNG ĐĂNG TIN</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items">
+            <a class="nav-link" href="@Url.Action("Index","ThongKe")">
+                <span class="menu-icon">
+                    <i class="mdi mdi-star-three-points"></i>
+                </span>
+                <span class="menu-title">THỐNG KÊ</span>
+            </a>
+        </li>*@
                 <li class="nav-item menu-items">
                     <a class="nav-link" href="@Url.Action("Index","HoTro")">
                         <span class="menu-icon">

@@ -13,6 +13,26 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
         // GET: Admin/Home
         public ActionResult Index()
         {
+            //Phòng đang được đăng tin
+            var pendingRooms = data.PHONGTROs.Where(pt => pt.TrangThai == 1).ToList();
+            int pendingRoomCount = pendingRooms.Count();
+            ViewBag.PendingRoomCount = pendingRoomCount;
+
+            //Phòng chờ duyệt
+            var approvalRooms = data.PHONGTROs.Where(pt => pt.TrangThai == 0).ToList();
+            int approvalRoomCount = approvalRooms.Count();
+            ViewBag.ApprovalRoomCount = approvalRoomCount;
+
+            //Phòng hết hạn đăng
+            var expiredRooms = data.PHONGTROs.Where(pt => pt.TrangThai == 2).ToList();
+            int expiredRoomCount = expiredRooms.Count();
+            ViewBag.ExpiredRoomCount = expiredRoomCount;
+
+            //Tài khoản chờ duyệt
+            var pendingAccounts = data.TAIKHOANs.Where(ct => ct.TrangThai == 0).ToList();
+            int pendingAccountCount = pendingAccounts.Count();
+            ViewBag.PendingAccountCount = pendingAccountCount;
+
             return View();
         }
         [HttpGet]

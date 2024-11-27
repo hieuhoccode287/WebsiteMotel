@@ -96,8 +96,11 @@
         </div>
         <!-- Review Accounts Button -->
         <div class="mb-3">
-            <a href="@Url.Action("CTApprove","DUYETCT")" class="btn btn-info" style="margin-top:10px">Duyệt tài khoản chủ trọ</a>
+            <a href="@Url.Action("CTApprove","DUYETCT")" class="btn btn-info" style="margin-top:10px">
+                Duyệt tài khoản chủ trọ (@ViewBag.PendingAccountCount chờ duyệt)
+            </a>
         </div>
+
     </div>
 </div>
 

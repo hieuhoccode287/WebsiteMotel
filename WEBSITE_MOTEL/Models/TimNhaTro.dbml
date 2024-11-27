@@ -1,11 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="TIM_TROO" Class="TimNhaTroDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Table Name="dbo.ANH_CCCD" Member="ANH_CCCDs">
-    <Type Name="ANH_CCCD">
+  <Table Name="dbo.CHITIETDONHANG" Member="CHITIETDONHANGs">
+    <Type Name="CHITIETDONHANG">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="IdTaiKhoan" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="IdCardPhoto" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Column Name="IdCardPhoto2" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
-      <Association Name="TAIKHOAN_ANH_CCCD" Member="TAIKHOAN" ThisKey="IdTaiKhoan" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,0)" CanBeNull="true" />
+      <Column Name="Status" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NgayTao" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="TmnCode" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="TransactionNo" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Id_DH" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="DONHANG_CHITIETDONHANG" Member="DONHANG" ThisKey="Id_DH" OtherKey="IdDH" Type="DONHANG" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.DONHANG" Member="DONHANGs">
@@ -15,6 +18,8 @@
       <Column Name="TrangThai" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
       <Column Name="Id_NguoiDung" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Id_Phong" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TienCoc" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Association Name="DONHANG_CHITIETDONHANG" Member="CHITIETDONHANGs" ThisKey="IdDH" OtherKey="Id_DH" Type="CHITIETDONHANG" />
       <Association Name="PHONGTRO_DONHANG" Member="PHONGTRO" ThisKey="Id_Phong" OtherKey="Id" Type="PHONGTRO" IsForeignKey="true" />
       <Association Name="TAIKHOAN_DONHANG" Member="TAIKHOAN" ThisKey="Id_NguoiDung" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
     </Type>
@@ -42,8 +47,6 @@
     <Type Name="KHUVUC">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Ten" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="Slug" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Column Name="TieuDe" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Column Name="MoTa" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Association Name="KHUVUC_PHONGTRO" Member="PHONGTROs" ThisKey="Id" OtherKey="KhuVuc" Type="PHONGTRO" />
     </Type>
@@ -83,12 +86,13 @@
       <Column Name="HoTen" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="PhanQuyen" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="SDT" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="SDT" Type="System.String" DbType="VarChar(11)" CanBeNull="true" />
       <Column Name="DiaChi" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="NgaySinh" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
       <Column Name="CCCD" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
       <Column Name="TrangThai" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
-      <Association Name="TAIKHOAN_ANH_CCCD" Member="ANH_CCCDs" ThisKey="Id" OtherKey="IdTaiKhoan" Type="ANH_CCCD" />
+      <Column Name="IdCardPhoto" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="IdCardPhoto2" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Association Name="TAIKHOAN_DONHANG" Member="DONHANGs" ThisKey="Id" OtherKey="Id_NguoiDung" Type="DONHANG" />
       <Association Name="TAIKHOAN_PHONGTRO" Member="PHONGTROs" ThisKey="Id" OtherKey="Id_ChuTro" Type="PHONGTRO" />
     </Type>

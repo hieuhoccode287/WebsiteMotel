@@ -9,7 +9,7 @@
     Layout = "~/Views/_LayoutUser.cshtml";
 }
 <script src="~/ckeditor/ckeditor.js"></script>
-@using (Html.BeginForm("Index", "RoomPost", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Index", "RoomPost", FormMethod.Post, new { @enctype = "multipart/form-data", id = "form-dangtin" }))
 {
     <div class="nav-text">
         <ol>
@@ -94,13 +94,8 @@
 
 
 
-                        <!--form-row 4-->
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="dNgayCapNhat">Ngày đăng:</label>
-                                <input type="date" class="form-control" id="dNgayCapNhat" name="dNgayCapNhat">
-                            </div>
-                        </div>
+                        <input type="hidden" class="form-control" id="dNgayCapNhat" name="dNgayCapNhat">
+
                         <div class="form-inline">
                             <div class="form-group ">
                                 <input type="hidden" size="70" name="sTrangThai" value="0" readonly />
@@ -168,7 +163,7 @@
                             <label for="pac-input">Số nhà, Tên đường cụ thể</label></br>
                             <input id="pac-input" class="controls" type="text" placeholder="  Nhập địa chỉ nhà chi tiết..." name="sDiaChi" style="width:300px">
                             <!-- Form để gửi tên địa điểm và tọa độ -->
-                            <form action="/submit-location" method="POST" >
+                            <form action="/submit-location" method="POST">
                                 <!-- Trường ẩn để lưu tọa độ -->
                                 <input type="hidden" id="sMap" name="sMap" />
                             </form>
@@ -176,135 +171,176 @@
                             <div id="map" style="margin-top:50px">
                             </div>
                         </div>
-                </div>
-                <!--Thông tin mô tả chi tiết-->
-                @*<div class="group-form">
+                    </div>
+                    <!--Thông tin mô tả chi tiết-->
+                    @*<div class="group-form">
+                            <div class="form-title"><h3>THÔNG TIN MÔ TẢ CHI TIẾT</h3></div>
+                            <div class="group-form-body">
+                                <div class="form-group">
+                                    <label for="comment">Giới thiệu mô tả về tin đăng của bạn. Ví dụ: Khu nhà có vị trí thuận lợi: Gần trường học, gần trạm xe buýt ...Tổng diện tích 52m2, đường đi ô tô vào tận cửa...</label>
+                                    <textarea class="form-control" rows="5" id="comment" name="sMoTa"></textarea>
+                                </div>
+                            </div>
+                        </div>*@
+                    <div class="form-group">
                         <div class="form-title"><h3>THÔNG TIN MÔ TẢ CHI TIẾT</h3></div>
                         <div class="group-form-body">
                             <div class="form-group">
                                 <label for="comment">Giới thiệu mô tả về tin đăng của bạn. Ví dụ: Khu nhà có vị trí thuận lợi: Gần trường học, gần trạm xe buýt ...Tổng diện tích 52m2, đường đi ô tô vào tận cửa...</label>
-                                <textarea class="form-control" rows="5" id="comment" name="sMoTa"></textarea>
+                                <textarea name="sMoTa" id="mota">@ViewBag.MoTa</textarea>
+                                <script>CKEDITOR.replace("mota")</script>
                             </div>
                         </div>
-                    </div>*@
-                <div class="form-group">
-                    <div class="form-title"><h3>THÔNG TIN MÔ TẢ CHI TIẾT</h3></div>
-                    <div class="group-form-body">
-                        <div class="form-group">
-                            <label for="comment">Giới thiệu mô tả về tin đăng của bạn. Ví dụ: Khu nhà có vị trí thuận lợi: Gần trường học, gần trạm xe buýt ...Tổng diện tích 52m2, đường đi ô tô vào tận cửa...</label>
-                            <textarea name="sMoTa" id="mota">@ViewBag.MoTa</textarea>
-                            <script>CKEDITOR.replace("mota")</script>
-                        </div>
                     </div>
-                </div>
 
-                <!--Phần hình ảnh hoặc video-->
-                <div class="group-form">
-                    <div class="form-title"><h3>HÌNH ẢNH HOẶC VIDEO VỀ PHÒNG TRỌ.</h3></div>
-                    <div class="group-form-body">
-                        <p style="color: #044880; font-size: 0.9em">Tin đăng có hình ảnh hoặc video rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có. Hãy đăng ảnh hoặc video để được giao dịch nhanh chóng!</p>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <p>LƯU Ý*: NHẤN CTRL TRONG LÚC CHỌN ẢNH ĐỂ CHỌN ĐƯỢC NHIỀU ẢNH CÙNG LÚC (NÊN CHỌN 5 HÌNH ẢNH).</p>
-                                    <p>Định dạng ảnh hỗ trợ: .jpg .png .jpeg .gif - Dung lượng ảnh không quá 2MB</p>
+                    <!--Phần hình ảnh hoặc video-->
+                    <div class="group-form">
+                        <div class="form-title"><h3>HÌNH ẢNH HOẶC VIDEO VỀ PHÒNG TRỌ.</h3></div>
+                        <div class="group-form-body">
+                            <p style="color: #044880; font-size: 0.9em">Tin đăng có hình ảnh hoặc video rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có. Hãy đăng ảnh hoặc video để được giao dịch nhanh chóng!</p>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <p>LƯU Ý*: NHẤN CTRL TRONG LÚC CHỌN ẢNH ĐỂ CHỌN ĐƯỢC NHIỀU ẢNH CÙNG LÚC (NÊN CHỌN 5 HÌNH ẢNH).</p>
+                                        <p>Định dạng ảnh hỗ trợ: .jpg .png .jpeg .gif - Dung lượng ảnh không quá 2MB</p>
 
-                                    @*<input type=file id="files" name="fFileUpload" multiple accept="" required />*@
-                                    @Html.TextBox("fFileUpload", "", new { type = "file", multiple = "multiple", accept = "image/*" })
+                                        @*<input type=file id="files" name="fFileUpload" multiple accept="" required />*@
+                                        @Html.TextBox("fFileUpload", "", new { type = "file", multiple = "multiple", accept = "image/*" })
 
-                                    <br />
+                                        <br />
 
-                                    <div class="filearray">
+                                        <div class="filearray">
 
-                                    </div>
-                                    @* script của multiple upload *@
-                                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-                                    <script>
-                                        $(document).on('ready', () => {
-                                            $("#fFileUpload").on('change', function () {
-                                                $(".filearray").empty();
-                                                for (let i = 0; i < 5; ++i) {
-                                                    let filereader = new FileReader();
-                                                    let $img = jQuery.parseHTML("<img width='150' height='100' src=''>");
-                                                    filereader.onload = function () {
-                                                        $img[0].src = this.result;
-                                                    };
-                                                    filereader.readAsDataURL(this.files[i]);
-                                                    $(".filearray").append($img);
-                                                }
+                                        </div>
+
+                                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                                        <script>
+                                            $(document).on('ready', () => {
+                                                $("#fFileUpload").on('change', function () {
+                                                    $(".filearray").empty();
+                                                    for (let i = 0; i < 5; ++i) {
+                                                        let filereader = new FileReader();
+                                                        let $img = jQuery.parseHTML("<img width='150' height='100' src=''>");
+                                                        filereader.onload = function () {
+                                                            $img[0].src = this.result;
+                                                        };
+                                                        filereader.readAsDataURL(this.files[i]);
+                                                        $(".filearray").append($img);
+                                                    }
+                                                });
                                             });
-                                        });
-                                    </script>
+                                        </script>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div style="text-align: center">
+                        <button type="submit" class="btn btn-default" style="width:180px;" onclick="return validateForm();">Đăng phòng ngay</button>
+                    </div>
+
+
                 </div>
-                <script>
-                    function validateForm() {
-                        var title = document.getElementById("tieude").value;
-                        var type = document.getElementById("type").value;
-                        var price = parseNumber(document.getElementById("price").value);
-                        var pileprice = parseNumber(document.getElementById("pileprice").value);
-                        var area = parseNumber(document.getElementsByName("sDienTich")[0].value);
-                        var numberOfPeople = parseNumber(document.getElementsByName("sSoLuong")[0].value);
-                        var numberOfRoom = parseNumber(document.getElementsByName("sSoPhong")[0].value);
-                        var date = document.getElementsByName("dNgayCapNhat")[0].value;
-                        var address = document.getElementsByName("sDiaChi")[0].value;
-                        var servicePriceElectric = parseNumber(document.getElementById("price-electric").value);
-                        var servicePriceWater = parseNumber(document.getElementById("price-water").value);
-                        var servicePriceInternet = parseNumber(document.getElementById("price-internet").value);
-                        var servicePricePark = parseNumber(document.getElementById("price-park").value);
-                        var fileUpload = document.getElementById("fFileUpload").files.length;
-
-                        var fields = {
-                            "Tiêu đề tin": title,
-                            "Loại hình cho thuê": type,
-                            "Giá cho thuê": price,
-                            "Giá tiền cọc": pileprice,
-                            "Diện tích": area,
-                            "Số người ở": numberOfPeople,
-                            "Số lượng phòng": numberOfRoom,
-                            "Ngày đăng": date,
-                            "Địa chỉ": address,
-                            "Giá điện": servicePriceElectric,
-                            "Giá nước": servicePriceWater,
-                            "Internet": servicePriceInternet,
-                            "Gửi xe": servicePricePark
-                        };
-
-                        for (var field in fields) {
-                            // Kiểm tra nếu giá trị không tồn tại (rỗng hoặc undefined) nhưng không phải là 0
-                            if (fields[field] === "" || fields[field] === undefined) {
-                                alert("Vui lòng không để trống: " + field + "!");
-                                return false; // Ngăn không cho gửi biểu mẫu
-                            }
-                            if (["Giá cho thuê", "Giá tiền cọc", "Diện tích", "Số người ở", "Số lượng phòng", "Giá điện", "Giá nước", "Internet", "Gửi xe"].includes(field) && isNaN(fields[field])) {
-                                alert("Vui lòng không để trống: " + field + "!");
-                                return false; // Prevent form submission
-                            }
-                        }
-
-
-                        // Kiểm tra xem có file nào được chọn không
-                        if (fileUpload === 0) {
-                            alert("Vui lòng chọn ít nhất một file hình ảnh!");
-                            return false; // Ngăn không cho gửi biểu mẫu
-                        }
-
-                        return true; // Cho phép gửi biểu mẫu
-                    }
-                </script>
-
-                <div style="text-align: center">
-                    <button type="submit" class="btn btn-default" style="width:180px;" onclick="return validateForm();">Đăng phòng ngay</button>
-                </div>
-
-
-            </div>
         </form>
     </div>
 </section>
+
+<script>
+    function validateForm() {
+        var title = document.getElementById("tieude").value;
+        var price = parseNumber(document.getElementById("price").value);
+        var pileprice = parseNumber(document.getElementById("pileprice").value);
+        var area = parseNumber(document.getElementsByName("sDienTich")[0].value);
+        var numberOfPeople = parseNumber(document.getElementsByName("sSoLuong")[0].value);
+        var numberOfRoom = parseNumber(document.getElementsByName("sSoPhong")[0].value);
+        var date = document.getElementsByName("dNgayCapNhat")[0].value;
+        var ward = document.getElementById("ward").value;
+        var address = document.getElementsByName("sDiaChi")[0].value;
+        var servicePriceElectric = parseNumber(document.getElementById("price-electric").value);
+        var servicePriceWater = parseNumber(document.getElementById("price-water").value);
+        var servicePriceInternet = parseNumber(document.getElementById("price-internet").value);
+        var servicePricePark = parseNumber(document.getElementById("price-park").value);
+        var description = CKEDITOR.instances.mota.getData().trim();
+        var fileUpload = document.getElementById("fFileUpload").files.length;
+
+        // Kiểm tra các trường thông tin
+        if (!title) {
+            alert("Tiêu đề không được để trống.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(price)) {
+            alert("Giá cho thuê phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(pileprice)) {
+            alert("Giá tiền cọc phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(area) || area <= 0) {
+            alert("Diện tích phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(numberOfPeople) || numberOfPeople <= 0) {
+            alert("Số người ở phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(numberOfRoom) || numberOfRoom <= 0) {
+            alert("Số lượng phòng phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(servicePriceElectric) || servicePriceElectric < 0) {
+            alert("Giá điện phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(servicePriceWater) || servicePriceWater < 0) {
+            alert("Giá nước phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(servicePriceInternet) || servicePriceInternet < 0) {
+            alert("Giá internet phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (isNaN(servicePricePark) || servicePricePark < 0) {
+            alert("Giá gửi xe phải là số hợp lệ.");
+            return false; // Prevent form submission
+        }
+
+        if (!ward) {
+            alert("Bạn chưa chọn Phường/Xã.");
+            return false;
+        }
+
+        if (!address) {
+            alert("Số nhà, Tên đường không được để trống.");
+            return false; // Prevent form submission
+        }
+
+        if (description === "") {
+            alert("Mô tả không được để trống.");
+            return false;
+        }
+
+        if (fileUpload !== 5) {
+            alert("Vui lòng tải lên đúng 5 file ảnh.");
+            return false; // Prevent form submission
+        }
+
+        // Nếu không có lỗi, form có thể được gửi đi
+        return true;
+    }
+
+</script>
+
 
 <script>
     // Tạo bản đồ tại vị trí mặc định (Thủ Dầu Một)
@@ -317,9 +353,13 @@
     }).addTo(map);
 
     // Tạo marker tại vị trí Đại học Thủ Dầu Một
-    var marker = L.marker([10.980746, 106.674011]).addTo(map)
+    var defaultLatLng = [10.980746, 106.674011]; // Vị trí mặc định
+    var marker = L.marker(defaultLatLng).addTo(map)
         .bindPopup('Đại học Thủ Dầu Một')
         .openPopup();
+
+    // Gắn giá trị mặc định vào input ẩn
+    document.getElementById("sMap").value = defaultLatLng[0] + "," + defaultLatLng[1];
 
 
     // Khi người dùng nhấp vào bản đồ

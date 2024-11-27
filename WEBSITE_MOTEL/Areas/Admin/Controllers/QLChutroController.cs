@@ -26,7 +26,7 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             ViewData["strSearch"] = strSearch;
             ViewBag.IdCT = new SelectList(data.TAIKHOANs.ToList().OrderBy(n => n.HoTen), "Id", "HoTen");
 
-            int pageSize = 5;
+            int pageSize = 8;
             int pageNumber = page ?? 1;
 
             // Truy vấn danh sách chủ trọ
@@ -61,6 +61,14 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
 
             ViewBag.PendingRoomsCounts = pendingRoomsCounts;
 
+            // Giả sử bạn có bảng ChuTro với cột TrangThai
+            var pendingAccounts = data.TAIKHOANs.Where(ct => ct.TrangThai == 0).ToList();
+
+            // Tính số tài khoản chủ trọ có trạng thái chờ duyệt
+            int pendingAccountCount = pendingAccounts.Count();
+
+            ViewBag.PendingAccountCount = pendingAccountCount; // Lưu số tài khoản chờ duyệt vào ViewBag
+
             // Sort the list by pending rooms count in descending order, then by Id if counts are equal
             var chutroPaged = chutroList
                 .OrderByDescending(ct => pendingRoomsCounts.ContainsKey(ct.sId) ? pendingRoomsCounts[ct.sId] : 0)
@@ -92,8 +100,6 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                         data.IMAGEs.DeleteAllOnSubmit(images); // Xóa tất cả ảnh liên quan đến phòng trọ
                         data.PHONGTROs.DeleteOnSubmit(phong); // Xóa phòng trọ
                     }
-
-                    // Xóa tài khoản chủ trọ
                     data.TAIKHOANs.DeleteOnSubmit(chuTro);
                     data.SubmitChanges();
 

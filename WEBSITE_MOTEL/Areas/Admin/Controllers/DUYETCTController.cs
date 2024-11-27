@@ -26,7 +26,6 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(strSearch))
             {
                 var ct = (from a in data.TAIKHOANs
-                          join c in data.ANH_CCCDs on a.Id equals c.IdTaiKhoan
                           where a.TrangThai == 0
                           select new TaiKhoan()
                           {
@@ -40,15 +39,14 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                               sEmailCT = a.Email,
                               sNgaySinh = (DateTime)a.NgaySinh,
                               sSDTCT = a.SDT,
-                              sidcardphoto = c.IdCardPhoto,
-                              sidcardphoto2 = c.IdCardPhoto2,
+                              sidcardphoto = a.IdCardPhoto,
+                              sidcardphoto2 = a.IdCardPhoto2,
                           });
                 return View(ct.OrderByDescending(n => n.sTrangThai == 0).ToPagedList(iPageNum, iSize));
             }
             else
             {
                 var ct = (from a in data.TAIKHOANs
-                          join c in data.ANH_CCCDs on a.Id equals c.IdTaiKhoan
                           where a.TrangThai == 0
                           select new TaiKhoan()
                           {
@@ -62,8 +60,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                               sEmailCT = a.Email,
                               sNgaySinh = (DateTime)a.NgaySinh,
                               sSDTCT = a.SDT,
-                              sidcardphoto = c.IdCardPhoto,
-                              sidcardphoto2 = c.IdCardPhoto2,
+                              sidcardphoto = a.IdCardPhoto,
+                              sidcardphoto2 = a.IdCardPhoto2,
                           });
                 return View(ct.OrderByDescending(n => n.sTrangThai == 0).ToPagedList(iPageNum, iSize));
             }
@@ -82,8 +80,6 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
         }
         public ActionResult BoDuyetCT(int id)
         {
-            var anhcccd = data.ANH_CCCDs.Where(p => p.IdTaiKhoan == id);
-            data.ANH_CCCDs.DeleteAllOnSubmit(anhcccd);
             data.SubmitChanges();
             var chutros = data.TAIKHOANs.Where(p => p.Id == id);
             data.TAIKHOANs.DeleteAllOnSubmit(chutros);

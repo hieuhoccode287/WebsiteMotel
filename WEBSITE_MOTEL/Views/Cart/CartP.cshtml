@@ -273,7 +273,7 @@
                     }
                     else if (item.sTrangThai == 1)
                     {
-                        <button style="width:300px" type="button" name="pay" id="@item.sMa">THANH TOÁN TIỀN CỌC</button>
+                            <button onclick="initiatePayment(@item.sMa,@item.dGiaCoc)" style="width:300px" type="button">THANH TOÁN TIỀN CỌC</button>
                     }
                 </form>
             </article>
@@ -308,6 +308,27 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
 <script src="~/js/pagination.js"></script>
 
 <script>
+    function initiatePayment(orderId, amount) {
+        $.ajax({
+            url: '@Url.Action("CreateVnPayUrl", "Cart")',
+            type: 'POST',
+            data: {
+                orderId: orderId,
+                amount: amount
+            },
+            success: function (data) {
+                if (data && data.paymentUrl) {
+                    window.location.href = data.paymentUrl;
+                } else {
+                    alert("Failed to generate payment URL.");
+                }
+            },
+            error: function () {
+                alert("An error occurred while initiating payment.");
+            }
+        });
+    }
+
     $(document).on('click', "button[name='delete']", (function () {
         let MaDH = $(this).attr('id');
         if (confirm('Bạn thực sự muốn xóa Phòng này.')) {
@@ -353,28 +374,4 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
         }
     }));
 
-    $(document).on('click', "button[name='pay']", function () {
-        let MaDH = $(this).attr('id');
-        // Bạn có thể mở một modal để nhập thông tin thanh toán hoặc chuyển hướng đến trang thanh toán
-        // Dưới đây là ví dụ sử dụng confirm đơn giản
-        if (confirm('Bạn có muốn thanh toán tiền cọc cho đơn đặt hàng này?')) {
-            // Gửi AJAX request tới server để xử lý thanh toán
-            $.ajax({
-                url: '/Cart/Pay',
-                type: 'post',
-                data: { maDH: MaDH },
-                success: function (data) {
-                    if (data.code == 200) {
-                        alert(data.msg);
-                        location.reload();
-                    } else {
-                        alert(data.msg);
-                    }
-                },
-                error: function () {
-                    alert('Đã xảy ra lỗi trong quá trình thanh toán.');
-                }
-            });
-        }
-    });
 </script>

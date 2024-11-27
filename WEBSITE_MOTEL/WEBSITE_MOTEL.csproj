@@ -55,6 +55,9 @@
     <PackageReference Include="Microsoft.AspNet.WebPages">
       <Version>3.2.9</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions">
+      <Version>2.2.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Web.Infrastructure">
       <Version>2.0.0</Version>
     </PackageReference>
@@ -121,8 +124,8 @@
     <Compile Include="Areas\Admin\Controllers\DUYETCTController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="Areas\Admin\Controllers\HoTroController.cs" />
+    <Compile Include="Areas\Admin\Controllers\KhuVucController.cs" />
     <Compile Include="Areas\Admin\Controllers\QLChutroController.cs" />
-    <Compile Include="Areas\Admin\Controllers\QLPhongController.cs" />
     <Compile Include="Areas\Admin\Controllers\ThongKeController.cs" />
     <Compile Include="Controllers\ApproveController.cs" />
     <Compile Include="Controllers\CartController.cs" />
@@ -135,6 +138,7 @@
     <Compile Include="Controllers\RoomPostController.cs" />
     <Compile Include="Controllers\StartPageController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VnPayLibrary.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1517,10 +1521,8 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\Admin\Views\web.config" />
-    <Content Include="Areas\Admin\Views\QLPhong\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Login.cshtml" />
-    <Content Include="Areas\Admin\Views\QLPhong\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\QLChutro\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_LayoutAD.cshtml" />
     <Content Include="Areas\assets\css\maps\style.css.map" />
@@ -1698,6 +1700,7 @@
     <Content Include="Areas\Admin\Views\DUYETCT\CTApprove.cshtml" />
     <Content Include="Areas\Admin\Views\DSPhong\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ThongKe\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\KhuVuc\Index.cshtml" />
     <None Include="Models\TimNhaTro.dbml.layout">
       <DependentUpon>TimNhaTro.dbml</DependentUpon>
     </None>
@@ -1755,13 +1758,13 @@
     <Content Include="Views\Motel\SearchKQ.cshtml" />
     <Content Include="Views\Default\Index.cshtml" />
     <Content Include="Views\Approve\Approve.cshtml" />
-    <Content Include="Views\Payment\CreatePayment.cshtml" />
-    <Content Include="Views\Payment\PaymentReturn.cshtml" />
+    <Content Include="Views\Cart\VnPayReturn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Views\ADMIN\" />
+    <Folder Include="Views\VnPayLibrary\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

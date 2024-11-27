@@ -4,13 +4,14 @@ function isEmail(s) {
     return re.test(String(s).toLowerCase());
 }
 
-// Kiểm tra ngày sinh có hợp lệ không (YYYY-MM-DD)
+// Kiểm tra ngày sinh có hợp lệ không
 function isValidDate(dateString) {
     const re = /^\d{4}-\d{2}-\d{2}$/;
     if (!re.test(dateString)) return false;
     const date = new Date(dateString);
     return date instanceof Date && !isNaN(date);
 }
+
 
 // Kiểm tra số điện thoại
 function isValidPhone(phone) {
@@ -122,7 +123,7 @@ $(document).ready(function () {
         }
         if (!isValidDate(user_ns)) {
             $("#user_ns").focus();
-            return showError('Ngày sinh không hợp lệ. Vui lòng nhập theo định dạng YYYY-MM-DD.');
+            return showError('Ngày sinh không hợp lệ. Vui lòng nhập theo định dạng MM-DD-YYYY.');
         }
         if (!user_tendn) {
             $("#user_tendn").focus();

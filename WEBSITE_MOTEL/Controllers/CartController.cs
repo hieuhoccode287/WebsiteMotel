@@ -7,6 +7,9 @@ using PagedList;
 using PagedList.Mvc;
 using System.Web.UI;
 using WEBSITE_MOTEL.Models;
+using VNPAY_CS_ASPX;
+using Microsoft.AspNetCore.Mvc;
+using WebGrease;
 
 namespace WEBSITE_MOTEL.Controllers
 {
@@ -72,6 +75,131 @@ namespace WEBSITE_MOTEL.Controllers
                              });
                 return View(phong.ToList().OrderByDescending(n => n.sNgayDat).ToPagedList(iPageNum, iSize));
             }
+        }
+
+        [HttpPost]
+        public JsonResult CreateVnPayUrl(string orderId, decimal amount)
+        {
+            if (string.IsNullOrEmpty(orderId) || amount <= 0)
+            {
+                return Json(new { success = false, message = "Invalid order ID or amount." });
+            }
+
+            // Get Config Info
+            string vnp_Returnurl = "https://localhost:44348/Cart/VnPayReturn"; // Return URL
+            string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; // VNPay payment URL
+            string vnp_TmnCode = "6LY4D08E"; // Terminal Id
+            string vnp_HashSecret = "L32MNN2JMUFDPMQZXE1IQB3QFKV75MI3"; // Secret Key
+
+            try
+            {
+                VnPayLibrary vnpay = new VnPayLibrary();
+                vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
+                vnpay.AddRequestData("vnp_Command", "pay");
+                vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+                vnpay.AddRequestData("vnp_Amount", (amount * 100).ToString("F0"));
+                vnpay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss"));
+                vnpay.AddRequestData("vnp_CurrCode", "VND");
+                vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress());
+                vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang: {orderId}");
+                vnpay.AddRequestData("vnp_OrderType", "other");
+                vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
+                vnpay.AddRequestData("vnp_TxnRef", orderId);
+                vnpay.AddRequestData("vnp_BankCode", "VNBANK");
+                vnpay.AddRequestData("vnp_Locale", "vn");
+
+
+                string paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+                return Json(new { success = true, paymentUrl });
+            }
+            catch (Exception ex)
+            {
+                // Log exception (optional)
+                return Json(new { success = false, message = "Error creating payment URL.", error = ex.Message });
+            }
+        }
+
+        public ActionResult VnPayReturn()
+        {
+            // Initialize display variables for the view
+            string message = string.Empty;
+            string terminalId = string.Empty;
+            string txnRef = string.Empty;
+            string vnpayTranNo = string.Empty;
+            string amount = string.Empty;
+            string bankCode = string.Empty;
+
+            if (Request.QueryString.Count > 0)
+            {
+                string vnp_HashSecret = "L32MNN2JMUFDPMQZXE1IQB3QFKV75MI3"; // Secret Key
+                var vnpayData = Request.QueryString;
+                VnPayLibrary vnpay = new VnPayLibrary();
+
+                foreach (string s in vnpayData)
+                {
+                    // Get all querystring data
+                    if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_"))
+                    {
+                        vnpay.AddResponseData(s, vnpayData[s]);
+                        
+                    }
+                }
+
+                long orderId = Convert.ToInt64(vnpay.GetResponseData("vnp_TxnRef"));
+                long vnpayTranId = Convert.ToInt64(vnpay.GetResponseData("vnp_TransactionNo"));
+                string vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
+                string vnp_TransactionStatus = vnpay.GetResponseData("vnp_TransactionStatus");
+                string vnp_SecureHash = vnpay.GetResponseData("vnp_SecureHash");
+                terminalId = vnpay.GetResponseData("vnp_TmnCode");
+                amount = (Convert.ToInt64(vnpay.GetResponseData("vnp_Amount")) / 100).ToString("N0");
+                bankCode = vnpay.GetResponseData("vnp_BankCode");
+
+                bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, vnp_HashSecret);
+                if (checkSignature)
+                {
+                    if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
+                    {
+                        decimal? parsedAmount = null;
+                        if (decimal.TryParse(amount, out decimal result))
+                        {
+                            parsedAmount = result;
+                        }
+
+                        var ctdh = new CHITIETDONHANG
+                        {
+                            Id_DH = (int)orderId,
+                            TmnCode = terminalId,
+                            TransactionNo = vnp_TransactionStatus,
+                            NgayTao = DateTime.Now,
+                            Status = 0,
+                            Amount = parsedAmount
+                        };
+                        data.CHITIETDONHANGs.InsertOnSubmit(ctdh);
+                        data.SubmitChanges();
+                        message = "Giao dịch được thực hiện thành công. Cảm ơn quý khách đã sử dụng dịch vụ";
+                    }
+                    else
+                    {
+                        message = "Có lỗi xảy ra trong quá trình xử lý. Mã lỗi: " + vnp_ResponseCode;
+                    }
+                    txnRef = orderId.ToString();
+                    vnpayTranNo = vnpayTranId.ToString();
+                }
+                else
+                {
+                    message = "Có lỗi xảy ra trong quá trình xử lý";
+                }
+            }
+
+            // Pass values to the view
+            ViewBag.Message = message;
+            ViewBag.TerminalID = terminalId;
+            ViewBag.TxnRef = txnRef;
+            ViewBag.VnPayTranNo = vnpayTranNo;
+            ViewBag.Amount = amount;
+            ViewBag.BankCode = bankCode;
+
+            return View();
         }
 
         [HttpPost]
