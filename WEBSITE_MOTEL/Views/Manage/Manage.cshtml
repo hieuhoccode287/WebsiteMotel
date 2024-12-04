@@ -252,7 +252,7 @@
 </script>*@
 
 <div id="mapModal" class="modal map-modal">
-    <div class="modal-content map-modal-content">
+    <div class="modal-content map-modal-content" style="border: 1px solid rgba(0, 0, 0, 0.1);">
         <span class="close" style="font-size: 4rem;" onclick="closeMapModal()">&times;</span>
 
         <!-- Input field for address -->
@@ -260,11 +260,13 @@
             <input type="text"
                    id="addressInput"
                    placeholder="Nhập địa chỉ để tìm trên bản đồ"
-                   style="width: 80%; padding: 10px; font-size: 1.2rem;" />
+                   style="width: 80%; padding: 10px; font-size: 1.2rem;"
+                   oninput="autocompleteAddress()" />
             <button onclick="findAddress()" style="padding: 10px 20px; font-size: 1.2rem;">Tìm</button>
+            <ul id="addressSuggestions" style="list-style-type: none; padding: 0; margin-top: 5px; background-color: white; border: 1px solid #ccc; position: absolute; width: 80%; max-height: 150px; overflow-y: auto;"></ul>
         </div>
 
-        <div id="amap" style="width: 100%; height: 600px; margin-top: 20px;"></div>
+        <div id="amap" style="width: 100%; height: 500px; margin-top: 20px;"></div>
         <div style="align-items: center; display: flex;">
             <button id="okButton" style="margin-top: 20px;" onclick="saveCoordinates()">OK</button>
         </div>
@@ -325,6 +327,42 @@
                 alert("An error occurred while fetching room details.");
             }
         });
+    }
+
+    function autocompleteAddress() {
+        const address = document.getElementById('addressInput').value;
+        const suggestionsBox = document.getElementById('addressSuggestions');
+
+        // Clear previous suggestions
+        suggestionsBox.innerHTML = '';
+
+        if (address.length < 3) {
+            return;  // Nếu nhập ít hơn 3 ký tự thì không hiển thị gợi ý
+        }
+
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&addressdetails=1&limit=5`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item.display_name;
+                        li.style.padding = '5px';
+                        li.style.cursor = 'pointer';
+                        li.addEventListener('click', function () {
+                            document.getElementById('addressInput').value = item.display_name;
+                            findAddress();
+                            suggestionsBox.innerHTML = '';  // Clear suggestions after selection
+                        });
+                        suggestionsBox.appendChild(li);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching address suggestions:", error);
+            });
     }
 
     function findAddress() {
@@ -709,6 +747,18 @@
 </script>
 
 <style>
+    #addressSuggestions {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 5px;
+        background-color: white;
+        border: 1px solid #ccc;
+        position: absolute;
+        width: 80%;
+        max-height: 150px;
+        overflow-y: auto;
+        z-index: 9999; /* Đảm bảo suggestions box nằm trên cùng */
+    }
     .map-modal {
         display: none;
         background-color: rgba(0, 0, 0, 0.5); /* Màu nền tối */

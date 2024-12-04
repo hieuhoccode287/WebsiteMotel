@@ -134,7 +134,6 @@ ul li span.title{
           height: 35px;
         background-color: #fff;
         font-size: 15px;
-        position: absolute !important;
         top: 22px !important;
         left: 0 !important;
         text-overflow: ellipsis;

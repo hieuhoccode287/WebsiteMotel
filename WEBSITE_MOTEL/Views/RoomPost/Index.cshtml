@@ -161,16 +161,19 @@
                         <div class="form-group">
                             <!--Thông tin vị trí cụ thể-->
                             <label for="pac-input">Số nhà, Tên đường cụ thể</label></br>
-                            <input id="pac-input" class="controls" type="text" placeholder="  Nhập địa chỉ nhà chi tiết..." name="sDiaChi" style="width:300px">
+                            <input id="pac-input" class="controls" type="text" placeholder="Nhập địa chỉ nhà trọ chi tiết..." name="sDiaChi" style="width:300px" /></br>
+                            <label for="pac-input" style="margin-top: 30px">Đánh dấu địa chỉ trên bản đồ</label></br>
+                            <input id="pac-input2" class="controls" type="text" placeholder="Tìm..." style="width: 100%;" oninput="autocompleteAddress()" />
+                            <ul id="addressSuggestions" style="list-style-type: none; padding: 0; margin-top: 5px; background-color: white; border: 1px solid #ccc; position: absolute; width: 100%; max-height: 150px; overflow-y: auto;"></ul>
                             <!-- Form để gửi tên địa điểm và tọa độ -->
                             <form action="/submit-location" method="POST">
                                 <!-- Trường ẩn để lưu tọa độ -->
                                 <input type="hidden" id="sMap" name="sMap" />
                             </form>
                             <br />
-                            <div id="map" style="margin-top:50px">
-                            </div>
+                            <div id="map" style="margin-top:15px"></div>
                         </div>
+
                     </div>
                     <!--Thông tin mô tả chi tiết-->
                     @*<div class="group-form">
@@ -343,6 +346,87 @@
 
 
 <script>
+    function autocompleteAddress() {
+        const address = document.getElementById('pac-input2').value;
+        const suggestionsBox = document.getElementById('addressSuggestions');
+
+        // Clear previous suggestions
+        suggestionsBox.innerHTML = '';
+
+        if (address.length < 3) {
+            return;  // If less than 3 characters, do not show suggestions
+        }
+
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&addressdetails=1&limit=5`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item.display_name;
+                        li.style.padding = '5px';
+                        li.style.cursor = 'pointer';
+                        li.addEventListener('click', function () {
+                            document.getElementById('pac-input2').value = item.display_name;
+                            findAddress();  // After selecting address, trigger address search
+                            suggestionsBox.innerHTML = '';  // Clear suggestions
+                        });
+                        suggestionsBox.appendChild(li);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching address suggestions:", error);
+            });
+    }
+
+    function findAddress() {
+        const address = document.getElementById('pac-input2').value;
+        if (!address) {
+            alert("Vui lòng nhập địa chỉ!");
+            return;
+        }
+
+        // Use OpenStreetMap (Nominatim) API to geocode the address
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    const { lat, lon } = data[0];
+                    const selectedLat = parseFloat(lat);
+                    const selectedLng = parseFloat(lon);
+
+                    // Update the map with the new coordinates
+                    if (map) {
+                        map.setView([selectedLat, selectedLng], 13);
+
+                        // If marker already exists, update its position
+                        if (marker) {
+                            marker.setLatLng([selectedLat, selectedLng]);
+                        } else {
+                            // If marker doesn't exist, create a new one
+                            marker = L.marker([selectedLat, selectedLng]).addTo(map);
+                        }
+
+                        // Save the coordinates in the hidden field
+                        document.getElementById('sMap').value = `${selectedLat},${selectedLng}`;
+
+                        console.log("Đã tìm thấy địa chỉ:", address, selectedLat, selectedLng);
+                    }
+                } else {
+                    alert("Không tìm thấy địa chỉ. Vui lòng thử lại.");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching coordinates:", error);
+                alert("Có lỗi xảy ra khi tìm địa chỉ.");
+            });
+    }
+
     // Tạo bản đồ tại vị trí mặc định (Thủ Dầu Một)
     var map = L.map('map').setView([10.9804, 106.6519], 13); // Tọa độ và mức zoom
 
@@ -355,8 +439,6 @@
     // Tạo marker tại vị trí Đại học Thủ Dầu Một
     var defaultLatLng = [10.980746, 106.674011]; // Vị trí mặc định
     var marker = L.marker(defaultLatLng).addTo(map)
-        .bindPopup('Đại học Thủ Dầu Một')
-        .openPopup();
 
     // Gắn giá trị mặc định vào input ẩn
     document.getElementById("sMap").value = defaultLatLng[0] + "," + defaultLatLng[1];
@@ -366,15 +448,12 @@
     map.on('click', function (e) {
         var latlng = e.latlng; // Lấy tọa độ của vị trí nhấp
 
-        // Hiển thị thông báo với tọa độ được chọn
-        alert("Bạn đã chọn vị trí: " + latlng.lat + ", " + latlng.lng);
-
         // Lưu tọa độ vào input ẩn để gửi lên server
         document.getElementById("sMap").value = latlng.lat + "," + latlng.lng;
 
         // Di chuyển marker đến vị trí mới và cập nhật popup
         marker.setLatLng(latlng)
-            .bindPopup("Vị trí đã chọn: " + latlng.lat + ", " + latlng.lng)
+            .bindPopup("Vị trí đã chọn")
             .openPopup();
     });
 </script>
@@ -425,6 +504,18 @@
 </script>
 
 <style>
+    #addressSuggestions {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 5px;
+        background-color: white;
+        border: 1px solid #ccc;
+        position: absolute;
+        width: 80%;
+        max-height: 150px;
+        overflow-y: auto;
+        z-index: 9999; /* Đảm bảo suggestions box nằm trên cùng */
+    }
     .group-form {
         border: 1px solid #ddd;
         padding: 15px;
