@@ -38,42 +38,80 @@ namespace WEBSITE_MOTEL.Controllers
                 TAIKHOAN tk = GetAcc();
                 int iSize = 4;
                 int iPageNum = (page ?? 1);
+
+                var userdanhgia = (from a in data.DANHGIAs
+                                   join b in data.TAIKHOANs on a.Id_TaiKhoan equals b.Id
+                                   select new DanhGia()
+                                   {
+                                       sId = a.Id,
+                                       sId_Phong = (int)a.Id_Phong,
+                                       sTenNguoiDanhGia = b.HoTen,
+                                       sDanhGiaRating = a.DanhGiaRating,
+                                       sMoTaDanhGia = a.MoTa,
+                                       dNgayDanhGia = (DateTime)a.NgayDanhGia,
+                                   });
+                ViewBag.Reviews = userdanhgia;
+
+                var allRatings = (from a in data.DANHGIAs
+                                  join b in data.PHONGTROs on a.Id_Phong equals b.Id
+                                  select new DanhGia()
+                                  {
+                                      sId = a.Id,
+                                      sId_Phong = (int)a.Id_Phong,
+                                      sDanhGiaRating = a.DanhGiaRating,
+                                      sMoTaDanhGia = a.MoTa,
+                                      dNgayDanhGia = (DateTime)a.NgayDanhGia,
+                                  });
+                ViewBag.AllRatings = allRatings;
+
                 var phong = (from a in data.PHONGTROs
                              join c in data.IMAGEs on a.Id equals c.Id_PhongTro
                              join g in data.DONHANGs on a.Id equals g.Id_Phong
                              join e in data.TAIKHOANs on g.Id_NguoiDung equals e.Id
                              join kv in data.KHUVUCs on a.KhuVuc equals kv.Id
-                             where (tk.Id == g.Id_NguoiDung) && (g.TrangThai == 2 || g.TrangThai == 3|| g.TrangThai == 1)
+                             join f in data.DANHGIAs on a.Id equals f.Id_Phong into danhgia
+                             from f in danhgia.DefaultIfEmpty()  // Left join DANHGIA để tránh trùng
+                             where (tk.Id == g.Id_NguoiDung)   // Ensure tk is defined properly
+                             group new { a, c, g, e, kv, f } by g.IdDH into groupedPhong
                              select new RoomDetail()
                              {
-                                 sMa = g.IdDH,
-                                 sTenPhong = a.TenPhong,
-                                 sHoTen = e.HoTen,
-                                 sDienTich = (int)a.DienTich,
-                                 sSoluong = (int)a.SoLuong,
-                                 sSoNguoiO = (int)a.SoNguoiO,
-                                 sAnhBia = a.AnhBia,
-                                 sMoTa = a.MoTa,
-                                 dNgayCapNhat = (DateTime)a.Ngay,
-                                 dGiaCa = (double)a.GiaCa,
-                                 dGiaCoc = (double)a.GiaCoc,
-                                 sSDT = e.SDT,
-                                 sEmail = e.Email,
-                                 sUrl_Path = c.Url_Path,
-                                 sUrl_Path2 = c.Url_Path2,
-                                 sUrl_Path3 = c.Url_Path3,
-                                 sUrl_Path4 = c.Url_Path4,
-                                 sMap = a.Map,
-                                 sDiaChi = a.Diachi,
-                                 sDien = (double)a.Dien,
-                                 sNuoc = (double)a.Nuoc,
-                                 sGuiXe = (double)a.GuiXe,
-                                 sInternet = (double)a.Internet,
-                                 sTenKV = kv.Ten,
-                                 sTrangThai = (byte)g.TrangThai,
-                                 sNgayDat = (DateTime)g.NgayDat,
+                                 sMa = groupedPhong.FirstOrDefault().g.IdDH,
+                                 sMa2 = groupedPhong.FirstOrDefault().g.Id_Phong,
+                                 sTenPhong = groupedPhong.FirstOrDefault().a.TenPhong ?? "",
+                                 sHoTen = groupedPhong.FirstOrDefault().e.HoTen ?? "",
+                                 sDanhGia = groupedPhong.FirstOrDefault().f != null ? (int?)groupedPhong.FirstOrDefault().f.DanhGiaRating : (int?)null,
+                                 sDienTich = (int)groupedPhong.FirstOrDefault().a.DienTich,
+                                 sSoluong = (int)groupedPhong.FirstOrDefault().a.SoLuong,
+                                 sSoNguoiO = (int)groupedPhong.FirstOrDefault().a.SoNguoiO,
+                                 sAnhBia = groupedPhong.FirstOrDefault().a.AnhBia ?? "",
+                                 sMoTa = groupedPhong.FirstOrDefault().a.MoTa ?? "",
+                                 sMoTaDanhGia = groupedPhong.FirstOrDefault().f != null ? groupedPhong.FirstOrDefault().f.MoTa : "",
+                                 dNgayCapNhat = (DateTime)groupedPhong.FirstOrDefault().a.Ngay,
+                                 dNgayDanhGia = groupedPhong.FirstOrDefault().f != null ? (DateTime?)groupedPhong.FirstOrDefault().f.NgayDanhGia : null,
+                                 dGiaCa = (double)groupedPhong.FirstOrDefault().a.GiaCa,
+                                 dGiaCoc = (double)groupedPhong.FirstOrDefault().a.GiaCoc,
+                                 sSDT = groupedPhong.FirstOrDefault().e.SDT ?? "",
+                                 sEmail = groupedPhong.FirstOrDefault().e.Email ?? "",
+                                 sUrl_Path = groupedPhong.FirstOrDefault().c.Url_Path ?? "",
+                                 sUrl_Path2 = groupedPhong.FirstOrDefault().c.Url_Path2 ?? "",
+                                 sUrl_Path3 = groupedPhong.FirstOrDefault().c.Url_Path3 ?? "",
+                                 sUrl_Path4 = groupedPhong.FirstOrDefault().c.Url_Path4 ?? "",
+                                 sMap = groupedPhong.FirstOrDefault().a.Map ?? "",
+                                 sDiaChi = groupedPhong.FirstOrDefault().a.Diachi ?? "",
+                                 sDien = (double)groupedPhong.FirstOrDefault().a.Dien,
+                                 sNuoc = (double)groupedPhong.FirstOrDefault().a.Nuoc,
+                                 sGuiXe = (double)groupedPhong.FirstOrDefault().a.GuiXe,
+                                 sInternet = (double)groupedPhong.FirstOrDefault().a.Internet,
+                                 sTenKV = groupedPhong.FirstOrDefault().kv.Ten ?? "",
+                                 sTrangThai = (byte)groupedPhong.FirstOrDefault().g.TrangThai,
+                                 sNgayDat = (DateTime)groupedPhong.FirstOrDefault().g.NgayDat,
                              });
-                return View(phong.ToList().OrderByDescending(n => n.sNgayDat).ToPagedList(iPageNum, iSize));
+
+                return View(phong.OrderBy(r => r.sTrangThai)  // Sắp xếp theo TrangThai
+                 .ThenByDescending(r => r.sNgayDat)  // Sau đó sắp xếp theo NgayDat giảm dần
+                 .ToPagedList(iPageNum, iSize));
+
+
             }
         }
 
@@ -239,9 +277,8 @@ namespace WEBSITE_MOTEL.Controllers
                     return Json(new { code = 404, msg = "Đơn hàng không tồn tại." }, JsonRequestBehavior.AllowGet);
                 }
                 p.SoLuong += 1;
-                // Delete the order
-                data.DONHANGs.DeleteOnSubmit(dh);
-                data.SubmitChanges();
+                dh.TrangThai = 4;
+                //data.SubmitChanges();
 
                 return Json(new { code = 200, msg = "Trả phòng thành công." }, JsonRequestBehavior.AllowGet);
             }
@@ -250,5 +287,43 @@ namespace WEBSITE_MOTEL.Controllers
                 return Json(new { code = 500, msg = "Trả phòng thất bại. Lỗi " + ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpPost]
+        public JsonResult SubmitReview(int sMa2, int userId,  string review, int rating)
+        {
+            try
+            {
+                // Kiểm tra dữ liệu đầu vào
+                if (string.IsNullOrWhiteSpace(review) || rating < 1 || rating > 5)
+                {
+                    return Json(new { success = false, msg = "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại!" });
+                }
+
+                // Tạo đối tượng review mới
+                var newReview = new DANHGIA
+                {
+                    Id_Phong = sMa2,
+                    Id_TaiKhoan = userId,
+                    MoTa = review,
+                    DanhGiaRating = rating,
+                    NgayDanhGia = DateTime.Now
+                };
+
+                data.DANHGIAs.InsertOnSubmit(newReview);
+                data.SubmitChanges();
+
+                // Phản hồi thành công
+                return Json(new { success = true, msg = "Đánh giá của bạn đã được gửi thành công!" });
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi (nếu cần)
+                // Logger.Error(ex);
+
+                // Phản hồi lỗi
+                return Json(new { success = false, msg = "Đã xảy ra lỗi khi gửi đánh giá. Vui lòng thử lại!" });
+            }
+        }
+
     }
 }

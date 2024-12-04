@@ -82,7 +82,7 @@
 </section>
 
 <!-- Modal Xem Chi Tiết Phòng -->
-<div class="modal fade" id="roomEditModal" tabindex="-1" role="dialog" aria-labelledby="roomEditLabel" aria-hidden="true">
+<div class="modal fade" id="roomEditModal" role="dialog" aria-labelledby="roomEditLabel" aria-hidden="true">
     <div class="modal-dialog custom-modal" role="document">
         <div class="modal-content" style="top: 150px; border-radius: 12px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);">
             <div class="modal-header" style="background-color: rgb(51, 204, 102); color: black; border-top-left-radius: 12px; border-top-right-radius: 12px;">
@@ -90,7 +90,7 @@
             </div>
             <div class="modal-body">
                 <!-- Modal for Full-Size Image -->
-                <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+                <div class="modal fade" id="imageModal" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-body text-center">
@@ -146,7 +146,7 @@
 
                         <div class="mb-3">
                             <label for="roomSoLuong">Số Lượng Phòng Còn</label>
-                            <input type="text" class="form-control" id="roomSoLuong">
+                            <input type="number" class="form-control" id="roomSoLuong">
                         </div>
                         @*<div class="mb-3">
                                 <label for="roomStatus">Trạng Thái</label>
@@ -155,13 +155,13 @@
                         <div class="mb-3">
                             <label for="roomDien">Giá Điện (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomDien" oninput="formatNumber(this)">
+                                <input type="number" class="form-control" id="roomDien" oninput="formatNumber(this)">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="roomGuiXe">Giá Gửi Xe (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomGuiXe" oninput="formatNumber(this)">
+                                <input type="number" class="form-control" id="roomGuiXe" oninput="formatNumber(this)">
                             </div>
                         </div>
                     </div>
@@ -184,19 +184,19 @@
                         <div class="mb-3">
                             <label for="roomDienTich">Diện Tích (m²)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomDienTich">
+                                <input type="number" class="form-control" id="roomDienTich">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="roomNuoc">Giá Nước (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomNuoc" oninput="formatNumber(this)">
+                                <input type="number" class="form-control" id="roomNuoc" oninput="formatNumber(this)">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="roomInternet">Giá Internet (đồng/tháng)</label>
                             <div style="display: flex; align-items: center;">
-                                <input type="text" class="form-control" id="roomInternet" oninput="formatNumber(this)">
+                                <input type="number" class="form-control" id="roomInternet" oninput="formatNumber(this)">
                             </div>
                         </div>
                     </div>
@@ -240,7 +240,7 @@
     </div>
 </div>
 
-<script>
+@*<script>
     // Reload the page when the modal is closed
     $('#roomEditModal').on('hidden.bs.modal', function () {
         location.reload(); // This will reload the current page
@@ -249,13 +249,23 @@
     function reloadPage() {
         location.reload(); // This will reload the current page
     }
-</script>
+</script>*@
 
 <div id="mapModal" class="modal map-modal">
     <div class="modal-content map-modal-content">
         <span class="close" style="font-size: 4rem;" onclick="closeMapModal()">&times;</span>
-        <div id="amap" style="width: 100%; height: 600px; margin-top: 40px"></div> <!-- Reduced height for the map -->
-        <div style="align-items:center ; display: flex" >
+
+        <!-- Input field for address -->
+        <div style="margin: 20px 0; text-align: center;">
+            <input type="text"
+                   id="addressInput"
+                   placeholder="Nhập địa chỉ để tìm trên bản đồ"
+                   style="width: 80%; padding: 10px; font-size: 1.2rem;" />
+            <button onclick="findAddress()" style="padding: 10px 20px; font-size: 1.2rem;">Tìm</button>
+        </div>
+
+        <div id="amap" style="width: 100%; height: 600px; margin-top: 20px;"></div>
+        <div style="align-items: center; display: flex;">
             <button id="okButton" style="margin-top: 20px;" onclick="saveCoordinates()">OK</button>
         </div>
     </div>
@@ -265,6 +275,7 @@
     let map;
     let selectedLat = null;
     let selectedLng = null;
+    let marker;
 
     // Đảm bảo mapModal bị tắt khi load trang
     $(document).ready(function () {
@@ -316,6 +327,50 @@
         });
     }
 
+    function findAddress() {
+        const address = document.getElementById('addressInput').value;
+        if (!address) {
+            alert("Vui lòng nhập địa chỉ!");
+            return;
+        }
+
+        // Sử dụng API của OpenStreetMap (Nominatim) để chuyển đổi địa chỉ thành tọa độ
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    const { lat, lon } = data[0];
+                    selectedLat = parseFloat(lat);
+                    selectedLng = parseFloat(lon);
+
+                    // Cập nhật bản đồ với tọa độ mới
+                    if (map) {
+                        map.setView([selectedLat, selectedLng], 13);
+
+                        // Nếu đã có marker, cập nhật vị trí của nó
+                        if (marker) {
+                            marker.setLatLng([selectedLat, selectedLng]);
+                        } else {
+                            // Nếu chưa có marker, thêm mới
+                            marker = L.marker([selectedLat, selectedLng]).addTo(map);
+                        }
+
+                        console.log("Đã tìm thấy địa chỉ:", address, selectedLat, selectedLng);
+                    } else {
+                        console.error("Bản đồ chưa được khởi tạo.");
+                    }
+                } else {
+                    alert("Không tìm thấy địa chỉ. Vui lòng thử lại.");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching coordinates:", error);
+                alert("Có lỗi xảy ra khi tìm địa chỉ.");
+            });
+    }
+
     function closeMapModal() {
         const mapModal = document.getElementById('mapModal');
         console.log("Closing modal");
@@ -337,7 +392,7 @@
         }).addTo(map);
 
         // Thêm một marker cho vị trí này
-        const marker = L.marker([lat, lng]).addTo(map)
+        marker = L.marker([lat, lng]).addTo(map)
             .openPopup();
 
         // Cập nhật tọa độ đã chọn khi nhấp vào bản đồ
@@ -469,7 +524,7 @@
             sGuiXe: parseNumber($('#roomGuiXe').val()),
             sInternet: parseNumber($('#roomInternet').val()),
             sMoTa: $('#roomDescribe').val(),
-            sDiaChi: $('#roomAddress').val(),     
+            sDiaChi: $('#roomAddress').val(),
         };
 
         if (selectedLat != null && selectedLng != null) {
@@ -682,6 +737,16 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
+    #mapModal {
+        z-index: 1050; /* Đảm bảo modal hiển thị trên các phần tử khác */
+        position: fixed; /* Đảm bảo modal ở vị trí cố định */
+    }
+
+    input {
+        pointer-events: auto; /* Đảm bảo input có thể tương tác */
+    }
+
+
     .close {
         position: absolute;
         top: 10px;
@@ -758,5 +823,4 @@
         #okButton:active {
             background-color: #3e8e41; /* Màu nền khi nhấn */
         }
-        
 </style>

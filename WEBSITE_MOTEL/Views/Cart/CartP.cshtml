@@ -5,6 +5,10 @@
     ViewBag.Title = "CartP";
     Layout = "~/Views/_LayoutUser.cshtml";
 }
+@{
+    WEBSITE_MOTEL.Models.TAIKHOAN tk = (WEBSITE_MOTEL.Models.TAIKHOAN)Session["TaiKhoan"];
+    int userId = tk != null ? tk.Id : 0;
+}
 <div class="nav-text">
     <ol>
         <li><a href="@Url.Action("Index","Motel")">Trang chủ</a></li>
@@ -26,11 +30,11 @@
                 <div id="myCarousel_@i" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
                     @*<ol class="carousel-indicators">
-                            <li data-target="#myCarousel_@i" data-slide-to="0" class="active"></li>
-                            <li data-target="#myCarousel_@i" data-slide-to="1"></li>
-                            <li data-target="#myCarousel_@i" data-slide-to="2"></li>
-                            <li data-target="#myCarousel_@i" data-slide-to="3"></li>
-                        </ol>*@
+                        <li data-target="#myCarousel_@i" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel_@i" data-slide-to="1"></li>
+                        <li data-target="#myCarousel_@i" data-slide-to="2"></li>
+                        <li data-target="#myCarousel_@i" data-slide-to="3"></li>
+                    </ol>*@
 
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner" role="listbox">
@@ -42,13 +46,13 @@
 
                     <!-- Left and right controls -->
                     @*<a class="left carousel-control" href="#myCarousel_@i" role="button" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>*@
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>*@
                 </div>
             </div>
 
@@ -67,7 +71,7 @@
                         Trạng thái:
                         @if (item.sTrangThai == 3)
                         {
-                            <span colspan="3" style="color:limegreen;">Đã được duyệt thành công</span>
+                            <span colspan="3" style="color:limegreen;">Đang thuê</span>
                         }
                         else if (item.sTrangThai == 2)
                         {
@@ -76,6 +80,10 @@
                         else if (item.sTrangThai == 1)
                         {
                             <span colspan="3" style="color: #1fefed;">Đang chờ thanh toán</span>
+                        }
+                        else if (item.sTrangThai == 4)
+                        {
+                            <span colspan="3" style="color: #ff471a;">Đã trả phòng</span>
                         }
                     </div>
                 </div>
@@ -87,7 +95,31 @@
                         <li class="item-cr1 internet-price hide_op"><i class="fa fa-wifi"></i> Mạng: <span>@string.Format("{0:#,##0}", item.sInternet).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 park-price hide_op"><i class="fa fa-motorcycle"></i> Gửi xe: <span>@string.Format("{0:#,##0}", item.sGuiXe).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 price"><i class="fa fa-money"></i> Giá tiền phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</span></li>
-                        <li class="item-cr1 phone"><i class="fa fa-phone"></i> LH:@item.sSDT <span></span></li>
+                        @{
+                            var allRatings = ViewBag.AllRatings as IEnumerable<WEBSITE_MOTEL.Models.DanhGia>;
+                            if (allRatings != null)
+                            {
+                                var ratingsForRoom = allRatings.Where(r => r.sId_Phong == item.sMa2).ToList();
+
+                                if (ratingsForRoom.Any())  // Check if there are any ratings for this room
+                                {
+                                    var averageRating = ratingsForRoom.Average(r => r.sDanhGiaRating);  // Calculate average rating
+
+                                    <li class="item-cr1 phone">
+                                        Đánh giá: <span style="font-size:20px;">@(averageRating?.ToString("F1") ?? "0.0")</span>
+                                        <span id="star">★</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <p>Chưa được đánh giá.</p>
+                                }
+                            }
+                            else
+                            {
+                                <p>Chưa được đánh giá.</p>
+                            }
+                        }
                     </ul>
                     <button class="button-detail" data-toggle="collapse" data-target="#content-detail1_@i"><i class="fa fa-arrow-right"></i> Xem chi tiết</button>
                 </div>
@@ -114,8 +146,8 @@
                         <li class="active"><a data-toggle="tab" href="#menu1_@i">THÔNG TIN CHUNG</a></li>
                         <li><a data-toggle="tab" href="#menu2_@i">MÔ TẢ CHI TIẾT</a></li>
                         <li><a data-toggle="tab" href="#menu3_@i">HÌNH ẢNH</a></li>
-                        @*<li><a data-toggle="tab" href="#menu5_@i">ẢNH 360<sup>o</sup></a></li>*@
                         <li class="position item1"><a data-toggle="tab" href="#menu4_@i">VỊ TRÍ</a></li>
+                        <li><a data-toggle="tab" href="#menu5_@i">ĐÁNH GIÁ</a></li>
                     </ul>
                     <!-- Content navs tabs-->
                     <div class="tab-content">
@@ -145,14 +177,15 @@
                                         <td>@item.sSoNguoiO</td>
                                     </tr>
                                     <tr>
-                                        <th>Giá tiền cọc</th>
-                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCoc).Replace(',', '.')đ</td>
+                                        <th>Giá tiền phòng</th>
+                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')    đ/tháng</td>
                                         <th>Số phòng còn</th>
                                         <td>@item.sSoluong</td>
                                     </tr>
                                     <tr>
-                                        <th>Giá tiền phòng</th>
-                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')    đ/tháng</td>
+                                        <th>Giá tiền cọc</th>
+                                        <td>@string.Format("{0:#,##0,0}", item.dGiaCoc).Replace(',', '.')đ</td>
+                                        
                                     </tr>
 
                                 </tbody>
@@ -255,17 +288,67 @@
                                 });
                             </script>
                         </div>
-                        @*<div id="menu5_@i" class="tab-pane fade">
-                            <p style="color: green">Tính năng này hiện chỉ hỗ trợ trên Chrome Browser</p>
-                            <div id="panorama1" class="panorama" style="width: 100%; height: 400px"></div>
-                        </div>*@
+                        <div id="menu5_@i" class="tab-pane fade">
+                            <div class="des-detail-content">
+                                <div class="rating">
+                                    @{
+                                        var reviews = ViewBag.Reviews as IEnumerable<WEBSITE_MOTEL.Models.DanhGia>;
+                                        if (reviews != null)
+                                        {
+                                            var reviewsForCurrentRoom = reviews.Where(r => r.sId_Phong == item.sMa2).OrderByDescending(r => r.dNgayDanhGia).ToList();
+                                            if (reviewsForCurrentRoom.Any())
+                                            {
+                                                // Hiển thị 3 đánh giá đầu tiên
+                                                foreach (var review in reviewsForCurrentRoom.Take(3))
+                                                {
+                                                    @Html.Partial("_ReviewPartial", review)
+                                                }
+
+                                                <!-- Đánh giá ẩn (skip 3 đánh giá đầu tiên) -->
+                                                <div id="all-reviews_@i" class="hidden-reviews" hidden>
+                                                    @foreach (var review in reviewsForCurrentRoom.Skip(3))
+                                                    {
+                                                        @Html.Partial("_ReviewPartial", review)
+                                                    }
+                                                </div>
+
+                                                // Nút Xem thêm
+                                                <div class="view-all-reviews">
+                                                    <button id="view-more-reviews_@i" style="margin-top:0px;" class="view-more-reviews">Xem thêm</button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <p>Không có đánh giá nào được tìm thấy.</p>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>Không có đánh giá nào được tìm thấy.</p>
+                                        }
+                                    }
+
+                                    <script>
+                                        $(document).ready(function() {
+                                            // Sự kiện cho nút "Xem thêm"
+                                            $("#view-more-reviews_@i").click(function() {
+                                                $("#all-reviews_@i").toggle(); // Hiển thị hoặc ẩn đánh giá ẩn
+                                                $(this).text(function(i, text) {
+                                                    return text === "Xem thêm" ? "Ẩn đánh giá" : "Xem thêm";
+                                                });
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <form style="text-align:center">
                     @*<button type="button" data-toggle="modal" data-target="#ModalPay" name="pay" id="@item.sMa">THANH TOÁN</button>*@
                     @if (item.sTrangThai == 3)
                     {
-                        <button style="width:300px" type="button" name="checkout" id="@item.sMa">TRẢ PHÒNG</button>
+                        <button style="width:300px" type="button" name="checkout" id="@item.sMa" data-sma="@item.sMa2">TRẢ PHÒNG</button>
                     }
                     else if (item.sTrangThai == 2)
                     {
@@ -273,12 +356,63 @@
                     }
                     else if (item.sTrangThai == 1)
                     {
-                            <button onclick="initiatePayment(@item.sMa,@item.dGiaCoc)" style="width:300px" type="button">THANH TOÁN TIỀN CỌC</button>
+                        <button onclick="initiatePayment(@item.sMa,@item.dGiaCoc)" style="width:300px" type="button">THANH TOÁN TIỀN CỌC</button>
                     }
                 </form>
+
             </article>
 
+            <!-- Modal 1: Cảm ơn và chọn hành động -->
+            <div id="thankYouModal" class="modal" style="display: none;" aria-labelledby="thankYouTitle" aria-hidden="true">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2 id="thankYouTitle" style="color: #fff">Cảm ơn bạn đã sử dụng dịch vụ!</h2>
+                    <p class="modal-description" style="color: #fff">Bạn có muốn để lại đánh giá để cải thiện dịch vụ không?</p>
+                    <div class="modal-actions">
+                        <style>
+                            #writeReviewBtn {
+                                background: #fff;
+                                color: #27ae60;
+                                padding: 10px 20px;
+                                border-radius: 20px;
+                                font-size: 13px;
+                                border: none;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                            }
 
+                                #writeReviewBtn:hover {
+                                    background: #00b300;
+                                    color: #fff;
+                                }
+
+                            #exitBtn {
+                                background: #fff;
+                                color: #27ae60;
+                                padding: 10px 20px;
+                                border-radius: 20px;
+                                font-size: 13px;
+                                border: 2px solid #fff;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                            }
+
+                                #exitBtn:hover {
+                                    background: #00b300;
+                                    color: #fff;
+                                }
+                        </style>
+
+                        <button id="writeReviewBtn" class="primary-btn" data-sma="@item.sMa2">
+                            Viết Đánh Giá
+                        </button>
+                        <button id="exitBtn"
+                                class="secondary-btn">
+                            Thoát
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <hr width="100%"
                 color="red"
@@ -292,22 +426,80 @@
 
 
 </section>
+
+
+<!-- Modal 2: Viết đánh giá -->
+<div id="reviewModal" class="modal" role="dialog" style="display: none;" aria-labelledby="reviewTitle" aria-hidden="true">
+    <div class="modal-content" role="document">
+        <span class="close" role="button" tabindex="0">&times;</span>
+        <h2 id="reviewTitle" style="color: #fff;">Viết Đánh Giá</h2>
+
+        <input type="hidden" id="sMa2" value="">
+
+        <!-- Rating Stars -->
+        <div class="stars-row">
+            <div class="col">
+                <button class="star" data-value="1">&#9733;</button>
+            </div>
+            <div class="col">
+                <button class="star" data-value="2">&#9733;</button>
+            </div>
+            <div class="col">
+                <button class="star" data-value="3">&#9733;</button>
+            </div>
+            <div class="col">
+                <button class="star" data-value="4">&#9733;</button>
+            </div>
+            <div class="col">
+                <button class="star" data-value="5">&#9733;</button>
+            </div>
+        </div>
+
+        <input type="hidden" id="selectedStar" value="">
+
+        <!-- Phần nhập đánh giá -->
+        <textarea id="reviewText" rows="5" placeholder="Nhập đánh giá của bạn tại đây"></textarea>
+
+        <!-- Nút hành động -->
+        <div class="modal-actions">
+            <button id="submitReview" class="primary-btn">Gửi Đánh Giá</button>
+            <button class="closeReviewModal secondary-btn">Đóng</button>
+        </div>
+    </div>
+</div>
+
+
+
 Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
 <div class="MenuTrang">
     @Html.PagedListPager(Model, page => Url.Action("CartP", "Cart", new { page = page }))
 </div>
-<style>
-    .MenuTrang {
-        display: inline;
-        text-align: center;
-    }
-</style>
 
 
 <div class="clear"></div>
 <script src="~/js/pagination.js"></script>
 
 <script>
+    var idphong = 0;
+    // JavaScript để đảm bảo chỉ chọn một sao và sáng tất cả sao trước đó
+    const stars = document.querySelectorAll('.star');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function () {
+            // Xóa lớp 'selected' khỏi tất cả sao
+            stars.forEach(s => s.classList.remove('selected'));
+
+            // Thêm lớp 'selected' vào sao đã chọn và tất cả sao trước đó
+            this.classList.add('selected');
+            let previousStars = Array.from(stars).slice(0, this.getAttribute('data-value'));
+            previousStars.forEach(star => {
+                star.classList.add('selected');
+            });
+        });
+    });
+
+
+
     function initiatePayment(orderId, amount) {
         $.ajax({
             url: '@Url.Action("CreateVnPayUrl", "Cart")',
@@ -318,7 +510,7 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
             },
             success: function (data) {
                 if (data && data.paymentUrl) {
-                    window.location.href = data.paymentUrl;
+                    window.open(data.paymentUrl, '_blank');
                 } else {
                     alert("Failed to generate payment URL.");
                 }
@@ -351,8 +543,9 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
             })
         }
     }));
-    $(document).on('click', "button[name='checkout']", (function () {
+    $(document).on('click', "button[name='checkout']", function () {
         let MaDH = $(this).attr('id');
+        idphong = $(this).attr('data-sma');
         if (confirm('Xác nhận muốn trả phòng.')) {
             $.ajax({
                 url: '/Cart/Checkout',
@@ -362,16 +555,276 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
                 },
                 success: function (data) {
                     if (data.code == 200) {
-                        alert(data.msg);
-                        location.reload();
+                        alert(data.msg); // Thông báo thành công
+                        $('#thankYouModal').fadeIn(); // Mở modal cảm ơn
+                    } else {
+                        alert(data.msg); // Thông báo lỗi
                     }
-                    else {
-                        alert(data.msg);
-                    }
-
                 },
-            })
+            });
         }
-    }));
+    });
+
+    // Xử lý nút trong Modal 1
+    $('#writeReviewBtn').on('click', function () {
+        // Store the button element in a variable to reference it later
+        const $button = $(this);
+
+        $('#thankYouModal').fadeOut(function () {
+            const sMa2 = $button.attr('data-sma'); 
+            $('#sMa2').val(sMa2); 
+            $('#reviewModal').fadeIn(); // Show the review modal
+        });
+    });
+
+
+    $('#exitBtn').on('click', function () {
+        $('#thankYouModal').fadeOut();
+        location.reload(); // Tải lại trang
+    });
+
+    // Xử lý Modal 2
+    // Handle star click to select rating
+    $('.star').on('click', function () {
+        const value = $(this).data('value');
+        $('#selectedStar').val(value);
+
+        // Highlight the selected stars
+        $('.star').each(function () {
+            if ($(this).data('value') <= value) {
+                $(this).addClass('selected'); // Apply selected style
+            } else {
+                $(this).removeClass('selected'); // Remove style for non-selected
+            }
+        });
+    });
+
+    // Submit review button logic
+    $('#submitReview').on('click', function () {
+        const sMa2 = idphong;
+        const userId = @userId;
+        const reviewText = $('#reviewText').val();
+        const selectedStar = $('#selectedStar').val();
+        console.log(sMa2, userId);
+        if (!selectedStar) {
+            alert('Vui lòng chọn số sao đánh giá.');
+            return;
+        }
+        if (!reviewText.trim()) {
+            alert('Vui lòng nhập đánh giá.');
+            return;
+        }
+
+        // Send review via AJAX
+        $.ajax({
+            url: '/Cart/SubmitReview',
+            type: 'post',
+            data: {
+                sMa2: sMa2,
+                userId: userId,
+                review: reviewText,
+                rating: selectedStar
+            },
+            
+            success: function (data) {
+                console.log(data);
+                if (data.success) {
+                    alert('Đánh giá của bạn đã được gửi.');
+                    $('#reviewModal').fadeOut();
+                    location.reload();
+                } else {
+                    alert(data.msg || 'Đã xảy ra lỗi, vui lòng thử lại.');
+                }
+            },
+            error: function () {
+                alert('Không thể gửi đánh giá, vui lòng kiểm tra kết nối.');
+            }
+        });
+
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            $('#reviewModal').fadeOut();
+        }
+    });
+
+    // Close modal logic
+    $('.close, .closeReviewModal').on('click', function () {
+        $(this).closest('.modal').fadeOut(); // Close the modal
+    });
 
 </script>
+
+<style>
+    .MenuTrang {
+        display: inline;
+        text-align: center;
+    }
+
+    .rating {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .single-rating {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .fa-star.checked {
+        color: gold; /* Màu vàng cho sao đã chọn */
+    }
+
+    .fa-star {
+        color: gray; /* Màu xám cho sao chưa chọn */
+    }
+
+    /* Modal Styling */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: linear-gradient(135deg, #2ecc71, #27ae60); /* Xanh lá cây */
+        border-radius: 10px;
+        color: black;
+        padding: 20px;
+        width: 400px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        position: relative;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+        .modal-content h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content .modal-description {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            height: 100px;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            resize: none;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+    .modal-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .primary-btn {
+        background: #fff;
+        color: #27ae60;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .primary-btn:hover {
+            background: #00b300;
+            color: #fff;
+        }
+
+    .secondary-btn {
+        background: #fff;
+        color: #27ae60;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 16px;
+        border: 2px solid #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .secondary-btn:hover {
+            background: #00b300;
+            color: #fff;
+        }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #fff;
+    }
+    /* Row and Stars Styling */
+    .star {
+        font-size: 24px;
+        color: gray;
+        cursor: pointer;
+    }
+
+        .star.selected {
+            color: gold;
+        }
+
+    .stars-row {
+        display: flex; /* Hiển thị dạng hàng ngang */
+        justify-content: center; /* Canh giữa */
+        gap: 10px; /* Khoảng cách giữa các sao */
+    }
+
+        .stars-row .col {
+            position: relative;
+        }
+
+            .stars-row .col .star {
+                font-size: 40px; /* Kích thước sao */
+                color: #ccc; /* Màu mặc định */
+                background: none;
+                border: none;
+                cursor: pointer;
+                transition: color 0.3s ease;
+            }
+
+                /* Hover hiệu ứng cho tất cả sao trước nó */
+                .stars-row .col .star:hover,
+                .stars-row .col .star:hover ~ .star {
+                    color: yellow; /* Màu vàng khi hover */
+                }
+
+                /* Sáng sao khi click vào sao và các sao trước đó */
+                .stars-row .col .star.selected,
+                .stars-row .col .star.selected ~ .star {
+                    color: yellow; /* Màu vàng khi được chọn */
+                }
+
+    #star {
+        display: inline-block;
+        color: gold;
+        font-size: 24px;
+    }
+</style>

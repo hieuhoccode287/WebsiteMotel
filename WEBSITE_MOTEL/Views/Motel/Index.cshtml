@@ -1,6 +1,7 @@
 ﻿@using WEBSITE_MOTEL.Models
 @using PagedList.Mvc;
 @model PagedList.PagedList<WEBSITE_MOTEL.Models.RoomDetail>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/_LayoutUser.cshtml";
@@ -81,7 +82,38 @@
                         <li class="item-cr1 internet-price hide_op"><i class="fa fa-wifi"></i> Mạng: <span>@string.Format("{0:#,##0}", item.sInternet).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 park-price hide_op"><i class="fa fa-motorcycle"></i> Gửi xe: <span>@string.Format("{0:#,##0}", item.sGuiXe).Replace(',', '.')đ/tháng</span></li>
                         <li class="item-cr1 price"><i class="fa fa-money"></i> Giá tiền phòng: <span>@string.Format("{0:#,##0,0}", item.dGiaCa).Replace(',', '.')đ/tháng</span></li>
-                        <li class="item-cr1 phone"><i class="fa fa-phone"></i> LH:@item.sSDT <span></span></li>
+                        @{
+                            var allRatings = ViewBag.AllRatings as IEnumerable<DanhGia>;
+                            if (allRatings != null)
+                            {
+                                var ratingsForRoom = allRatings.Where(r => r.sId_Phong == item.sMa).ToList();
+
+                                if (ratingsForRoom.Any())  // Check if there are any ratings for this room
+                                {
+                                    var averageRating = ratingsForRoom.Average(r => r.sDanhGiaRating);  // Calculate average rating
+
+                                        <li class="item-cr1 phone">
+                                            Đánh giá: <span style="font-size:20px;">@(averageRating?.ToString("F1") ?? "0.0")</span>
+                                            <span id="star">★</span>
+                                        </li>
+                                }
+                                else
+                                {
+                                    <p>Chưa được đánh giá.</p>
+                                }
+                            }
+                            else
+                            {
+                                <p>Chưa được đánh giá.</p>
+                            }
+                        }
+
+
+
+
+
+
+
                     </ul>
                     <button class="button-detail" data-toggle="collapse" data-target="#content-detail1_@i"><i class="fa fa-arrow-right"></i> Xem chi tiết</button>
                 </div>
@@ -104,8 +136,8 @@
                         <li class="active"><a data-toggle="tab" href="#menu1_@i">THÔNG TIN CHUNG</a></li>
                         <li><a data-toggle="tab" href="#menu2_@i">MÔ TẢ CHI TIẾT</a></li>
                         <li><a data-toggle="tab" href="#menu3_@i">HÌNH ẢNH</a></li>
-                        @*<li><a data-toggle="tab" href="#menu5_@i">ẢNH 360<sup>o</sup></a></li>*@
                         <li class="position item1"><a class="nav-link" data-toggle="tab" href="#menu4_@i">VỊ TRÍ</a></li>
+                        <li><a data-toggle="tab" href="#menu5_@i">ĐÁNH GIÁ</a></li>
                     </ul>
                     <!-- Content navs tabs-->
                     <div class="tab-content">
@@ -149,16 +181,6 @@
                         <div id="menu2_@i" class="tab-pane fade">
                             <div id="detail-item2" class="des-detail-content">
                                 <p>
-                                    @*Nhà cao cấp giá bình dân chỉ 2tr5 bạn đã sở hữu 1 phòng sạch sẽ và an ninh nhất quận 9.Đến xem là mê liền * Giảm 10% cho bạn thuê phòng lần đầu tiên Hiện tại bên mình đang có phòng trọ cho thuê, mình xin mô tả thông tin như sau:
-                    <br>
-                    Địa chỉ: SỐ 3/108 Nguyễn Trãi, Thượng Đình, Thanh Xuân, Hà Nội.  Nhà gần chợ và siêu thị bạn thoải mái nấu những món ăn mà mình yêu thích nhé
-                    <br>
-                    - Gần các trường ĐH giao thông vận tải, ĐH sư phạm kĩ thuật thuận lợi cho các bạn sinh viên
-                    <br>
-                    - Gần nơi sầm uất như VINCOM PLAZA, siêu thị CoopMart, cây xăng Tân phú, bệnh viện quận 9....
-                    <br>
-                    - Toàn bộ phòng được lát gạch men nên phòng ốc rất sạch sẽ và cao cấp<br> Vì số lượng có hạn nên gọi ngay cho mình để đặt phòng nhé.(MS. HẰNG)*@
-
                                     @Html.Raw(item.sMoTa)
                                 </p>
                             </div>
@@ -253,27 +275,83 @@
                                 });
                             </script>
                         </div>
+                        <div id="menu5_@i" class="tab-pane fade">
+                            <div class="des-detail-content">
+                                <div class="rating">
+                                    @{
+                                        var reviews = ViewBag.Reviews as IEnumerable<DanhGia>;
+                                        if (reviews != null)
+                                        {
+                                            var reviewsForCurrentRoom = reviews.Where(r => r.sId_Phong == item.sMa).OrderByDescending(r => r.dNgayDanhGia).ToList();
+                                            if (reviewsForCurrentRoom.Any())
+                                            {
+                                                // Hiển thị 3 đánh giá đầu tiên
+                                                foreach (var review in reviewsForCurrentRoom.Take(3))
+                                                {
+                                                    @Html.Partial("_ReviewPartial", review)
+                                                }
+
+                                                <!-- Đánh giá ẩn (skip 3 đánh giá đầu tiên) -->
+                                                <div id="all-reviews_@i" class="hidden-reviews" hidden>
+                                                    @foreach (var review in reviewsForCurrentRoom.Skip(3))
+                                                    {
+                                                        @Html.Partial("_ReviewPartial", review)
+                                                    }
+                                                </div>
+
+                                                // Nút Xem thêm
+                                                <div class="view-all-reviews">
+                                                    <button id="view-more-reviews_@i" style="margin-top:0px;" class="view-more-reviews">Xem thêm</button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <p>Không có đánh giá nào được tìm thấy.</p>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>Không có đánh giá nào được tìm thấy.</p>
+                                        }
+                                    }
+
+                                    <script>
+                                        $(document).ready(function() {
+                                            // Sự kiện cho nút "Xem thêm"
+                                            $("#view-more-reviews_@i").click(function() {
+                                                $("#all-reviews_@i").toggle(); // Hiển thị hoặc ẩn đánh giá ẩn
+                                                $(this).text(function(i, text) {
+                                                    return text === "Xem thêm" ? "Ẩn đánh giá" : "Xem thêm";
+                                                });
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+
+
 
                     </div>
-                @if (Session["TaiKhoan"] == null)
-                {
-                    <form style="text-align:center">
-                        <button type="button"><a href="@Url.Action("DangNhap","User")">ĐẶT NGAY</a></button>
-                    </form>
-                }
-                else if (tk.PhanQuyen == 2 || tk.PhanQuyen == 1 || item.sSoluong == 0)
-                {
-                    <form style="text-align:center">
-                        <button type="button" style="display:none" data-toggle="modal" data-target="#exampleModal" name="dat" id="@item.sMa">ĐẶT NGAY</button>
-                    </form>
-                }
-                else if (tk.PhanQuyen == 3)
-                {
-                    <form style="text-align:center">
-                        <button type="button" data-toggle="modal" data-target="#exampleModal" name="dat" id="@item.sMa">ĐẶT NGAY</button>
-                    </form>
-                }
-            </article>
+                        @if (Session["TaiKhoan"] == null)
+                        {
+                            <form style="text-align:center">
+                                <button type="button"><a href="@Url.Action("DangNhap","User")">ĐẶT NGAY</a></button>
+                            </form>
+                        }
+                        else if (tk.PhanQuyen == 2 || tk.PhanQuyen == 1 || item.sSoluong == 0)
+                        {
+                            <form style="text-align:center">
+                                <button type="button" style="display:none" data-toggle="modal" data-target="#exampleModal" name="dat" id="@item.sMa">ĐẶT NGAY</button>
+                            </form>
+                        }
+                        else if (tk.PhanQuyen == 3)
+                        {
+                            <form style="text-align:center">
+                                <button type="button" data-toggle="modal" data-target="#exampleModal" name="dat" id="@item.sMa">ĐẶT NGAY</button>
+                            </form>
+                        }
+</article>
 
 
 
@@ -394,10 +472,54 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
         opacity: 1;
         font-size: 2.5rem;
     }
+    .rating {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .single-rating {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .fa-star.checked {
+        color: gold; /* Màu vàng cho sao đã chọn */
+    }
+
+    .fa-star {
+        color: gray; /* Màu xám cho sao chưa chọn */
+    }
+    #star {
+        display: inline-block;
+        color: gold;
+        font-size: 24px;
+    }
 
 </style>
 
 <script>
+    document.querySelectorAll('.star-rating .fa').forEach(star => {
+        star.addEventListener('click', function () {
+            const rating = this.getAttribute('data-rating');
+            // Đánh dấu các sao cho đến sao đã chọn
+            document.querySelectorAll('.star-rating .fa').forEach((s, index) => {
+                if (index < rating) {
+                    s.classList.add('checked');
+                } else {
+                    s.classList.remove('checked');
+                }
+            });
+        });
+    });
+
+
     $(document).on('click', "close", (function () {
         location.reload();
     }));
@@ -484,6 +606,7 @@ Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
         let formatted = price.replace(/\B(?=(\d{3})+(?!\d))/g, ".").replace(',', '.');
         return formatted;
     }
+
 
 
 </script>

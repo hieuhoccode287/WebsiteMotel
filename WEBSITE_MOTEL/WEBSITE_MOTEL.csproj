@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\ChuTro.cs" />
+    <Compile Include="Models\DanhGia.cs" />
     <Compile Include="Models\image.cs" />
     <Compile Include="Models\KhuVuc.cs" />
     <Compile Include="Models\NguoiDung.cs" />
@@ -1759,6 +1760,7 @@
     <Content Include="Views\Default\Index.cshtml" />
     <Content Include="Views\Approve\Approve.cshtml" />
     <Content Include="Views\Cart\VnPayReturn.cshtml" />
+    <Content Include="Views\Shared\_ReviewPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

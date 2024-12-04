@@ -24,12 +24,32 @@
       <Association Name="TAIKHOAN_DONHANG" Member="TAIKHOAN" ThisKey="Id_NguoiDung" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.DANHGIA" Member="DANHGIAs">
+    <Type Name="DANHGIA">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Id_Phong" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Id_TaiKhoan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NgayDanhGia" Type="System.DateTime" DbType="SmallDateTime" CanBeNull="true" />
+      <Column Name="MoTa" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="DanhGiaRating" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="PHONGTRO_DANHGIA" Member="PHONGTRO" ThisKey="Id_Phong" OtherKey="Id" Type="PHONGTRO" IsForeignKey="true" />
+      <Association Name="TAIKHOAN_DANHGIA" Member="TAIKHOAN" ThisKey="Id_TaiKhoan" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.HOTRO" Member="HOTROs">
     <Type Name="HOTRO">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Ten" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="Sdt" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="MotaVande" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.KHUVUC" Member="KHUVUCs">
+    <Type Name="KHUVUC">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Ten" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="MoTa" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Association Name="KHUVUC_PHONGTRO" Member="PHONGTROs" ThisKey="Id" OtherKey="KhuVuc" Type="PHONGTRO" />
     </Type>
   </Table>
   <Table Name="dbo.IMAGES" Member="IMAGEs">
@@ -41,14 +61,6 @@
       <Column Name="Url_Path3" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Column Name="Url_Path4" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
       <Association Name="PHONGTRO_IMAGE" Member="PHONGTRO" ThisKey="Id_PhongTro" OtherKey="Id" Type="PHONGTRO" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.KHUVUC" Member="KHUVUCs">
-    <Type Name="KHUVUC">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Ten" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Column Name="MoTa" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Association Name="KHUVUC_PHONGTRO" Member="PHONGTROs" ThisKey="Id" OtherKey="KhuVuc" Type="PHONGTRO" />
     </Type>
   </Table>
   <Table Name="dbo.PHONGTRO" Member="PHONGTROs">
@@ -73,6 +85,7 @@
       <Column Name="TrangThai" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
       <Column Name="Map" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
       <Association Name="PHONGTRO_DONHANG" Member="DONHANGs" ThisKey="Id" OtherKey="Id_Phong" Type="DONHANG" />
+      <Association Name="PHONGTRO_DANHGIA" Member="DANHGIAs" ThisKey="Id" OtherKey="Id_Phong" Type="DANHGIA" />
       <Association Name="PHONGTRO_IMAGE" Member="IMAGEs" ThisKey="Id" OtherKey="Id_PhongTro" Type="IMAGE" />
       <Association Name="KHUVUC_PHONGTRO" Member="KHUVUC1" ThisKey="KhuVuc" OtherKey="Id" Type="KHUVUC" IsForeignKey="true" />
       <Association Name="TAIKHOAN_PHONGTRO" Member="TAIKHOAN" ThisKey="Id_ChuTro" OtherKey="Id" Type="TAIKHOAN" IsForeignKey="true" />
@@ -94,6 +107,7 @@
       <Column Name="IdCardPhoto" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="IdCardPhoto2" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Association Name="TAIKHOAN_DONHANG" Member="DONHANGs" ThisKey="Id" OtherKey="Id_NguoiDung" Type="DONHANG" />
+      <Association Name="TAIKHOAN_DANHGIA" Member="DANHGIAs" ThisKey="Id" OtherKey="Id_TaiKhoan" Type="DANHGIA" />
       <Association Name="TAIKHOAN_PHONGTRO" Member="PHONGTROs" ThisKey="Id" OtherKey="Id_ChuTro" Type="PHONGTRO" />
     </Type>
   </Table>

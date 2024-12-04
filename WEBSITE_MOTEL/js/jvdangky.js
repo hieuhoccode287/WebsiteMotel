@@ -61,6 +61,34 @@ $(document).ready(function () {
         }
     });
 
+    $("#user_sdt").on('input', function () {
+        var user_sdt = $(this).val();
+
+        if (user_sdt) {
+            $.ajax({
+                url: '/User/CheckPhone',
+                type: 'GET',
+                data: { sdt: user_sdt },
+                success: function (response) {
+                    if (!response.available) {
+                        $(".item_message .message").html(response.message).css('color', 'red');
+                        $("#user_sdt").data('valid', false); // Set valid flag to false if unavailable
+                    } else {
+                        $(".item_message .message").html('');
+                        $("#user_sdt").data('valid', true); // Set valid flag to true if available
+                    }
+                },
+                error: function () {
+                    $(".item_message .message").html('Đã xảy ra lỗi khi kiểm tra số điện thoại.').css('color', 'red');
+                    $("#user_sdt").data('valid', false);
+                }
+            });
+        } else {
+            $(".item_message .message").html('');
+            $("#user_sdt").data('valid', false);
+        }
+    });
+
     $("input[name='phanquyen']").change(function () {
         if ($('#chutro').is(':checked')) {
             $(".cccd-file").show();
@@ -105,6 +133,10 @@ $(document).ready(function () {
             $("#user_sdt").focus();
             return showError('Số điện thoại không hợp lệ. Số điện thoại phải bắt đầu bằng 0 và có 10-11 chữ số.');
         }
+        if ($("#user_sdt").data('valid') === false) {
+            $("#user_sdt").focus();
+            return showError('Số điện thoại đã tồn tại.');
+        }
         if (!user_cccd) {
             $("#user_cccd").focus();
             return showError('Vui lòng nhập số căn cước công dân.');
@@ -131,7 +163,7 @@ $(document).ready(function () {
         }
         if ($("#user_tendn").data('valid') === false) {
             $("#user_tendn").focus();
-            return showError('Tên đăng nhập không khả dụng.');
+            return showError('Tên đăng nhập đã tồn tại.');
         }
         if (!user_pass) {
             $("#user_pass").focus();

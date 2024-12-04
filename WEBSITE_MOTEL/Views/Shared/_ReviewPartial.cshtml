@@ -1,0 +1,28 @@
+﻿
+<div class="single-rating" id="review_@Model.sId">
+    <div class="user-info">
+        <img src="~/Images/whiteavatar.jpg" style="height:40px; width:40px; border-radius:30px" class="user-avatar" />
+        <span class="user-name">@Model.sTenNguoiDanhGia</span>
+    </div>
+    <div class="star-rating" aria-label="User rating: @Model.sDanhGiaRating stars">
+        @for (int j = 1; j <= 5; j++)
+        {
+            <span class="fa fa-star @(j <= Model.sDanhGiaRating ? "checked" : "")"></span>
+        }
+    </div>
+    <p class="review-text">@Model.sMoTaDanhGia</p>
+    <p class="review-date">@string.Format("{0:dd/MM/yyyy}", Model.dNgayDanhGia)</p>
+    <div class="divider"></div>
+</div>
+<style>
+    .single-rating {
+        border-bottom: 1px solid #ddd; /* Đường kẻ nhẹ giữa các đánh giá */
+        padding:10px;
+    }
+
+    .divider {
+        border-top: 1px solid rgba(0, 0, 0, 0.1); /* Đường kẻ mờ */
+        margin-top: 5px;
+    }
+
+</style>

@@ -95,6 +95,21 @@ namespace WEBSITE_MOTEL.Controllers
                 return Json(new { available = true, message = "Tên đăng nhập có sẵn." }, JsonRequestBehavior.AllowGet);
             }
         }
+        
+        [HttpGet]
+        public JsonResult CheckPhone(string SDT)
+        {
+            var existingSDT = data.TAIKHOANs.SingleOrDefault(u => u.SDT == SDT);
+
+            if (existingSDT != null)
+            {
+                return Json(new { available = false, message = "Số điện thoại đã tồn tại." }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { available = true, message = "Số điện thoại có sẵn." }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
 
         [HttpPost]

@@ -6,6 +6,7 @@ namespace WEBSITE_MOTEL.Models
     public class RoomDetail
     {
         public int sMa { get; set; }
+        public int? sMa2 { get; set; }
 
         [Required(ErrorMessage = "Tên phòng là bắt buộc.")]
         [StringLength(100, ErrorMessage = "Tên phòng không được vượt quá 100 ký tự.")]
@@ -35,7 +36,11 @@ namespace WEBSITE_MOTEL.Models
         [DataType(DataType.Date)]
         public DateTime? dNgayCapNhat { get; set; }
 
+        [DataType(DataType.Date)]
+        public DateTime? dNgayDanhGia { get; set; }
+
         public string sMoTa { get; set; }
+        public string sMoTaDanhGia { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Giá cả phải là một số hợp lệ.")]
         public double dGiaCa { get; set; }
@@ -69,6 +74,7 @@ namespace WEBSITE_MOTEL.Models
         public string sDiaChi { get; set; }
 
         public int sTrangThai { get; set; }
+        public int? sDanhGia { get; set; }
         public int sIdKV { get; set; }
         public string sTenKV { get; set; }
 

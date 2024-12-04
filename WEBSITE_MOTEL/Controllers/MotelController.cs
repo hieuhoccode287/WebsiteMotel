@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using PagedList;
 using WEBSITE_MOTEL.Models;
@@ -17,80 +18,137 @@ namespace WEBSITE_MOTEL.Controllers
             /*ViewBag.IdPH = new SelectList(data.PHONGTROs.ToList().OrderBy(n => n.TenPhong), "Id", "TenPhong");*/
             int iSize = 5;
             int iPageNum = (page ?? 1);
+
+            var userdanhgia = (from a in data.DANHGIAs
+                               join b in data.TAIKHOANs on a.Id_TaiKhoan equals b.Id
+                               select new DanhGia()
+                               {
+                                   sId = a.Id,
+                                   sId_Phong = (int)a.Id_Phong,
+                                   sTenNguoiDanhGia = b.HoTen,
+                                   sDanhGiaRating = a.DanhGiaRating,
+                                   sMoTaDanhGia = a.MoTa,
+                                   dNgayDanhGia = (DateTime)a.NgayDanhGia,
+                               });
+            ViewBag.Reviews = userdanhgia;
+
+            var allRatings = (from a in data.DANHGIAs
+                               join b in data.PHONGTROs on a.Id_Phong equals b.Id
+                               select new DanhGia()
+                               {
+                                   sId = a.Id,
+                                   sId_Phong = (int)a.Id_Phong,
+                                   sDanhGiaRating = a.DanhGiaRating,
+                                   sMoTaDanhGia = a.MoTa,
+                                   dNgayDanhGia = (DateTime)a.NgayDanhGia,
+                               });
+            ViewBag.AllRatings = allRatings;
+
+
+
+
             if (!string.IsNullOrEmpty(strSearch))
             {
                 var phong = (from a in data.PHONGTROs
-                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro
+                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro into images
+                             from c in images.DefaultIfEmpty()  // Left join IMAGEs để tránh trùng
                              join e in data.TAIKHOANs on a.Id_ChuTro equals e.Id
                              join d in data.KHUVUCs on a.KhuVuc equals d.Id
-                             where a.TrangThai == 1 && a.TenPhong.Contains(strSearch) || a.MoTa.Contains(strSearch) /*|| a.DienTich.Equals(strSearch) */
+                             join f in data.DANHGIAs on a.Id equals f.Id_Phong into danhgia
+                             from f in danhgia.DefaultIfEmpty()  // Left join DANHGIA để tránh trùng
+                             where a.TrangThai == 1 &&
+                                   (string.IsNullOrEmpty(strSearch) || a.TenPhong.Contains(strSearch) || a.MoTa.Contains(strSearch))
+                             group new { a, c, e, d, f } by a.Id into groupedPhong
                              select new RoomDetail()
                              {
-                                 sMa = a.Id,
-                                 sTenPhong = a.TenPhong,
-                                 sHoTen = e.HoTen,
-                                 sTrangThai = (byte)a.TrangThai,
-                                 sDienTich = (int)a.DienTich,
-                                 sSoluong = (int)a.SoLuong,
-                                 sSoNguoiO = (int)a.SoNguoiO,
-                                 sAnhBia = a.AnhBia,
-                                 sMoTa = a.MoTa,
-                                 dNgayCapNhat = (DateTime)a.Ngay,
-                                 dGiaCa = (double)a.GiaCa,
-                                 dGiaCoc = (double)a.GiaCoc,
-                                 sSDT = e.SDT,
-                                 sEmail = e.Email,
-                                 sUrl_Path = c.Url_Path,
-                                 sUrl_Path2 = c.Url_Path2,
-                                 sUrl_Path3 = c.Url_Path3,
-                                 sUrl_Path4 = c.Url_Path4,
-                                 sMap = a.Map,
-                                 sDiaChi = a.Diachi,
-                                 sDien = (double)a.Dien,
-                                 sNuoc = (double)a.Nuoc,
-                                 sGuiXe = (double)a.GuiXe,
-                                 sInternet = (double)a.Internet,
-                                 sTenKV = d.Ten,
-                             });
+                                 sMa = groupedPhong.FirstOrDefault().a.Id,
+                                 sTenPhong = groupedPhong.FirstOrDefault().a.TenPhong ?? "",
+                                 sHoTen = groupedPhong.FirstOrDefault().e.HoTen ?? "",
+                                 sDanhGia = groupedPhong.FirstOrDefault().f != null ? (int?)groupedPhong.FirstOrDefault().f.DanhGiaRating : (int?)null,
+                                 sDienTich = (int)groupedPhong.FirstOrDefault().a.DienTich,
+                                 sSoluong = (int)groupedPhong.FirstOrDefault().a.SoLuong,
+                                 sSoNguoiO = (int)groupedPhong.FirstOrDefault().a.SoNguoiO,
+                                 sAnhBia = groupedPhong.FirstOrDefault().a.AnhBia ?? "",
+                                 sMoTa = groupedPhong.FirstOrDefault().a.MoTa ?? "",
+                                 sMoTaDanhGia = groupedPhong.FirstOrDefault().f != null ? groupedPhong.FirstOrDefault().f.MoTa : "",
+                                 dNgayCapNhat = (DateTime)groupedPhong.FirstOrDefault().a.Ngay,
+                                 dNgayDanhGia = groupedPhong.FirstOrDefault().f != null ? (DateTime?)groupedPhong.FirstOrDefault().f.NgayDanhGia : null,
+                                 dGiaCa = (double)groupedPhong.FirstOrDefault().a.GiaCa,
+                                 dGiaCoc = (double)groupedPhong.FirstOrDefault().a.GiaCoc,
+                                 sSDT = groupedPhong.FirstOrDefault().e.SDT ?? "",
+                                 sEmail = groupedPhong.FirstOrDefault().e.Email ?? "",
+                                 sUrl_Path = groupedPhong.FirstOrDefault().c.Url_Path ?? "",
+                                 sUrl_Path2 = groupedPhong.FirstOrDefault().c.Url_Path2 ?? "",
+                                 sUrl_Path3 = groupedPhong.FirstOrDefault().c.Url_Path3 ?? "",
+                                 sUrl_Path4 = groupedPhong.FirstOrDefault().c.Url_Path4 ?? "",
+                                 sMap = groupedPhong.FirstOrDefault().a.Map ?? "",
+                                 sDiaChi = groupedPhong.FirstOrDefault().a.Diachi ?? "",
+                                 sDien = (double)groupedPhong.FirstOrDefault().a.Dien,
+                                 sNuoc = (double)groupedPhong.FirstOrDefault().a.Nuoc,
+                                 sGuiXe = (double)groupedPhong.FirstOrDefault().a.GuiXe,
+                                 sInternet = (double)groupedPhong.FirstOrDefault().a.Internet,
+                                 sTenKV = groupedPhong.FirstOrDefault().d.Ten ?? "",
+                             })
+                             .GroupBy(r => r.sMa)  // Nhóm theo Id_Phong (sMa)
+                             .Select(g => g.First())  // Chọn bản ghi đầu tiên trong mỗi nhóm
+                             .Distinct()
+                             .ToList();
+
+
                 return View(phong.OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
+
+
+
             }
             else
             {
                 var phong = (from a in data.PHONGTROs
-                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro
+                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro into images
+                             from c in images.DefaultIfEmpty()  // Left join IMAGEs để tránh trùng
                              join e in data.TAIKHOANs on a.Id_ChuTro equals e.Id
                              join d in data.KHUVUCs on a.KhuVuc equals d.Id
-                             where a.TrangThai == 1 
+                             join f in data.DANHGIAs on a.Id equals f.Id_Phong into danhgia
+                             from f in danhgia.DefaultIfEmpty()  // Left join DANHGIA để tránh trùng
+                             where a.TrangThai == 1
+                             group new { a, c, e, d, f } by a.Id into groupedPhong
                              select new RoomDetail()
                              {
-                                 sMa = a.Id,
-                                 sTenPhong = a.TenPhong,
-                                 sHoTen = e.HoTen,
-                                 sTrangThai = (byte)a.TrangThai,
-                                 sDienTich = (int)a.DienTich,
-                                 sSoluong = (int)a.SoLuong,
-                                 sSoNguoiO = (int)a.SoNguoiO,
-                                 sAnhBia = a.AnhBia,
-                                 sMoTa = a.MoTa,
-                                 dNgayCapNhat = (DateTime)a.Ngay,
-                                 dGiaCa = (double)a.GiaCa,
-                                 dGiaCoc = (double)a.GiaCoc,
-                                 sSDT = e.SDT,
-                                 sEmail = e.Email,
-                                 sUrl_Path = c.Url_Path,
-                                 sUrl_Path2 = c.Url_Path2,
-                                 sUrl_Path3 = c.Url_Path3,
-                                 sUrl_Path4 = c.Url_Path4,
-                                 sMap = a.Map,
-                                 sDiaChi = a.Diachi,
-                                 sDien = (double)a.Dien,
-                                 sNuoc = (double)a.Nuoc,
-                                 sGuiXe = (double)a.GuiXe,
-                                 sInternet = (double)a.Internet,
-                                 sTenKV = d.Ten,
-                             });
+                                 sMa = groupedPhong.FirstOrDefault().a.Id,
+                                 sTenPhong = groupedPhong.FirstOrDefault().a.TenPhong ?? "",
+                                 sHoTen = groupedPhong.FirstOrDefault().e.HoTen ?? "",
+                                 sDanhGia = groupedPhong.FirstOrDefault().f != null ? (int?)groupedPhong.FirstOrDefault().f.DanhGiaRating : (int?)null,
+                                 sDienTich = (int)groupedPhong.FirstOrDefault().a.DienTich,
+                                 sSoluong = (int)groupedPhong.FirstOrDefault().a.SoLuong,
+                                 sSoNguoiO = (int)groupedPhong.FirstOrDefault().a.SoNguoiO,
+                                 sAnhBia = groupedPhong.FirstOrDefault().a.AnhBia ?? "",
+                                 sMoTa = groupedPhong.FirstOrDefault().a.MoTa ?? "",
+                                 sMoTaDanhGia = groupedPhong.FirstOrDefault().f != null ? groupedPhong.FirstOrDefault().f.MoTa : "",
+                                 dNgayCapNhat = (DateTime)groupedPhong.FirstOrDefault().a.Ngay,
+                                 dNgayDanhGia = groupedPhong.FirstOrDefault().f != null ? (DateTime?)groupedPhong.FirstOrDefault().f.NgayDanhGia : null,
+                                 dGiaCa = (double)groupedPhong.FirstOrDefault().a.GiaCa,
+                                 dGiaCoc = (double)groupedPhong.FirstOrDefault().a.GiaCoc,
+                                 sSDT = groupedPhong.FirstOrDefault().e.SDT ?? "",
+                                 sEmail = groupedPhong.FirstOrDefault().e.Email ?? "",
+                                 sUrl_Path = groupedPhong.FirstOrDefault().c.Url_Path ?? "",
+                                 sUrl_Path2 = groupedPhong.FirstOrDefault().c.Url_Path2 ?? "",
+                                 sUrl_Path3 = groupedPhong.FirstOrDefault().c.Url_Path3 ?? "",
+                                 sUrl_Path4 = groupedPhong.FirstOrDefault().c.Url_Path4 ?? "",
+                                 sMap = groupedPhong.FirstOrDefault().a.Map ?? "",
+                                 sDiaChi = groupedPhong.FirstOrDefault().a.Diachi ?? "",
+                                 sDien = (double)groupedPhong.FirstOrDefault().a.Dien,
+                                 sNuoc = (double)groupedPhong.FirstOrDefault().a.Nuoc,
+                                 sGuiXe = (double)groupedPhong.FirstOrDefault().a.GuiXe,
+                                 sInternet = (double)groupedPhong.FirstOrDefault().a.Internet,
+                                 sTenKV = groupedPhong.FirstOrDefault().d.Ten ?? "",
+                             })
+                             .GroupBy(r => r.sMa)  // Nhóm theo Id_Phong (sMa)
+                             .Select(g => g.First())  // Chọn bản ghi đầu tiên trong mỗi nhóm
+                             .Distinct()
+                             .ToList();
 
                 return View(phong.OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
+
+
             }
         }
 
@@ -189,49 +247,79 @@ namespace WEBSITE_MOTEL.Controllers
         {
             int iSize = 5;
             int iPageNum = (page ?? 1);
+
+            var userdanhgia = (from a in data.DANHGIAs
+                               join b in data.TAIKHOANs on a.Id_TaiKhoan equals b.Id
+                               select new DanhGia()
+                               {
+                                   sId = a.Id,
+                                   sId_Phong = (int)a.Id_Phong,
+                                   sTenNguoiDanhGia = b.HoTen,
+                                   sDanhGiaRating = a.DanhGiaRating,
+                                   sMoTaDanhGia = a.MoTa,
+                                   dNgayDanhGia = (DateTime)a.NgayDanhGia,
+                               });
+            ViewBag.Reviews = userdanhgia;
+
+            var allRatings = (from a in data.DANHGIAs
+                              join b in data.PHONGTROs on a.Id_Phong equals b.Id
+                              select new DanhGia()
+                              {
+                                  sId = a.Id,
+                                  sId_Phong = (int)a.Id_Phong,
+                                  sDanhGiaRating = a.DanhGiaRating,
+                                  sMoTaDanhGia = a.MoTa,
+                                  dNgayDanhGia = (DateTime)a.NgayDanhGia,
+                              });
+            ViewBag.AllRatings = allRatings;
+
             var listSearch = from a in data.PHONGTROs
-                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro
+                             join c in data.IMAGEs on a.Id equals c.Id_PhongTro into images
+                             from c in images.DefaultIfEmpty()  // Left join IMAGEs để tránh trùng
                              join e in data.TAIKHOANs on a.Id_ChuTro equals e.Id
                              join d in data.KHUVUCs on a.KhuVuc equals d.Id
+                             join f in data.DANHGIAs on a.Id equals f.Id_Phong into danhgia
+                             from f in danhgia.DefaultIfEmpty()  // Left join DANHGIA để tránh trùng
                              where a.TrangThai == 1
+                             group new { a, c, e, d, f } by a.Id into groupedPhong
                              select new RoomDetail()
                              {
-                                 sMa = a.Id,
-                                 sTenPhong = a.TenPhong,
-                                 sHoTen = e.HoTen,
-                                 sTrangThai = (byte)a.TrangThai,
-                                 sDienTich = (int)a.DienTich,
-                                 sSoluong = (int)a.SoLuong,
-                                 sSoNguoiO = (int)a.SoNguoiO,
-                                 sAnhBia = a.AnhBia,
-                                 sMoTa = a.MoTa,
-                                 dNgayCapNhat = (DateTime)a.Ngay,
-                                 dGiaCa = (double)a.GiaCa,
-                                 dGiaCoc = (double)a.GiaCoc,
-                                 sSDT = e.SDT,
-                                 sEmail = e.Email,
-                                 sUrl_Path = c.Url_Path,
-                                 sUrl_Path2 = c.Url_Path2,
-                                 sUrl_Path3 = c.Url_Path3,
-                                 sUrl_Path4 = c.Url_Path4,
-                                 sMap = a.Map,
-                                 sDiaChi = a.Diachi,
-                                 sDien = (double)a.Dien,
-                                 sNuoc = (double)a.Nuoc,
-                                 sGuiXe = (double)a.GuiXe,
-                                 sInternet = (double)a.Internet,
-                                 sTenKV = d.Ten,
-                                 sIdKV = d.Id,
+                                 sMa = groupedPhong.FirstOrDefault().a.Id,
+                                 sTenPhong = groupedPhong.FirstOrDefault().a.TenPhong ?? "",
+                                 sHoTen = groupedPhong.FirstOrDefault().e.HoTen ?? "",
+                                 sDanhGia = groupedPhong.FirstOrDefault().f != null ? (int?)groupedPhong.FirstOrDefault().f.DanhGiaRating : (int?)null,
+                                 sDienTich = (int)groupedPhong.FirstOrDefault().a.DienTich,
+                                 sSoluong = (int)groupedPhong.FirstOrDefault().a.SoLuong,
+                                 sSoNguoiO = (int)groupedPhong.FirstOrDefault().a.SoNguoiO,
+                                 sAnhBia = groupedPhong.FirstOrDefault().a.AnhBia ?? "",
+                                 sMoTa = groupedPhong.FirstOrDefault().a.MoTa ?? "",
+                                 sMoTaDanhGia = groupedPhong.FirstOrDefault().f != null ? groupedPhong.FirstOrDefault().f.MoTa : "",
+                                 dNgayCapNhat = (DateTime)groupedPhong.FirstOrDefault().a.Ngay,
+                                 dNgayDanhGia = groupedPhong.FirstOrDefault().f != null ? (DateTime?)groupedPhong.FirstOrDefault().f.NgayDanhGia : null,
+                                 dGiaCa = (double)groupedPhong.FirstOrDefault().a.GiaCa,
+                                 dGiaCoc = (double)groupedPhong.FirstOrDefault().a.GiaCoc,
+                                 sSDT = groupedPhong.FirstOrDefault().e.SDT ?? "",
+                                 sEmail = groupedPhong.FirstOrDefault().e.Email ?? "",
+                                 sUrl_Path = groupedPhong.FirstOrDefault().c.Url_Path ?? "",
+                                 sUrl_Path2 = groupedPhong.FirstOrDefault().c.Url_Path2 ?? "",
+                                 sUrl_Path3 = groupedPhong.FirstOrDefault().c.Url_Path3 ?? "",
+                                 sUrl_Path4 = groupedPhong.FirstOrDefault().c.Url_Path4 ?? "",
+                                 sMap = groupedPhong.FirstOrDefault().a.Map ?? "",
+                                 sDiaChi = groupedPhong.FirstOrDefault().a.Diachi ?? "",
+                                 sDien = (double)groupedPhong.FirstOrDefault().a.Dien,
+                                 sNuoc = (double)groupedPhong.FirstOrDefault().a.Nuoc,
+                                 sGuiXe = (double)groupedPhong.FirstOrDefault().a.GuiXe,
+                                 sInternet = (double)groupedPhong.FirstOrDefault().a.Internet,
+                                 sTenKV = groupedPhong.FirstOrDefault().d.Ten ?? "",
                              };
-
-            // Lọc theo Khu vực
+            // Filter by Khu vực (Area)
             if (IdKV != 0)
             {
                 listSearch = listSearch.Where(a => a.sIdKV == IdKV);
             }
 
-            // Lọc theo số lượng người
-            if (!String.IsNullOrEmpty(IdSL) && IdSL != "Số người ở")
+            // Filter by number of occupants (Số người ở)
+            if (!string.IsNullOrEmpty(IdSL) && IdSL != "Số người ở")
             {
                 int numberOfOccupants;
                 if (int.TryParse(IdSL, out numberOfOccupants))
@@ -240,8 +328,8 @@ namespace WEBSITE_MOTEL.Controllers
                 }
             }
 
-            // Lọc theo diện tích
-            if (!String.IsNullOrEmpty(IdDT) && IdDT != "Diện tích(m2)")
+            // Filter by area (Diện tích)
+            if (!string.IsNullOrEmpty(IdDT) && IdDT != "Diện tích(m2)")
             {
                 string[] areaRange = IdDT.Split(' ');
                 if (areaRange.Length >= 2)
@@ -267,8 +355,8 @@ namespace WEBSITE_MOTEL.Controllers
                 }
             }
 
-            // Lọc theo giá cả
-            if (!String.IsNullOrEmpty(IdGia) && IdGia != "Mức giá?")
+            // Filter by price (Giá)
+            if (!string.IsNullOrEmpty(IdGia) && IdGia != "Mức giá?")
             {
                 string[] priceRange = IdGia.Split(' ');
                 if (priceRange.Length >= 2)
@@ -294,18 +382,19 @@ namespace WEBSITE_MOTEL.Controllers
                 }
             }
 
-            // Kiểm tra nếu không có kết quả
+            // Check if no results were found
             if (!listSearch.Any())
             {
                 ViewBag.ErrorMessage = "Không tìm thấy kết quả phù hợp.";
             }
 
-            // Truyền lại các tham số lọc vào ViewBag để sử dụng trong View
+            // Pass the search filters back to the ViewBag
             ViewBag.IdKV = IdKV;
             ViewBag.IdGia = IdGia;
             ViewBag.IdSL = IdSL;
             ViewBag.IdDT = IdDT;
 
+            // Return the view with results, ordered by the update date
             return View("Index", listSearch.OrderByDescending(n => n.dNgayCapNhat).ToPagedList(iPageNum, iSize));
         }
 
@@ -430,6 +519,7 @@ namespace WEBSITE_MOTEL.Controllers
                 dh.Id_NguoiDung = nd.Id;
                 dh.Id_Phong = idphong;
                 dh.TrangThai = 2;
+                dh.TienCoc = phong.GiaCoc;
 
 
                 data.DONHANGs.InsertOnSubmit(dh);
