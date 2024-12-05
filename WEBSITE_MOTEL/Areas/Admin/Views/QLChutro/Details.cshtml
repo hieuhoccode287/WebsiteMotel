@@ -33,10 +33,10 @@ else
             <th>Tên phòng</th>
             <th>Ảnh bìa</th>
             <th>Mô tả</th>
-            <th>Giá cả</th>
+            <th>Giá thuê</th>
             <th>Diện tích</th>
             <th>Trạng thái</th>
-            <th>Ngày đăng</th>
+            <th>Đánh giá</th>
             <th>Thao tác</th>
         </tr>
     </thead>
@@ -113,7 +113,32 @@ else
                         <span style="color: #ddec71">Đang chờ admin duyệt phòng</span>
                     }
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.dNgayCapNhat)</td>
+
+                @{
+                    var allRatings = ViewBag.AllRatings as IEnumerable<WEBSITE_MOTEL.Models.DanhGia>;
+                    if (allRatings != null)
+                    {
+                        var ratingsForRoom = allRatings.Where(r => r.sId_Phong == item.sMa).ToList();
+
+                        if (ratingsForRoom.Any())  // Check if there are any ratings for this room
+                        {
+                            var averageRating = ratingsForRoom.Average(r => r.sDanhGiaRating);  // Calculate average rating
+
+                            <td>
+                                <span style="font-size:20px;">@(averageRating?.ToString("F1") ?? "0.0")</span>
+                                <span id="star">★</span>
+                            </td>
+                        }
+                        else
+                        {
+                             <td>Chưa được đánh giá.</td>
+                        }
+                    }
+                    else
+                    {
+                        <td>Chưa được đánh giá.</td>
+                    }
+                }
                 <td>
                     @if (item.sTrangThai == 0)
                     {
@@ -193,5 +218,11 @@ else
         height: 300px !important; /* Set fixed height */
         object-fit: cover !important;
         border-radius: 5% !important;
+    }
+
+    #star {
+        display: inline-block;
+        color: gold;
+        font-size: 24px;
     }
 </style>

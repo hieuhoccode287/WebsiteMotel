@@ -202,6 +202,19 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             int iSize = 4;
             int iPageNum = (page ?? 1);
 
+
+            var allRatings = (from a in data.DANHGIAs
+                              join b in data.PHONGTROs on a.Id_Phong equals b.Id
+                              select new DanhGia()
+                              {
+                                  sId = a.Id,
+                                  sId_Phong = (int)a.Id_Phong,
+                                  sDanhGiaRating = a.DanhGiaRating,
+                                  sMoTaDanhGia = a.MoTa,
+                                  dNgayDanhGia = (DateTime)a.NgayDanhGia,
+                              });
+            ViewBag.AllRatings = allRatings;
+
             var test = data.TAIKHOANs.FirstOrDefault(n => n.Id == id);
 
             var tenct = test?.HoTen;

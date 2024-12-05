@@ -10,6 +10,7 @@ using WEBSITE_MOTEL.Models;
 using VNPAY_CS_ASPX;
 using Microsoft.AspNetCore.Mvc;
 using WebGrease;
+using System.Globalization;
 
 namespace WEBSITE_MOTEL.Controllers
 {
@@ -166,6 +167,7 @@ namespace WEBSITE_MOTEL.Controllers
             string vnpayTranNo = string.Empty;
             string amount = string.Empty;
             string bankCode = string.Empty;
+            DateTime dt = DateTime.Now;
 
             if (Request.QueryString.Count > 0)
             {
@@ -192,29 +194,53 @@ namespace WEBSITE_MOTEL.Controllers
                 amount = (Convert.ToInt64(vnpay.GetResponseData("vnp_Amount")) / 100).ToString("N0");
                 bankCode = vnpay.GetResponseData("vnp_BankCode");
 
+                //@@@
+                string payDate = vnpay.GetResponseData("vnp_PayDate");
+                if (!string.IsNullOrEmpty(payDate))
+                {
+                    dt = DateTime.ParseExact(payDate, "yyyyMMddHHmmss", CultureInfo.InvariantCulture);
+                }
+
                 bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, vnp_HashSecret);
                 if (checkSignature)
                 {
                     if (vnp_ResponseCode == "00" && vnp_TransactionStatus == "00")
                     {
-                        decimal? parsedAmount = null;
-                        if (decimal.TryParse(amount, out decimal result))
+                        // Kiểm tra xem giao dịch đã tồn tại hay chưa
+                        var existingTransaction = data.CHITIETDONHANGs.FirstOrDefault(x => x.Id_DH == orderId);
+                        if (existingTransaction == null)
                         {
-                            parsedAmount = result;
-                        }
+                            decimal? parsedAmount = null;
+                            if (decimal.TryParse(amount, out decimal result))
+                            {
+                                parsedAmount = result;
+                            }
 
-                        var ctdh = new CHITIETDONHANG
+                            // Thêm giao dịch mới nếu chưa tồn tại
+                            var ctdh = new CHITIETDONHANG
+                            {
+                                Id_DH = (int)orderId,
+                                TmnCode = terminalId,
+                                TransactionNo = vnp_TransactionStatus,
+                                NgayTao = dt,
+                                Status = 1,
+                                Amount = parsedAmount
+                            };
+
+                            var dh = data.DONHANGs.SingleOrDefault(n => n.IdDH == orderId);
+                            if (dh != null)
+                            {
+                                dh.TrangThai = 3;
+                            }
+
+                            data.CHITIETDONHANGs.InsertOnSubmit(ctdh);
+                            data.SubmitChanges();
+                            message = "Giao dịch được thực hiện thành công. Cảm ơn quý khách đã sử dụng dịch vụ";
+                        }
+                        else
                         {
-                            Id_DH = (int)orderId,
-                            TmnCode = terminalId,
-                            TransactionNo = vnp_TransactionStatus,
-                            NgayTao = DateTime.Now,
-                            Status = 0,
-                            Amount = parsedAmount
-                        };
-                        data.CHITIETDONHANGs.InsertOnSubmit(ctdh);
-                        data.SubmitChanges();
-                        message = "Giao dịch được thực hiện thành công. Cảm ơn quý khách đã sử dụng dịch vụ";
+                            message = "Giao dịch đã được xử lý trước đó.";
+                        }
                     }
                     else
                     {
@@ -227,9 +253,11 @@ namespace WEBSITE_MOTEL.Controllers
                 {
                     message = "Có lỗi xảy ra trong quá trình xử lý";
                 }
+
             }
 
             // Pass values to the view
+            ViewBag.Date = dt;
             ViewBag.Message = message;
             ViewBag.TerminalID = terminalId;
             ViewBag.TxnRef = txnRef;
