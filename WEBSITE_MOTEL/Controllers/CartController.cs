@@ -11,6 +11,7 @@ using VNPAY_CS_ASPX;
 using Microsoft.AspNetCore.Mvc;
 using WebGrease;
 using System.Globalization;
+using Microsoft.Ajax.Utilities;
 
 namespace WEBSITE_MOTEL.Controllers
 {
@@ -27,6 +28,23 @@ namespace WEBSITE_MOTEL.Controllers
             TAIKHOAN tk = (TAIKHOAN)Session["TaiKhoan"];
             return tk;
         }
+
+        private void UpdateOrderStatus()
+        {
+            // Lấy danh sách các đơn hàng đã hết hạn chờ thanh toán
+            var expiredOrders = data.DONHANGs
+                            .Where(p => p.TrangThai == 1 &&
+                                        p.NgayDat != null &&
+                                        p.NgayDat.Value.AddDays(3) < DateTime.Today)
+                            .ToList();
+
+            // Delete the expired orders
+            data.DONHANGs.DeleteAllOnSubmit(expiredOrders);
+
+            // Lưu thay đổi vào database
+            data.SubmitChanges();
+        }
+
         public ActionResult CartP(int? page)
         {
             if (Session["TaiKhoan"] == null || Session["TaiKhoan"].ToString() == "")
@@ -36,6 +54,7 @@ namespace WEBSITE_MOTEL.Controllers
 
             else
             {
+                UpdateOrderStatus();
                 TAIKHOAN tk = GetAcc();
                 int iSize = 4;
                 int iPageNum = (page ?? 1);

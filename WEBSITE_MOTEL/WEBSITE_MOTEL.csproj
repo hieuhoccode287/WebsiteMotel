@@ -130,7 +130,6 @@
     <Compile Include="Controllers\ApproveController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InfoController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MotelController.cs" />
@@ -1729,9 +1728,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\_LayoutUser.cshtml" />
     <Content Include="Views\Motel\Index.cshtml" />
     <Content Include="Views\Shared\NavPartial.cshtml" />
@@ -1766,7 +1762,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Views\ADMIN\" />
     <Folder Include="Views\VnPayLibrary\" />
   </ItemGroup>
   <ItemGroup>

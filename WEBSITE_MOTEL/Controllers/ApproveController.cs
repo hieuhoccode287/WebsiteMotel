@@ -134,6 +134,7 @@ namespace WEBSITE_MOTEL.Controllers
             if (dh != null && phongTro != null && dh.TrangThai == 2)
             {
                 dh.TrangThai = 1;
+                dh.NgayDat = DateTime.Now;
                 phongTro.SoLuong -= 1;
                 data.SubmitChanges();
                 TempData["Message"] = "Duyệt phòng thành công!";
@@ -143,20 +144,6 @@ namespace WEBSITE_MOTEL.Controllers
             return RedirectToAction("Approve");
         }
 
-        [HttpPost]
-        public ActionResult DuyetPhongAjax(int id)
-        {
-            var dh = data.DONHANGs.SingleOrDefault(n => n.IdDH == id);
-            var phongTro = data.PHONGTROs.SingleOrDefault(pt => pt.Id == dh.Id_Phong);
-            if (dh != null && phongTro != null && dh.TrangThai == 2)
-            {
-                dh.TrangThai = 3;
-                phongTro.SoLuong -= 1;
-                data.SubmitChanges();
-                return Json(new { success = true, message = "Duyệt phòng thành công!" });
-            }
-            return Json(new { success = false, message = "Lỗi không duyệt được phòng!" });
-        }
         public ActionResult BoDuyetPhong(int id)
         {
             var dh = data.DONHANGs.SingleOrDefault(n => n.IdDH == id);
@@ -170,23 +157,6 @@ namespace WEBSITE_MOTEL.Controllers
 
             // Chuyển hướng về trang quản lý
             return RedirectToAction("Approve");
-        }
-        [HttpPost]
-        public ActionResult BoDuyetPhongAjax(int id)
-        {
-            var dh = data.DONHANGs.SingleOrDefault(n => n.IdDH == id);
-            if (dh == null)
-            {
-                return Json(new { code = 404, msg = "Đơn hàng không tồn tại." }, JsonRequestBehavior.AllowGet);
-            }
-            if (dh != null && dh.TrangThai == 2)
-            {
-                // Delete the order
-                dh.TrangThai = 1;
-                data.SubmitChanges();
-                return Json(new { success = true, message = "Bỏ duyệt phòng thành công!" });
-            }
-            return Json(new { success = false, message = "Bỏ duyệt phòng không thành công!" });
         }
     }
 }
