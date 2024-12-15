@@ -48,7 +48,7 @@ else
                 <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
                     @Html.DisplayFor(modelItem => item.sTenPhong)
                 </td>
-                <td style="width: 200px; height: 200px;">
+                <td style="min-width:150px; width: 200px; height: 200px;">
                     <!-- Carousel start -->
                     <div id="@carouselId" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
@@ -131,7 +131,7 @@ else
                         }
                         else
                         {
-                             <td>Chưa được đánh giá.</td>
+                            <td>Chưa được đánh giá.</td>
                         }
                     }
                     else
@@ -139,17 +139,105 @@ else
                         <td>Chưa được đánh giá.</td>
                     }
                 }
-                <td>
-                    @if (item.sTrangThai == 0)
-                    {
-                        <a href="@Url.Action("DuyetPhong", new { id = item.sMa })" class="btn btn-success" role="button">Duyệt</a>
-                    }
-                    <a href="@Url.Action("TuChoiPhong", new { id = item.sMa })" class="btn btn-danger" role="button" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng này không?')">Xóa phòng</a>
-                </td>
+            <td>
+                @if (item.sTrangThai == 0)
+                {
+                    <a href="@Url.Action("DuyetPhong", new { id = item.sMa })" class="btn btn-success" role="button">Duyệt</a>
+                }
+                <a href="@Url.Action("ReviewsRoom", "QLChutro", new { id = item.sMa })" class="btn btn-info">
+                    Xem đánh giá
+                </a>
+                <a href="@Url.Action("TuChoiPhong", new { id = item.sMa })" class="btn btn-danger" role="button" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng này không?')">Xóa phòng</a>
+
+            </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div class="modal fade" id="ratingModal" role="dialog" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-white text-dark">
+            <!-- Thêm lớp bg-white và text-dark -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="ratingModalLabel">Đánh giá phòng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modalReviewContent" class="p-3">
+                    <p class="text-center">Không có đánh giá nào được tìm thấy.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeReviewModal()">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function closeReviewModal() {
+        const modal = $('#ratingModal');
+        modal.modal('hide'); // Sử dụng Bootstrap API để đóng modal
+        console.log("Modal is closing using Bootstrap API");
+    }
+
+    function showReviews(phongId) {
+        // Hiển thị modal
+        $('#ratingModal').modal('show');
+
+        // Gửi AJAX để lấy danh sách đánh giá
+        $.ajax({
+            url: '/QLChutro/GetReviews', // Đổi "QLChutro" thành tên controller của bạn
+            method: 'GET',
+            data: { id: phongId },
+            success: function (data) {
+                let content = '';
+
+                if (data.length > 0) {
+                    data.forEach(function (review) {
+                        const rawDate = review.dNgayDanhGia;
+                        const timestamp = parseInt(rawDate.match(/\d+/)[0]); // Trích xuất timestamp
+                        const date = new Date(timestamp);
+                        const formattedDate = date.toLocaleDateString('vi-VN');
+
+                        content += `
+                            <div class="review-item mb-4 p-3 border rounded-lg shadow-sm bg-white text-dark">
+                                <h6 class="font-weight-bold">Tên người đánh giá: ${review.sTenNguoiDanhGia}</h6>
+                                <p class="mb-2">Đánh giá: <span class="badge badge-info">${review.sDanhGiaRating}/5</span></p>
+                                <p class="mb-2"><em>"${review.sMoTaDanhGia}"</em></p>
+                                <small class="text-muted" style="color:black !important"">Ngày đánh giá: ${formattedDate}</small>
+                            </div>`;
+                                });
+                            } else {
+                                content = `
+                        <div class="text-center text-muted">
+                            <p><strong>Không có đánh giá nào được tìm thấy.</strong></p>
+                        </div>`;
+                            }
+
+                            // Chèn nội dung vào modal
+                            $('#modalReviewContent').html(content);
+                        },
+                        error: function () {
+                            $('#modalReviewContent').html(`
+                    <div class="text-center text-danger">
+                        <p><strong>Có lỗi xảy ra khi tải dữ liệu.</strong></p>
+                    </div>
+                `);
+            }
+
+
+        });
+    }
+
+</script>
+
+
 
 @{
     var pagedListRenderOptions = new PagedListRenderOptions
@@ -176,6 +264,7 @@ else
     .table th, .table td {
         vertical-align: middle;
     }
+
         .table td img {
             height: 140px !important;
             border-radius: 10px;

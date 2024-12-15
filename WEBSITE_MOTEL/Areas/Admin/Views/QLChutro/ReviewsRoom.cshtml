@@ -1,0 +1,237 @@
+﻿@using PagedList.Mvc;
+@model PagedList.PagedList<WEBSITE_MOTEL.Models.DanhGia>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.TenCT))
+{
+    <h3>ID: @ViewBag.ID</h3>
+    <h3>Tên phòng trọ: @ViewBag.TenCT</h3>
+}
+else
+{
+    <p>Dữ liệu không có sẵn.</p>
+}
+<div class="row">
+    <div class="col-md-12">
+        <div id="alertContainer">
+            @if (!string.IsNullOrEmpty(TempData["Message"] as string))
+            {
+                <div class="alert alert-success">
+                    @TempData["Message"]
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<table class="table table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Tên người đánh giá</th>
+            <th>Mô tả</th>
+            <th>Rating</th>
+            <th>Ngày đánh giá</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                    @Html.DisplayFor(modelItem => item.sTenNguoiDanhGia)
+                </td>
+
+                <td style="max-width: 200px; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                    @Html.DisplayFor(modelItem => item.sMoTaDanhGia)
+                </td>
+
+                <td>@Html.DisplayFor(modelItem => item.sDanhGiaRating) <span id="star">★</span></td>
+                <td id="dt1" class="ngay" style="text-align: center; vertical-align: middle;">@Html.FormatValue(item.dNgayDanhGia, "{0:dd/MM/yyyy}")</td>
+                <td>
+                    <button type="button" class="btn btn-info" onclick="EditReviews(@item.sId)">Sửa</button>
+                    <a href="@Url.Action("DeteleReview", new { id = item.sId })" class="btn btn-danger" role="button" onclick="return confirm('Bạn có chắc chắn muốn xóa đánh giá này không?')">Xóa</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal for editing review -->
+<div class="modal fade" id="editReviewModal" tabindex="-1" role="dialog" aria-labelledby="editReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editReviewModalLabel">Sửa đánh giá</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editReviewForm" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reviewerName">Tên người đánh giá</label>
+                        <input type="text" class="form-control" id="reviewerName" name="reviewerName" style="background-color: #2A3038; color: #fff; " readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewDescription">Mô tả</label>
+                        <textarea class="form-control" id="reviewDescription" name="reviewDescription" rows="3" style="color: #fff;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewRating"><span id="star">★</span> Rating</label>
+                        <input type="number" class="form-control" id="reviewRating" name="reviewRating" min="1" max="5" style="color: #fff;"/>
+                    </div>
+                    <input type="hidden" id="reviewId" name="reviewId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function EditReviews(reviewId) {
+    // Find the row containing the review information
+    var row = document.querySelector(`button[onclick="EditReviews(${reviewId})"]`).closest('tr');
+    var reviewerName = row.querySelector('td:nth-child(1)').textContent.trim();
+    var reviewDescription = row.querySelector('td:nth-child(2)').textContent.trim();
+    var reviewRating = row.querySelector('td:nth-child(3)').textContent.trim();
+
+    // Ensure the rating is a number
+    reviewRating = parseInt(reviewRating, 10);
+
+    // Populate the modal fields with existing data
+    document.getElementById('reviewId').value = reviewId;
+    document.getElementById('reviewerName').value = reviewerName;
+    document.getElementById('reviewDescription').value = reviewDescription;
+    document.getElementById('reviewRating').value = reviewRating;
+
+    // Show the modal
+    $('#editReviewModal').modal('show');
+
+    // Handle the form submission for AJAX
+    $('#editReviewForm').submit(function (e) {
+        e.preventDefault();  // Prevent default form submission
+
+        var formData = $(this).serialize();  // Serialize form data to send
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("EditReview", "QLChutro")',  // Your controller and action URL
+            data: formData,  // Send the serialized data
+            success: function (response) {
+                if (response.success) {
+                    // On success, close the modal and reload the page
+                    $('#editReviewModal').modal('hide');
+                    location.reload();  // Refresh the page to display updated data
+                } else {
+                    // Display the error message if the update fails
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                // Log and alert any errors
+                console.error('Error:', error);
+                console.error('Status:', status);
+                console.error('Response:', xhr.responseText);
+                alert('Có lỗi xảy ra khi cập nhật đánh giá.');
+            }
+        });
+    });
+}
+
+
+
+
+    function closeModal() {
+        const modal = $('#editReviewModal');
+        modal.modal('hide'); // Sử dụng Bootstrap API để đóng modal
+        console.log("Modal is closing using Bootstrap API");
+    }
+
+
+
+</script>
+
+@{
+    var pagedListRenderOptions = new PagedListRenderOptions
+    {
+        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination justify-content-center" },
+        ContainerDivClasses = new[] { "pagination-wrapper" },
+        LiElementClasses = new[] { "page-item" }
+    };
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="pagination-wrapper">
+            @Html.PagedListPager(Model, page => Url.Action("ReviewsRoom", new { page = page }), pagedListRenderOptions)
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+        .table td img {
+            height: 140px !important;
+            border-radius: 10px;
+        }
+
+
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .page-item {
+        margin: 0 5px;
+    }
+
+    .table-responsive .carousel {
+        max-width: 100% !important;
+        height: auto !important;
+        border-radius: 5% !important;
+    }
+
+    .table-responsive .carousel-image {
+        width: 100% !important;
+        height: 150px !important;
+        object-fit: cover !important;
+        border-radius: 5% !important;
+    }
+
+    .table-responsive td img {
+        max-width: 100% !important;
+        height: 300px !important; /* Set fixed height */
+        object-fit: cover !important;
+        border-radius: 5% !important;
+    }
+
+    #star {
+        display: inline-block;
+        color: gold;
+        font-size: 24px;
+    }
+</style>

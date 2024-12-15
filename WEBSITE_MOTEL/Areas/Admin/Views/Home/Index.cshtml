@@ -3,7 +3,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAD.cshtml";
 }
 
-<div class="header-container my-4 p-4 rounded">
+<div class="header-container my-4 p-4 rounded" style="padding:10px !important; margin-top:0px !important">
     <h2 class="header-title text-center">
         QUẢN TRỊ HỖ TRỢ ĐẶT PHÒNG TRỌ ONLINE TRÊN ĐỊA BÀN THÀNH PHỐ THỦ DẦU MỘT
     </h2>
@@ -43,6 +43,8 @@
 </div>
 
 
+
+
 <style>
     .header-container {
         background: linear-gradient(135deg, #007bff, #6c63ff);
@@ -64,9 +66,9 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        height: 150px; /* Giảm chiều cao */
+        height: 120px; /* Giảm chiều cao */
         padding: 1rem; /* Giảm padding */
-        gap: 0.3rem; /* Giảm khoảng cách giữa các thành phần */
+        gap: 0rem; /* Giảm khoảng cách giữa các thành phần */
     }
 
     .info-title {
@@ -82,5 +84,73 @@
     .info-box i {
         font-size: 2rem; /* Giảm kích thước icon */
     }
+
+    .revenue-stats-container {
+        padding: 1rem;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .revenue-info-box {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.5;
+    }
+
+        .revenue-info-box h5 {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+    .list-group-item {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container mt-4">
+    <h3 class="text-center">Thống kê lượt đặt phòng theo khu vực</h3>
+    <canvas id="myChart" width="400" height="200"></canvas>
+</div>
+
+<script>
+    // Lấy dữ liệu JSON từ ViewBag
+    var thongKeData = @Html.Raw(ViewBag.ThongKeJson);
+
+    // Dữ liệu cho biểu đồ
+    var khuVucLabels = thongKeData.map(function(item) {
+        return item.sTenKhuVuc;
+    });
+
+    var soLuongDonHangData = thongKeData.map(function(item) {
+        return item.SoLuongDonHang;
+    });
+
+    // Tạo biểu đồ bằng Chart.js
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: khuVucLabels,  // Các khu vực
+            datasets: [{
+                label: 'Số lượng đơn hàng',
+                data: soLuongDonHangData,  // Số lượng đơn hàng theo từng khu vực
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+
 

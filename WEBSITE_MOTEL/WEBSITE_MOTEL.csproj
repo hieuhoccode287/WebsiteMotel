@@ -151,6 +151,7 @@
     <Compile Include="Models\PhongDuyet.cs" />
     <Compile Include="Models\RoomDetail.cs" />
     <Compile Include="Models\TaiKhoan.cs" />
+    <Compile Include="Models\ThongKe.cs" />
     <Compile Include="Models\TimNhaTro.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1697,11 +1698,11 @@
       <LastGenOutput>TimNhaTro.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\Admin\Views\QLChutro\DuyetChuTro.cshtml" />
     <Content Include="Areas\Admin\Views\DUYETCT\CTApprove.cshtml" />
     <Content Include="Areas\Admin\Views\DSPhong\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ThongKe\Index.cshtml" />
     <Content Include="Areas\Admin\Views\KhuVuc\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\QLChutro\ReviewsRoom.cshtml" />
     <None Include="Models\TimNhaTro.dbml.layout">
       <DependentUpon>TimNhaTro.dbml</DependentUpon>
     </None>

@@ -202,7 +202,6 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             int iSize = 4;
             int iPageNum = (page ?? 1);
 
-
             var allRatings = (from a in data.DANHGIAs
                               join b in data.PHONGTROs on a.Id_Phong equals b.Id
                               select new DanhGia()
@@ -269,6 +268,53 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
                         .ToPagedList(iPageNum, iSize)); // Phân trang
 
         }
+        public ActionResult ReviewsRoom(int? page, int? id)
+        {
+            if (Session["Admin"] == null || Session["Admin"].ToString() == "")
+            {
+                return Redirect("~/Admin/Home/Login");
+            }
+
+            if (id == null)
+            {
+                return RedirectToAction("Index", "QLChutro"); // or an appropriate action if id is not provided
+            }
+
+            int iSize = 4; // number of reviews per page
+            int iPageNum = (page ?? 1); // default to first page if page is null
+
+            // Fetch room information based on the provided id
+            var room = data.PHONGTROs.FirstOrDefault(n => n.Id == id);
+            if (room == null)
+            {
+                return HttpNotFound(); // return 404 if room not found
+            }
+
+            // Set room name and ID in ViewBag
+            ViewBag.TenCT = room.TenPhong;
+            ViewBag.ID = room.Id;
+
+            // Get reviews for the room
+            var reviews = (from a in data.DANHGIAs
+                           join b in data.TAIKHOANs on a.Id_TaiKhoan equals b.Id
+                           where a.Id_Phong == id
+                           select new DanhGia()
+                           {
+                               sId = a.Id,
+                               sId_Phong = (int)a.Id_Phong,
+                               sTenNguoiDanhGia = b.HoTen,
+                               sDanhGiaRating = a.DanhGiaRating,
+                               sMoTaDanhGia = a.MoTa,
+                               dNgayDanhGia = (DateTime)a.NgayDanhGia,
+                           }).ToList();
+
+            // Paginate the reviews
+            var pagedReviews = reviews.ToPagedList(iPageNum, iSize);
+
+            // Pass paged reviews to the view
+            return View(pagedReviews);
+        }
+
 
         public ActionResult DuyetPhong(int id)
         {
@@ -303,6 +349,61 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
 
             TempData["Message"] = "Xóa phòng trọ thành công!";
             return RedirectToAction("Details", new { id = tk.Id });
+        }
+
+        [HttpPost]
+        public ActionResult EditReview(int reviewId, string reviewDescription, int reviewRating)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var review = data.DANHGIAs.FirstOrDefault(r => r.Id == reviewId);
+                    if (review != null)
+                    {
+                        review.MoTa = reviewDescription;
+                        review.DanhGiaRating = reviewRating;
+                        data.SubmitChanges();
+
+                        TempData["Message"] = "Cập nhật đánh giá thành công!";
+                        return Json(new { success = true });
+                    }
+                    else
+                    {
+                        TempData["Message"] = "Không tìm thấy đánh giá này.";
+                        return Json(new { success = false, message = "Không tìm thấy đánh giá này." });
+                    }
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Dữ liệu không hợp lệ." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+            }
+        }
+
+
+
+
+
+        public ActionResult DeteleReview(int id)
+        {
+            // Lấy thông tin phòng trọ cần xóa
+            var dg = data.DANHGIAs.SingleOrDefault(n => n.Id == id);
+            if (dg == null)
+            {
+                TempData["Message"] = "Không tìm thấy đánh giá có mã số tương ứng!";
+                return RedirectToAction("ReviewsRoom", new { id = dg.Id_Phong });
+            }
+
+            data.DANHGIAs.DeleteOnSubmit(dg);
+            data.SubmitChanges();
+
+            TempData["Message"] = "Xóa đánh giá thành công!";
+            return RedirectToAction("ReviewsRoom", new { id = dg.Id_Phong });
         }
     }
 }
