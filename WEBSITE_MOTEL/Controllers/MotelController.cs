@@ -311,6 +311,7 @@ namespace WEBSITE_MOTEL.Controllers
                                  sGuiXe = (double)groupedPhong.FirstOrDefault().a.GuiXe,
                                  sInternet = (double)groupedPhong.FirstOrDefault().a.Internet,
                                  sTenKV = groupedPhong.FirstOrDefault().d.Ten ?? "",
+                                 sIdKV = (int)groupedPhong.FirstOrDefault().a.KhuVuc,
                              };
             // Filter by Khu vực (Area)
             if (IdKV != 0)
