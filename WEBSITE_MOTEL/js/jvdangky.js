@@ -190,10 +190,10 @@ $(document).ready(function () {
             }
         }
 
-        function showError(message) {
+        function showError(message, e) {
             $(".item_message .message").html(message);
-            e.preventDefault(); // Prevent form submission
-            return;
+            if (e) e.preventDefault(); // Đảm bảo ngăn chặn submit form
+            return false;
         }
     });
 

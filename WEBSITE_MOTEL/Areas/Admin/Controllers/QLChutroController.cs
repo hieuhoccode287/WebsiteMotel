@@ -87,20 +87,41 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
             try
             {
                 // Lấy tài khoản chủ trọ theo id
-                var chuTro = data.TAIKHOANs.SingleOrDefault(ct => ct.Id == id);
-                if (chuTro != null)
+                var tk = data.TAIKHOANs.SingleOrDefault(ct => ct.Id == id);
+                if (tk != null)
                 {
                     // Lấy tất cả các phòng trọ liên kết với tài khoản này
-                    var phongTros = data.PHONGTROs.Where(pt => pt.Id_ChuTro == chuTro.Id).ToList();
+                    var phongTros = data.PHONGTROs.Where(pt => pt.Id_ChuTro == tk.Id).ToList();
+                    var donHangs = data.DONHANGs.Where(dh => dh.Id_NguoiDung == tk.Id).ToList();
+
+                    // Lấy tất cả các chi tiết đơn hàng liên quan
+                    var donHangIds = donHangs.Select(dh => dh.IdDH).ToList();
+                    var chiTietDonHangs = data.CHITIETDONHANGs.Where(ctdh => donHangIds.Contains(ctdh.Id_DH.Value)).ToList();
+
+                    // Lấy các đánh giá liên quan đến tài khoản
+                    var danhGiasLienQuan = data.DANHGIAs.Where(dg => dg.Id_TaiKhoan == tk.Id).ToList();
+
+                    // Xóa các đánh giá
+                    data.DANHGIAs.DeleteAllOnSubmit(danhGiasLienQuan);
+
+                    // Xóa chi tiết đơn hàng
+                    data.CHITIETDONHANGs.DeleteAllOnSubmit(chiTietDonHangs);
 
                     // Xóa tất cả các phòng trọ liên kết
                     foreach (var phong in phongTros)
                     {
                         var images = data.IMAGEs.Where(i => i.Id_PhongTro == phong.Id).ToList();
                         data.IMAGEs.DeleteAllOnSubmit(images); // Xóa tất cả ảnh liên quan đến phòng trọ
-                        data.PHONGTROs.DeleteOnSubmit(phong); // Xóa phòng trọ
+                        data.PHONGTROs.DeleteOnSubmit(phong);  // Xóa phòng trọ
                     }
-                    data.TAIKHOANs.DeleteOnSubmit(chuTro);
+
+                    // Xóa đơn hàng
+                    data.DONHANGs.DeleteAllOnSubmit(donHangs);
+
+                    // Xóa tài khoản
+                    data.TAIKHOANs.DeleteOnSubmit(tk);
+
+                    // Lưu thay đổi
                     data.SubmitChanges();
 
                     TempData["ThongBao"] = "Xóa thành công";
@@ -117,6 +138,8 @@ namespace WEBSITE_MOTEL.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
+
+
 
 
         [HttpGet]

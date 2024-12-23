@@ -273,6 +273,11 @@
             return false; // Prevent form submission
         }
 
+        if (title.length > 150) {
+            alert("Mô tả không được vượt quá 150 ký tự.");
+            return false;
+        }
+
         if (isNaN(price)) {
             alert("Giá cho thuê phải là số hợp lệ.");
             return false; // Prevent form submission
@@ -328,8 +333,18 @@
             return false; // Prevent form submission
         }
 
+        if (address.length > 150) {
+            alert("Mô tả không được vượt quá 150 ký tự.");
+            return false;
+        }
+
         if (description === "") {
             alert("Mô tả không được để trống.");
+            return false;
+        }
+
+        if (description.length > 300) {
+            alert("Mô tả không được vượt quá 300 ký tự.");
             return false;
         }
 

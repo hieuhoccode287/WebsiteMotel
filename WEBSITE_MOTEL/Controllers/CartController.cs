@@ -325,7 +325,7 @@ namespace WEBSITE_MOTEL.Controllers
                 }
                 p.SoLuong += 1;
                 dh.TrangThai = 4;
-                //data.SubmitChanges();
+                data.SubmitChanges();
 
                 return Json(new { code = 200, msg = "Trả phòng thành công." }, JsonRequestBehavior.AllowGet);
             }
